@@ -144,6 +144,22 @@ export const api = {
   async health(): Promise<{ status: string; timestamp: string }> {
     return request('/health');
   },
+
+  // Get all sessions (combined from all modules)
+  async getAllSessions(): Promise<SessionDetail[]> {
+    try {
+      const [soc, threat, pentest] = await Promise.all([
+        this.soc.getSessions().catch(() => ({ sessions: [] })),
+        this.threat.getSessions().catch(() => ({ sessions: [] })),
+        this.pentest.getSessions().catch(() => ({ sessions: [] })),
+      ]);
+      return [...soc.sessions, ...threat.sessions, ...pentest.sessions].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    } catch {
+      return [];
+    }
+  },
 };
 
 // Polling utility for session status

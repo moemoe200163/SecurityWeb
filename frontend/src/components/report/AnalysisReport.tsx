@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Copy, Check, FileText, Download } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Copy, Check, FileText, Download, FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import ReactMarkdown from 'react-markdown';
@@ -15,6 +15,8 @@ interface AnalysisReportProps {
 
 export function AnalysisReport({ report, title = '安全分析報告' }: AnalysisReportProps) {
   const [copied, setCopied] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(report);
@@ -22,7 +24,7 @@ export function AnalysisReport({ report, title = '安全分析報告' }: Analysi
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleDownload = () => {
+  const handleDownloadMarkdown = () => {
     const blob = new Blob([report], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -32,6 +34,60 @@ export function AnalysisReport({ report, title = '安全分析報告' }: Analysi
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const handleExportPDF = async () => {
+    if (!contentRef.current) return;
+
+    setExporting(true);
+
+    try {
+      // Use window.print() for PDF export via browser print dialog
+      // This is simpler and more reliable than html2pdf
+      const printContent = contentRef.current.innerHTML;
+      const printWindow = window.open('', '_blank');
+      if (!printWindow) {
+        alert('無法開啟列印視窗，請檢查瀏覽器設定');
+        return;
+      }
+
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>${title}</title>
+            <style>
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                padding: 20px;
+                max-width: 800px;
+                margin: 0 auto;
+              }
+              h1 { font-size: 24px; margin-bottom: 20px; }
+              h2 { font-size: 18px; margin-top: 20px; }
+              table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+              th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+              th { background-color: #f5f5f5; }
+              pre { background-color: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; }
+              code { background-color: #f5f5f5; padding: 2px 4px; border-radius: 2px; }
+            </style>
+          </head>
+          <body>
+            <h1>${title}</h1>
+            <p>生成時間：${new Date().toLocaleString('zh-TW')}</p>
+            <hr />
+            ${printContent}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    } catch (error) {
+      console.error('PDF export failed:', error);
+      alert('PDF 導出失敗，請稍後再試');
+    } finally {
+      setExporting(false);
+    }
   };
 
   return (
@@ -61,15 +117,25 @@ export function AnalysisReport({ report, title = '安全分析報告' }: Analysi
               </>
             )}
           </Button>
-          <Button variant="outline" size="sm" onClick={handleDownload}>
+          <Button variant="outline" size="sm" onClick={handleDownloadMarkdown}>
             <Download className="h-3 w-3 mr-1" />
-            下載
+            MD
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportPDF}
+            disabled={exporting}
+          >
+            <FileDown className="h-3 w-3 mr-1" />
+            {exporting ? '導出中...' : 'PDF'}
           </Button>
         </div>
       </div>
 
       {/* Content */}
       <div
+        ref={contentRef}
         className={cn(
           'p-6 max-h-96 overflow-y-auto prose prose-sm max-w-none',
           'prose-headings:text-gray-900 prose-headings:font-semibold',
