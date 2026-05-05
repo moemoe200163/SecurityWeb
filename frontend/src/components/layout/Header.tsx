@@ -1,5 +1,7 @@
 'use client';
 
+import { Moon, Sun } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useStepStore } from '@/stores/stepStore';
 
 const moduleTitles: Record<string, string> = {
@@ -11,6 +13,8 @@ const moduleTitles: Record<string, string> = {
 export function Header() {
   const currentModule = useStepStore((state) => state.currentModule);
   const isExecuting = useStepStore((state) => state.isExecuting);
+  const theme = useStepStore((state) => state.theme);
+  const toggleTheme = useStepStore((state) => state.toggleTheme);
 
   return (
     <header className="h-14 border-b bg-white px-6 flex items-center justify-between">
@@ -24,6 +28,21 @@ export function Header() {
             分析中
           </span>
         )}
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleTheme}
+          className="text-gray-600"
+        >
+          {theme === 'light' ? (
+            <Moon className="h-5 w-5" />
+          ) : (
+            <Sun className="h-5 w-5" />
+          )}
+        </Button>
       </div>
     </header>
   );
