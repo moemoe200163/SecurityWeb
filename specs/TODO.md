@@ -9,33 +9,33 @@
 ## 當前任務
 
 ### Phase 1: 項目初始化
-- [ ] 初始化 Next.js 14 前端專案
-- [ ] 設定 Tailwind + shadcn/ui
-- [ ] 建立 specs 目錄結構
-- [ ] 撰寫規格文件
+- [x] 初始化 Next.js 14 前端專案
+- [x] 設定 Tailwind + shadcn/ui
+- [x] 建立 specs 目錄結構
+- [x] 撰寫規格文件
 
 ### Phase 2: 前端核心框架
-- [ ] 建立頁面佈局（Sidebar + MainContent）
-- [ ] 實作頂部進度條組件（StepProgress）
-- [ ] 實作步進式卡片組件（StepCard）
-- [ ] 實作工具調用展示區（ToolCallBlock）
-- [ ] 建立狀態管理（Zustand stepStore）
+- [x] 建立頁面佈局（Sidebar + MainContent）
+- [x] 實作頂部進度條組件（StepProgress）
+- [x] 實作步進式卡片組件（StepCard）
+- [x] 實作工具調用展示區（ToolCallBlock）
+- [x] 建立狀態管理（Zustand stepStore）
 
 ### Phase 3: SOC 模組頁面
-- [ ] 建立 /soc/analyze 頁面
-- [ ] 實作告警上傳區（AlertUpload）
-- [ ] 實作 AI 即時對話面板（AIChatPanel）
-- [ ] 實作分析報告生成（AnalysisReport）
+- [x] 建立 /soc/analyze 頁面
+- [x] 實作告警上傳區（AlertUpload）
+- [x] 實作 AI 即時對話面板（AIChatPanel）
+- [x] 實作分析報告生成（AnalysisReport）
 
 ### Phase 4: 威脅情報模組
-- [ ] 建立 /threat/investigate 頁面
-- [ ] 實作 IP/Domain/Hash 輸入區
-- [ ] 實作線索挖掘流程
+- [x] 建立 /threat/investigate 頁面
+- [x] 實作 IP/Domain/Hash 輸入區
+- [x] 實作線索挖掘流程
 
 ### Phase 5: 滲透測試模組
-- [ ] 建立 /pentest/assist 頁面
-- [ ] 實作目標枚舉步驟
-- [ ] 實作漏洞驗證流程
+- [x] 建立 /pentest/assist 頁面
+- [x] 實作目標枚舉步驟
+- [x] 實作漏洞驗證流程
 
 ### Phase 6: 後端 API 層
 - [ ] 初始化後端專案
