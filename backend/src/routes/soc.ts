@@ -1,12 +1,11 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { aiService } from '../services/mockAIService.js';
-import type { SOCAnalyzeRequest } from '../services/types.js';
+import { miniMaxAdapter } from '../services/minimaxAdapter.js';
 
 const analyzeSchema = z.object({
   alertId: z.string().optional(),
   rawContent: z.string().optional(),
-  type: z.enum(['simulation', 'live']).default('simulation'),
+  type: z.enum(['simulation', 'live']).default('live'),
 });
 
 export async function socRoutes(fastify: FastifyInstance): Promise<void> {
@@ -19,9 +18,9 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
         rawContent: body.rawContent,
       };
 
-      const session = await aiService.startAnalysis('soc', input);
+      const session = await miniMaxAdapter.startAnalysis('soc', input);
 
-      // If simulation mode, run the analysis steps
+      // 如果是 simulation 模式，運行模擬
       if (body.type === 'simulation') {
         runSimulation(session.id).catch(console.error);
       }
@@ -47,7 +46,7 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/soc/sessions - Get all sessions
   fastify.get('/sessions', async (request, reply) => {
     try {
-      const sessions = await aiService.getAllSessions();
+      const sessions = await miniMaxAdapter.getAllSessions();
       return reply.send({ sessions });
     } catch (error) {
       console.error('Get sessions error:', error);
@@ -59,7 +58,7 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.get('/sessions/:id', async (request, reply) => {
     try {
       const { id } = request.params as { id: string };
-      const session = await aiService.getSession(id);
+      const session = await miniMaxAdapter.getSession(id);
 
       if (!session) {
         return reply.status(404).send({ error: 'Session not found' });
@@ -82,7 +81,7 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
         return reply.status(400).send({ error: 'Content is required' });
       }
 
-      const message = await aiService.sendMessage(id, content);
+      const message = await miniMaxAdapter.sendMessage(id, content);
       return reply.status(201).send({ message });
     } catch (error) {
       console.error('Send message error:', error);
@@ -93,39 +92,22 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
 
 // Simulation runner for SOC analysis
 async function runSimulation(sessionId: string): Promise<void> {
-  const service = aiService as any;
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  // Get session steps
-  const session = await aiService.getSession(sessionId);
+  const session = await miniMaxAdapter.getSession(sessionId);
   if (!session) return;
 
   const steps = session.steps.sort((a, b) => a.order - b.order);
 
   for (const step of steps) {
-    // Update step to running
     await delay(500);
-
-    // Get mock content for this step
-    const mockContent = service.getMockContent(step.order);
-    if (mockContent) {
-      await service.updateStepContent(step.id, mockContent.content, mockContent.codeBlock);
-    } else {
-      // Update step with generic content
-      await service.updateStepContent(
-        step.id,
-        `## ${step.title}\n\n已完成 ${step.title} 分析。`
-      );
-    }
-
+    await miniMaxAdapter.updateStepContent(
+      step.id,
+      `## ${step.title}\n\n已完成 ${step.title} 分析。`
+    );
     await delay(2000);
-    await service.completeStep(step.id);
+    await miniMaxAdapter.completeStep(step.id);
   }
 
-  // Update session status to completed
-  const { prisma } = await import('../db/client.js');
-  await prisma.session.update({
-    where: { id: sessionId },
-    data: { status: 'completed' },
-  });
+  await miniMaxAdapter.completeSession(sessionId);
 }

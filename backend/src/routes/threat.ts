@@ -1,11 +1,11 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { aiService } from '../services/mockAIService.js';
+import { miniMaxAdapter } from '../services/minimaxAdapter.js';
 
 const investigateSchema = z.object({
   type: z.enum(['ip', 'domain', 'hash']),
   value: z.string().min(1),
-  type2: z.enum(['simulation', 'live']).default('simulation'),
+  type2: z.enum(['simulation', 'live']).default('live'),
 });
 
 export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
@@ -18,9 +18,9 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
         value: body.value,
       };
 
-      const session = await aiService.startAnalysis('threat', input);
+      const session = await miniMaxAdapter.startAnalysis('threat', input);
 
-      // If simulation mode, run the analysis steps
+      // 如果是 simulation 模式，運行模擬
       if (body.type2 === 'simulation') {
         runThreatSimulation(session.id).catch(console.error);
       }
@@ -46,7 +46,7 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/threat/sessions - Get all sessions
   fastify.get('/sessions', async (request, reply) => {
     try {
-      const sessions = await aiService.getAllSessions();
+      const sessions = await miniMaxAdapter.getAllSessions();
       const threatSessions = sessions.filter((s) => s.module === 'threat');
       return reply.send({ sessions: threatSessions });
     } catch (error) {
@@ -59,7 +59,7 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.get('/sessions/:id', async (request, reply) => {
     try {
       const { id } = request.params as { id: string };
-      const session = await aiService.getSession(id);
+      const session = await miniMaxAdapter.getSession(id);
 
       if (!session) {
         return reply.status(404).send({ error: 'Session not found' });
@@ -82,7 +82,7 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
         return reply.status(400).send({ error: 'Content is required' });
       }
 
-      const message = await aiService.sendMessage(id, content);
+      const message = await miniMaxAdapter.sendMessage(id, content);
       return reply.status(201).send({ message });
     } catch (error) {
       console.error('Send message error:', error);
@@ -93,29 +93,22 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
 
 // Simulation runner for threat investigation
 async function runThreatSimulation(sessionId: string): Promise<void> {
-  const service = aiService as any;
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const session = await aiService.getSession(sessionId);
+  const session = await miniMaxAdapter.getSession(sessionId);
   if (!session) return;
 
   const steps = session.steps.sort((a, b) => a.order - b.order);
 
   for (const step of steps) {
     await delay(500);
-
-    await service.updateStepContent(
+    await miniMaxAdapter.updateStepContent(
       step.id,
       `## ${step.title}\n\n已完成威脅情報${step.title.replace('正在', '')}。`
     );
-
     await delay(2000);
-    await service.completeStep(step.id);
+    await miniMaxAdapter.completeStep(step.id);
   }
 
-  const { prisma } = await import('../db/client.js');
-  await prisma.session.update({
-    where: { id: sessionId },
-    data: { status: 'completed' },
-  });
+  await miniMaxAdapter.completeSession(sessionId);
 }
