@@ -18,9 +18,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4000:4000"
+    env_file:
+      - ./backend/.env
     environment:
       - DATABASE_URL=postgresql://securityweb:securityweb123@db:5432/securityweb
       - PORT=4000
+      - MINIMAX_API_KEY=${MINIMAX_API_KEY}
+      - MINIMAX_API_ENDPOINT=${MINIMAX_API_ENDPOINT:-https://api.minimax.chat/v1}
+      - MINIMAX_MODEL=${MINIMAX_MODEL:-MiniMax-M2.7}
     depends_on:
       db:
         condition: service_healthy
