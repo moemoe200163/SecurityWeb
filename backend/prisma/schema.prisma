@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id        String    @id @default(uuid())
+  module    String    // "soc" | "threat" | "pentest"
+  input     Json      // Original input data
+  status    String    @default("in_progress") // "in_progress" | "completed"
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  steps     Step[]
+  messages  Message[]
+
+  @@index([module])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Step {
+  id         String    @id @default(uuid())
+  sessionId  String
+  session    Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  order      Int
+  title      String
+  status     String    @default("pending") // "pending" | "running" | "success" | "error"
+  content    String?
+  codeBlock  String?
+  toolCalls  Json?
+  timestamp  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([sessionId])
+  @@index([status])
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  sessionId  String
+  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role       String   // "user" | "assistant"
+  content    String
+  createdAt  DateTime @default(now())
+
+  @@index([sessionId])
+}

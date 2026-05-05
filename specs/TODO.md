@@ -38,15 +38,15 @@
 - [x] 實作漏洞驗證流程
 
 ### Phase 6: 後端 API 層
-- [ ] 初始化後端專案
-- [ ] 設定 Prisma + PostgreSQL
-- [ ] 實作 AI Bridge 抽象層
-- [ ] 實作 API 路由
+- [x] 初始化後端專案
+- [x] 設定 Prisma + PostgreSQL
+- [x] 實作 AI Bridge 抽象層
+- [x] 實作 API 路由
 
 ### Phase 7: Docker 部署
-- [ ] 撰寫前端 Dockerfile
-- [ ] 撰寫後端 Dockerfile
-- [ ] 撰寫 docker-compose.yml
+- [x] 撰寫前端 Dockerfile
+- [x] 撰寫後端 Dockerfile
+- [x] 撰寫 docker-compose.yml
 
 ---
 
