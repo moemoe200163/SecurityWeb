@@ -29,7 +29,8 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-    throw new Error(error.error || `HTTP ${response.status}`);
+    const errorMessage = error.message || error.error || `HTTP ${response.status}`;
+    throw new Error(errorMessage);
   }
 
   return response.json();
@@ -70,6 +71,76 @@ export interface MessageDetail {
   role: 'user' | 'assistant';
   content: string;
   createdAt: string;
+}
+
+// IP Reputation Types
+export interface IpReputationResult {
+  ip: string;
+  status: 'malicious' | 'suspicious' | 'normal' | 'unknown';
+  threatLevel: 'high' | 'medium' | 'low' | 'none';
+  confidenceScore: number | null;
+  countryCode?: string;
+  countryName?: string;
+  isp?: string;
+  domain?: string;
+  usageType?: string;
+  totalReports?: number;
+  isWhitelisted?: boolean;
+  sources: Array<{
+    name: string;
+    confidenceScore?: number;
+    totalReports?: number;
+    lastReported?: string;
+    pulseCount?: number;
+  }>;
+  cached: boolean;
+  updatedAt: string;
+}
+
+export interface IpReputationStats {
+  total: number;
+  malicious: number;
+  suspicious: number;
+  normal: number;
+  unknown: number;
+}
+
+export interface BgpUpdate {
+  id: string;
+  prefix: string;
+  asPath: string | null;
+  peerAsn: string | null;
+  originAsn: string | null;
+  timestamp: string;
+  type: 'A' | 'W';
+  source: string | null;
+  country: string | null;
+}
+
+export interface BgpQueryResult {
+  data: BgpUpdate[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface BgpStats {
+  totalUpdates: number;
+  announces: number;
+  withdraws: number;
+  uniquePrefixes: number;
+  uniqueAsns: number;
+  since: string;
+}
+
+export interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }
 
 // API Functions
@@ -137,6 +208,60 @@ export const api = {
         method: 'POST',
         body: { content },
       });
+    },
+  },
+
+  // IP Reputation
+  ip: {
+    async check(ip: string, forceRefresh = false): Promise<IpReputationResult> {
+      const params = new URLSearchParams({ ip });
+      if (forceRefresh) params.set('forceRefresh', 'true');
+      return request<IpReputationResult>(`/api/ip/check?${params}`);
+    },
+    async history(): Promise<{ history: IpReputationResult[] }> {
+      return request('/api/ip/history');
+    },
+    async stats(): Promise<IpReputationStats> {
+      return request('/api/ip/stats');
+    },
+    async blacklist(params: {
+      page?: number;
+      limit?: number;
+      status?: string;
+      search?: string;
+      sortBy?: string;
+      sortOrder?: string;
+    }): Promise<{ data: IpReputationResult[]; pagination: PaginationInfo }> {
+      const query = new URLSearchParams();
+      if (params.page) query.set('page', String(params.page));
+      if (params.limit) query.set('limit', String(params.limit));
+      if (params.status) query.set('status', params.status);
+      if (params.search) query.set('search', params.search);
+      if (params.sortBy) query.set('sortBy', params.sortBy);
+      if (params.sortOrder) query.set('sortOrder', params.sortOrder);
+      return request(`/api/ip/blacklist?${query}`);
+    },
+  },
+
+  // BGP
+  bgp: {
+    async query(params: {
+      prefix?: string;
+      asn?: string;
+      page?: number;
+      limit?: number;
+      start_time?: string;
+    }): Promise<BgpQueryResult> {
+      const query = new URLSearchParams();
+      if (params.prefix) query.set('prefix', params.prefix);
+      if (params.asn) query.set('asn', params.asn);
+      if (params.page) query.set('page', String(params.page));
+      if (params.limit) query.set('limit', String(params.limit));
+      if (params.start_time) query.set('start_time', params.start_time);
+      return request(`/api/bgp/query?${query}`);
+    },
+    async stats(): Promise<BgpStats> {
+      return request('/api/bgp/stats');
     },
   },
 
