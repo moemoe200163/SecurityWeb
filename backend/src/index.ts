@@ -4,6 +4,8 @@ import { connectDatabase, prisma } from './db/client.js';
 import { socRoutes } from './routes/soc.js';
 import { threatRoutes } from './routes/threat.js';
 import { pentestRoutes } from './routes/pentest.js';
+import { ipReputationRoutes } from './routes/ipReputation.js';
+import { bgpRoutes } from './routes/bgp.js';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 
@@ -14,8 +16,10 @@ async function startServer() {
 
   // Register CORS
   await fastify.register(cors, {
-    origin: true,
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   });
 
   // Connect to database
@@ -25,6 +29,8 @@ async function startServer() {
   fastify.register(socRoutes, { prefix: '/api/soc' });
   fastify.register(threatRoutes, { prefix: '/api/threat' });
   fastify.register(pentestRoutes, { prefix: '/api/pentest' });
+  fastify.register(ipReputationRoutes, { prefix: '/api/ip' });
+  fastify.register(bgpRoutes, { prefix: '/api/bgp' });
 
   // Health check endpoint
   fastify.get('/health', async () => {
