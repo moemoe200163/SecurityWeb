@@ -41,7 +41,7 @@ const navigation: Record<ModuleType, NavItem> = {
     children: [
       { label: 'IP/域名查詢', href: '/threat/investigate' },
       { label: 'IP 黑名單', href: '/threat/blacklist' },
-      { label: 'BGP Tools', href: '/threat/bgp' },
+      { label: 'BGP 路由查詢', href: '/threat/bgp' },
     ],
   },
   pentest: {
