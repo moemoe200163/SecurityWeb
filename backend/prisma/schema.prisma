@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
 }
 
 datasource db {
@@ -49,4 +50,76 @@ model Message {
   createdAt  DateTime @default(now())
 
   @@index([sessionId])
+}
+
+// IP 信譽資料庫
+model IpReputation {
+  id              String   @id @default(uuid())
+  ipAddress       String   @unique  // IP 地址
+  status          String   @default("unknown")  // "malicious" | "suspicious" | "normal" | "unknown"
+  threatLevel     String?  // "high" | "medium" | "low" | "none"
+  confidenceScore Int?     // AbuseIPDB confidence score (0-100)
+  countryCode     String?
+  countryName     String?
+  isp             String?
+  domain          String?
+  usageType       String?
+  totalReports    Int?
+  lastReportedAt  DateTime?
+  isWhitelisted  Boolean  @default(false)
+  sources         Json?    // 來源資料庫陣列
+  firstSeen       DateTime?
+  lastSeen        DateTime?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([ipAddress])
+  @@index([status])
+  @@index([threatLevel])
+  @@index([createdAt])
+}
+
+// API 使用量追蹤
+model ApiUsage {
+  id          String   @id @default(uuid())
+  apiName     String   // "AbuseIPDB" | "OTX" | "VirusTotal"
+  date        DateTime @default(now()) @map("date")
+  requestCount Int     @default(0)
+  dailyLimit  Int      @default(1000)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([apiName, date])
+  @@index([apiName])
+  @@index([date])
+}
+
+// BGP 即時更新記錄（最近 24 小時）
+model BgpUpdate {
+  id        BigInt    @id @default(autoincrement())
+  prefix    String    // IP prefix (e.g., "192.168.1.0/24")
+  asPath    String?   @db.Text           // AS 路徑 (e.g., "12345 67890 54321")
+  peerAsn   BigInt?                       // 對等 AS 號碼
+  originAsn BigInt?                       // 起源 AS 號碼
+  timestamp DateTime  @default(now())      // BGP update 時間
+  type      String    @default("A")      // A=Announce, W=Withdraw
+  source    String?                       // RIPE RIS collector 名稱
+  country   String?                       // AS 國家
+
+  @@index([prefix])
+  @@index([originAsn])
+  @@index([timestamp])
+  @@index([timestamp, prefix])
+}
+
+// AS 資訊資料表（從 bgp.tools 同步）
+model BgpAsnInfo {
+  asn       BigInt    @id
+  name      String?
+  country   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([asn])
 }
