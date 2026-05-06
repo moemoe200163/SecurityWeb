@@ -40,7 +40,8 @@ const navigation: Record<ModuleType, NavItem> = {
     icon: <Search className="h-5 w-5" />,
     children: [
       { label: 'IP/域名查詢', href: '/threat/investigate' },
-      { label: '批量查詢', href: '/threat/batch' },
+      { label: 'IP 黑名單', href: '/threat/blacklist' },
+      { label: 'BGP Tools', href: '/threat/bgp' },
     ],
   },
   pentest: {
