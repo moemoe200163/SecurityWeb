@@ -46,22 +46,22 @@ export function CodeBlock({
   const lines = code.split('\n');
 
   return (
-    <div className="border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden bg-white dark:bg-neutral-900">
+    <div className="border border-neutral-200 rounded-2xl overflow-hidden bg-white">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700">
+      <div className="flex items-center justify-between px-4 py-2.5 bg-neutral-50 border-b border-neutral-200">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-xs font-medium text-neutral-500 dark:text-neutral-400">
+          <span className="font-mono text-xs font-medium text-neutral-500">
             {languageLabels[language] || language.toUpperCase()}
           </span>
           {filename && (
-            <span className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+            <span className="font-mono text-xs text-neutral-400">
               {filename}
             </span>
           )}
         </div>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 hover:text-neutral-900 transition-colors"
         >
           {copied ? (
             <>
@@ -79,14 +79,14 @@ export function CodeBlock({
 
       {/* Code Content */}
       <div className={`overflow-x-auto ${maxHeight}`}>
-        <pre className="p-4 text-sm font-mono bg-neutral-950 text-neutral-100">
+        <pre className="p-4 text-sm font-mono bg-white text-neutral-900">
           <code>
             {showLineNumbers ? (
               <table className="w-full">
                 <tbody>
                   {lines.map((line, idx) => (
                     <tr key={idx}>
-                      <td className="text-neutral-600 pr-4 text-right select-none w-8">
+                      <td className="text-neutral-400 pr-4 text-right select-none w-8">
                         {idx + 1}
                       </td>
                       <td>{line || ' '}</td>
@@ -110,7 +110,7 @@ interface CodeBlockInlineProps {
 
 export function CodeBlockInline({ code }: CodeBlockInlineProps) {
   return (
-    <code className="px-1.5 py-0.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded text-sm font-mono">
+    <code className="px-1.5 py-0.5 bg-neutral-100 text-neutral-800 rounded text-sm font-mono">
       {code}
     </code>
   );

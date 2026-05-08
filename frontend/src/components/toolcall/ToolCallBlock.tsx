@@ -41,20 +41,44 @@ export function ToolCallBlock({ toolCall }: ToolCallBlockProps) {
 
       {toolCall.params && (
         <div className="mt-3">
-          <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">參數:</p>
-          <div className="bg-neutral-950 text-neutral-100 p-3 rounded-lg text-xs font-mono overflow-x-auto">
-            <pre className="text-xs">{JSON.stringify(toolCall.params, null, 2)}</pre>
+          <p className="text-xs text-neutral-500 mb-1 font-medium">參數</p>
+          <div className="border border-neutral-200 rounded-lg overflow-hidden">
+            <div className="flex items-center justify-between px-3 py-1.5 bg-neutral-50 border-b border-neutral-200">
+              <span className="text-xs text-neutral-400">JSON</span>
+              <button
+                onClick={() => navigator.clipboard.writeText(JSON.stringify(toolCall.params, null, 2))}
+                className="text-xs text-neutral-400 hover:text-neutral-600"
+              >
+                複製
+              </button>
+            </div>
+            <pre className="p-3 text-xs font-mono text-neutral-900 bg-white overflow-x-auto">
+              {JSON.stringify(toolCall.params, null, 2)}
+            </pre>
           </div>
         </div>
       )}
 
       {toolCall.result != null && (
         <div className="mt-3">
-          <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">結果:</p>
-          <div className="bg-neutral-950 text-neutral-100 p-3 rounded-lg text-xs font-mono overflow-x-auto">
-            <pre className="text-xs">{typeof toolCall.result === 'string'
-              ? toolCall.result
-              : JSON.stringify(toolCall.result, null, 2)}</pre>
+          <p className="text-xs text-neutral-500 mb-1 font-medium">結果</p>
+          <div className="border border-neutral-200 rounded-lg overflow-hidden">
+            <div className="flex items-center justify-between px-3 py-1.5 bg-neutral-50 border-b border-neutral-200">
+              <span className="text-xs text-neutral-400">OUTPUT</span>
+              <button
+                onClick={() => navigator.clipboard.writeText(
+                  typeof toolCall.result === 'string' ? toolCall.result : JSON.stringify(toolCall.result, null, 2)
+                )}
+                className="text-xs text-neutral-400 hover:text-neutral-600"
+              >
+                複製
+              </button>
+            </div>
+            <pre className="p-3 text-xs font-mono text-neutral-900 bg-white overflow-x-auto">
+              {typeof toolCall.result === 'string'
+                ? toolCall.result
+                : JSON.stringify(toolCall.result, null, 2)}
+            </pre>
           </div>
         </div>
       )}

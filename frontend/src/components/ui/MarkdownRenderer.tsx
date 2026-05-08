@@ -2,6 +2,7 @@
 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Copy } from 'lucide-react';
 
 interface MarkdownRendererProps {
   content: string;
@@ -96,9 +97,26 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
           );
         },
         pre: ({ children }) => (
-          <pre className="mb-4 rounded-xl overflow-hidden bg-neutral-950 text-neutral-100 text-sm font-mono">
-            <code className="block p-4 overflow-x-auto">{children}</code>
-          </pre>
+          <div className="border border-neutral-200 rounded-2xl overflow-hidden bg-white my-4">
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-2.5 bg-neutral-50 border-b border-neutral-200">
+              <span className="font-mono text-xs font-medium text-neutral-500">CODE</span>
+              <button
+                onClick={() => {
+                  const code = children?.toString() || '';
+                  navigator.clipboard.writeText(code);
+                }}
+                className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 hover:text-neutral-900 transition-colors"
+              >
+                <Copy className="w-4 h-4" />
+                <span>複製</span>
+              </button>
+            </div>
+            {/* Code */}
+            <pre className="p-4 text-sm font-mono bg-white text-neutral-900 overflow-x-auto">
+              <code>{children}</code>
+            </pre>
+          </div>
         ),
         // Blockquote styles
         blockquote: ({ children }) => (
