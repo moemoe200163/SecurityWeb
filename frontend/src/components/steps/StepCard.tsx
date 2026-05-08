@@ -5,9 +5,9 @@ import { CheckCircle2, Circle, Loader2, XCircle, ChevronDown, ChevronUp } from '
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import MarkdownRenderer from '@/components/ui/MarkdownRenderer';
+import { CodeBlock } from '@/components/ui/CodeBlock';
 import type { Step, StepStatus } from '@/lib/types';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 
 const statusConfig: Record<StepStatus, { icon: React.ReactNode; color: string; label: string }> = {
   pending: {
@@ -103,7 +103,9 @@ export function StepCard({ step, isLast = false, toolPanel }: StepCardProps) {
             </div>
 
             {step.content && (
-              <p className="mt-2 text-sm text-gray-600">{step.content}</p>
+              <div className="mt-2">
+                <MarkdownRenderer content={step.content} />
+              </div>
             )}
 
             {step.timestamp && (
@@ -115,18 +117,13 @@ export function StepCard({ step, isLast = false, toolPanel }: StepCardProps) {
 
           <CollapsibleContent>
             <div className="border-t px-4 py-4 space-y-4 bg-gray-50/50">
-              {/* Markdown content */}
-              {step.content && step.status !== 'pending' && (
-                <div className="prose prose-sm max-w-none text-gray-700">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{step.content}</ReactMarkdown>
-                </div>
-              )}
-
               {/* Code block */}
               {step.codeBlock && (
-                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto">
-                  <code>{step.codeBlock}</code>
-                </pre>
+                <CodeBlock
+                  code={step.codeBlock}
+                  language="bash"
+                  maxHeight="max-h-[400px]"
+                />
               )}
 
               {/* Tool calls */}
