@@ -16,6 +16,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      target: runner
     ports:
       - "4000:4000"
     env_file:
@@ -34,10 +35,26 @@ services:
 
   db:
     image: postgres:15-alpine
+    container_name: securityweb-db-1
+    restart: unless-stopped
     environment:
       - POSTGRES_USER=securityweb
       - POSTGRES_PASSWORD=securityweb123
       - POSTGRES_DB=securityweb
+    command:
+      - postgres
+      - -c shared_buffers=384MB
+      - -c max_connections=40
+      - -c work_mem=10MB
+      - -c maintenance_work_mem=256MB
+      - -c effective_cache_size=1GB
+      - -c checkpoint_completion_target=0.9
+      - -c random_page_cost=1.1
+      - -c effective_io_concurrency=200
+      - -c min_wal_size=100MB
+      - -c max_wal_size=1GB
+      - -c autovacuum_max_workers=2
+      - -c log_min_duration_statement=1000
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -49,6 +66,14 @@ services:
       retries: 5
     networks:
       - securityweb
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
 networks:
   securityweb:
