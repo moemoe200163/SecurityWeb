@@ -2,6 +2,7 @@
 
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { CodeBlockInline } from '@/components/ui/CodeBlock';
 import type { ToolCall } from '@/lib/types';
 
 interface ToolCallBlockProps {
@@ -40,21 +41,21 @@ export function ToolCallBlock({ toolCall }: ToolCallBlockProps) {
 
       {toolCall.params && (
         <div className="mt-3">
-          <p className="text-xs text-gray-500 mb-1">參數:</p>
-          <pre className="bg-white/50 p-2 rounded text-xs font-mono overflow-x-auto">
-            {JSON.stringify(toolCall.params, null, 2)}
-          </pre>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">參數:</p>
+          <div className="bg-neutral-950 text-neutral-100 p-3 rounded-lg text-xs font-mono overflow-x-auto">
+            <pre className="text-xs">{JSON.stringify(toolCall.params, null, 2)}</pre>
+          </div>
         </div>
       )}
 
       {toolCall.result != null && (
         <div className="mt-3">
-          <p className="text-xs text-gray-500 mb-1">結果:</p>
-          <pre className="bg-white/50 p-2 rounded text-xs font-mono overflow-x-auto">
-            {typeof toolCall.result === 'string'
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">結果:</p>
+          <div className="bg-neutral-950 text-neutral-100 p-3 rounded-lg text-xs font-mono overflow-x-auto">
+            <pre className="text-xs">{typeof toolCall.result === 'string'
               ? toolCall.result
-              : JSON.stringify(toolCall.result, null, 2)}
-          </pre>
+              : JSON.stringify(toolCall.result, null, 2)}</pre>
+          </div>
         </div>
       )}
     </div>
