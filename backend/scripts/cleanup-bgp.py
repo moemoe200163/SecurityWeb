@@ -16,4 +16,5 @@ with engine.connect() as conn:
     result = conn.execute(text("""
         DELETE FROM "BgpUpdate" WHERE timestamp < :cutoff
     """), {"cutoff": cutoff})
+    conn.commit()
     print(f"Deleted {result.rowcount} BGP records older than {cutoff}")
