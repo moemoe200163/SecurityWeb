@@ -32,15 +32,3 @@ export function invalidateCache(): void {
   cachedProvider = null;
   cacheTimeout = 0;
 }
-
-export async function getCurrentProvider(): Promise<string> {
-  if (cachedProvider && Date.now() < cacheTimeout) {
-    return cachedProvider;
-  }
-
-  const setting = await prisma.systemSetting.findUnique({
-    where: { key: 'AI_PROVIDER' }
-  });
-
-  return setting?.value || 'minimax';
-}

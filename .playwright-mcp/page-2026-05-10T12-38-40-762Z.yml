@@ -1,0 +1,47 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - generic [ref=e17]:
+          - link "SOC 告警分析" [ref=e18] [cursor=pointer]:
+            - /url: /soc/analyze
+            - img [ref=e19]
+            - text: SOC 告警分析
+          - generic [ref=e21]:
+            - link "深度調查" [ref=e22] [cursor=pointer]:
+              - /url: /soc/analyze
+              - img [ref=e23]
+              - text: 深度調查
+            - link "歷史分析記錄" [ref=e25] [cursor=pointer]:
+              - /url: /soc/history
+              - img [ref=e26]
+              - text: 歷史分析記錄
+            - link "分析Demo" [ref=e28] [cursor=pointer]:
+              - /url: /soc/demo
+              - img [ref=e29]
+              - text: 分析Demo
+        - link "威脅情報調查" [ref=e32] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e33]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e37] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e38]
+          - text: 滲透測試輔助
+      - generic [ref=e43]: 安全智能體 v1.0
+    - main [ref=e44]:
+      - generic [ref=e45]: 載入中...
+  - button "Open Next.js Dev Tools" [ref=e51] [cursor=pointer]:
+    - img [ref=e52]

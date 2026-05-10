@@ -1,0 +1,13 @@
+[   19487ms] [ERROR] Access to fetch at 'http://localhost:4000/api/soc/analyze' from origin 'http://localhost:3000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://localhost:3000/soc/analyze:0
+[   19488ms] [ERROR] Failed to load resource: net::ERR_FAILED @ http://localhost:4000/api/soc/analyze:0
+[   19489ms] [ERROR] Analysis error: TypeError: Failed to fetch
+    at t (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:2373)
+    at Object.analyze (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:2540)
+    at O (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:29:25891)
+    at onClick (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:29:22973)
+    at http://localhost:3000/_next/static/chunks/0c5d7jnm41iol.js:1:1729
+    at onClick (http://localhost:3000/_next/static/chunks/0c5d7jnm41iol.js:1:36911)
+    at http://localhost:3000/_next/static/chunks/0c5d7jnm41iol.js:1:1729
+    at sJ (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:162749)
+    at http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:168645
+    at tD (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:30679) @ http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:95

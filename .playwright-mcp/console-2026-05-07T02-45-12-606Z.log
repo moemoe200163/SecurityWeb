@@ -1,0 +1,2 @@
+[      96ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=1mslj:0
+[   41333ms] [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:4000/api/pentest/assist:0

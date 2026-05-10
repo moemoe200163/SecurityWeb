@@ -1,0 +1,96 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "SOC 告警分析" [ref=e15] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e16]
+          - text: SOC 告警分析
+        - generic [ref=e18]:
+          - link "威脅情報調查" [ref=e19] [cursor=pointer]:
+            - /url: /threat/investigate
+            - img [ref=e20]
+            - text: 威脅情報調查
+          - generic [ref=e23]:
+            - link "IP/域名查詢" [ref=e24] [cursor=pointer]:
+              - /url: /threat/investigate
+              - img [ref=e25]
+              - text: IP/域名查詢
+            - link "IP 黑名單" [ref=e27] [cursor=pointer]:
+              - /url: /threat/blacklist
+              - img [ref=e28]
+              - text: IP 黑名單
+        - link "滲透測試輔助" [ref=e31] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e32]
+          - text: 滲透測試輔助
+      - generic [ref=e37]: 安全智能體 v1.0
+    - main [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - heading "IP 黑名單" [level=1] [ref=e43]
+            - paragraph [ref=e44]: 已收錄的威脅 IP 列表
+          - button "重新整理" [ref=e45]:
+            - img [ref=e46]
+            - text: 重新整理
+        - generic [ref=e51]:
+          - generic [ref=e64]:
+            - generic [ref=e65]:
+              - paragraph [ref=e66]: 總數
+              - paragraph [ref=e67]: 2,187
+            - generic [ref=e68]:
+              - paragraph [ref=e69]: 惡意 IP
+              - paragraph [ref=e70]: "46"
+            - generic [ref=e71]:
+              - paragraph [ref=e72]: 可疑 IP
+              - paragraph [ref=e73]: 2,139
+            - generic [ref=e74]:
+              - paragraph [ref=e75]: 良性 IP
+              - paragraph [ref=e76]: "2"
+          - generic [ref=e52]:
+            - generic [ref=e53]:
+              - img [ref=e54]
+              - textbox "搜尋 IP 地址..." [ref=e57]
+            - combobox [ref=e58]:
+              - option "全部"
+              - option "惡意" [selected]
+              - option "可疑"
+          - generic [ref=e59]:
+            - table [ref=e77]:
+              - rowgroup [ref=e78]:
+                - row "狀態 IP 地址 國家 ISP 舉報次數 更新時間 ↓" [ref=e79]:
+                  - columnheader "狀態" [ref=e80]
+                  - columnheader "IP 地址" [ref=e81]
+                  - columnheader "國家" [ref=e82]
+                  - columnheader "ISP" [ref=e83]
+                  - columnheader "舉報次數" [ref=e84] [cursor=pointer]
+                  - columnheader "更新時間 ↓" [ref=e85] [cursor=pointer]
+              - rowgroup [ref=e86]:
+                - row "惡意 45.33.32.156 - Linode 2 2026/5/6 上午9:25:29" [ref=e537] [cursor=pointer]:
+                  - cell "惡意" [ref=e538]:
+                    - generic [ref=e539]:
+                      - img [ref=e540]
+                      - generic [ref=e542]: 惡意
+                  - cell "45.33.32.156" [ref=e543]
+                  - cell "-" [ref=e544]
+                  - cell "Linode" [ref=e545]
+                  - cell "2" [ref=e546]
+                  - cell "2026/5/6 上午9:25:29" [ref=e547]
+            - generic [ref=e307]:
+              - paragraph [ref=e308]: 顯示 1 - 1，共 1 筆
+              - generic [ref=e309]:
+                - button [disabled] [ref=e310]:
+                  - img [ref=e311]
+                - generic [ref=e313]: 第 1 / 1 頁
+                - button [disabled] [ref=e314]:
+                  - img [ref=e315]
+  - alert [ref=e63]

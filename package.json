@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "html2pdf.js": "^0.14.0",
+    "pdfkit": "^0.18.0"
+  },
+  "devDependencies": {
+    "@types/pdfkit": "^0.17.6"
+  }
+}

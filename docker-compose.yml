@@ -11,6 +11,14 @@ services:
       - backend
     networks:
       - securityweb
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 3G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
 
   backend:
     build:
@@ -32,6 +40,14 @@ services:
         condition: service_healthy
     networks:
       - securityweb
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 3G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   db:
     image: postgres:15-alpine
@@ -70,11 +86,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2.0'
-          memory: 2G
+          cpus: '1.0'
+          memory: 1G
         reservations:
-          cpus: '0.5'
-          memory: 512M
+          cpus: '0.25'
+          memory: 256M
 
 networks:
   securityweb:

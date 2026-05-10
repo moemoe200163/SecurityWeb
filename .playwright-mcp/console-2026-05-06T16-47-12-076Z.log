@@ -1,0 +1,19 @@
+[   35140ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=1mslj:0
+[   35840ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=5qso8:0
+[   35869ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history:0
+[   35906ms] Error: Minified React error #418; visit https://react.dev/errors/418?args[]=HTML&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+    at rX (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:47213)
+    at iu (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:98254)
+    at sd (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:138944)
+    at http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:133830
+    at se (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:133931)
+    at s$ (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:160495)
+    at MessagePort.O (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:8660)
+[   35910ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=19hu7:0
+[   35913ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=1dg5o:0
+[   35915ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=29cf6:0
+[   35917ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=1kodi:0
+[   47976ms] [ERROR] Failed to load resource: the server responded with a status of 429 (Too Many Requests) @ http://localhost:4000/api/ip/check?ip=8.8.8.8:0
+[   47977ms] [ERROR] IP reputation check failed: Error: AbuseIPDB API 使用上限，請聯絡管理員
+    at t (http://localhost:3000/_next/static/chunks/0se7zkry036cz.js:1:456)
+    at async T (http://localhost:3000/_next/static/chunks/0se7zkry036cz.js:1:8021) @ http://localhost:3000/_next/static/chunks/0se7zkry036cz.js:0

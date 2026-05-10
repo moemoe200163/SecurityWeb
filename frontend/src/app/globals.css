@@ -39,6 +39,10 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  /* Module Theme Colors */
+  --color-soc: var(--soc);
+  --color-threat: var(--threat);
+  --color-pentest: var(--pentest);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -81,6 +85,10 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* Module Theme Colors */
+  --soc: oklch(0.6 0.15 220);
+  --threat: oklch(0.6 0.18 25);
+  --pentest: oklch(0.55 0.18 150);
 }
 
 .dark {
@@ -115,6 +123,10 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  /* Module Theme Colors - Dark Mode */
+  --soc: oklch(0.7 0.18 220);
+  --threat: oklch(0.7 0.22 25);
+  --pentest: oklch(0.65 0.2 150);
 }
 
 @layer base {

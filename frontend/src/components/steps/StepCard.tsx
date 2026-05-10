@@ -93,12 +93,16 @@ export function StepCard({ step, isLast = false, toolPanel }: StepCardProps) {
                   <span className="ml-1">{config.label}</span>
                 </Badge>
               </div>
-              <CollapsibleTrigger className="p-1 hover:bg-gray-100 rounded-md transition-colors">
+              <CollapsibleTrigger
+                className="p-1 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <button aria-label={isOpen ? '收起詳細內容' : '展開詳細內容'}>
                   {isOpen ? (
                     <ChevronUp className="h-4 w-4 text-gray-500" />
                   ) : (
                     <ChevronDown className="h-4 w-4 text-gray-500" />
                   )}
+                </button>
               </CollapsibleTrigger>
             </div>
 
@@ -157,13 +161,6 @@ export function StepCard({ step, isLast = false, toolPanel }: StepCardProps) {
                       )}
                     </div>
                   ))}
-                </div>
-              )}
-
-              {/* Tool panel */}
-              {toolPanel && (
-                <div className="mt-4 pt-4 border-t border-gray-200 bg-white/80 rounded-lg">
-                  {toolPanel}
                 </div>
               )}
             </div>

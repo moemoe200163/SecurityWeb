@@ -1,0 +1,171 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "安全智能體" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - img [ref=e6]
+      - generic [ref=e8]: 安全智能體
+    - navigation [ref=e9]:
+      - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+        - /url: /
+        - img [ref=e11]
+        - text: 首頁儀表板
+      - link "SOC 告警分析" [ref=e15] [cursor=pointer]:
+        - /url: /soc/analyze
+        - img [ref=e16]
+        - text: SOC 告警分析
+      - link "威脅情報調查" [ref=e19] [cursor=pointer]:
+        - /url: /threat/investigate
+        - img [ref=e20]
+        - text: 威脅情報調查
+      - generic [ref=e23]:
+        - link "滲透測試輔助" [ref=e24] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e25]
+          - text: 滲透測試輔助
+        - generic [ref=e30]:
+          - link "新建任務" [ref=e31] [cursor=pointer]:
+            - /url: /pentest/assist
+            - img [ref=e32]
+            - text: 新建任務
+          - link "任務歷史" [ref=e34] [cursor=pointer]:
+            - /url: /pentest/history
+            - img [ref=e35]
+            - text: 任務歷史
+    - generic [ref=e37]: 安全智能體 v1.0
+  - main [ref=e38]:
+    - generic [ref=e39]:
+      - generic [ref=e41]:
+        - generic [ref=e43]:
+          - generic [ref=e45]: "1"
+          - generic [ref=e46]: 接收告警
+        - generic [ref=e49]:
+          - generic [ref=e51]: "2"
+          - generic [ref=e52]: 威脅情報
+        - generic [ref=e55]:
+          - generic [ref=e57]: "3"
+          - generic [ref=e58]: 攻擊還原
+        - generic [ref=e61]:
+          - generic [ref=e63]: "4"
+          - generic [ref=e64]: 影響評估
+        - generic [ref=e67]:
+          - generic [ref=e69]: "5"
+          - generic [ref=e70]: 處置建議
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - img [ref=e75]
+          - generic [ref=e77]:
+            - heading "Penetration Testing Assistant" [level=1] [ref=e78]
+            - paragraph [ref=e79]: Select a template and configure target to begin automated security testing
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - img [ref=e82]
+            - heading "Select Test Template" [level=2] [ref=e84]
+          - generic [ref=e85]:
+            - generic [ref=e87] [cursor=pointer]:
+              - img [ref=e89]
+              - heading "網路掃描" [level=3] [ref=e94]
+              - paragraph [ref=e95]: Nmap/Nessus | 主機發現 → 端口掃描 → 服務枚舉 → 漏洞掃描 → 報告
+              - generic [ref=e96]:
+                - generic [ref=e97]: Nmap
+                - generic [ref=e98]: Nessus
+            - generic [ref=e100] [cursor=pointer]:
+              - img [ref=e102]
+              - heading "Web 滲透" [level=3] [ref=e105]
+              - paragraph [ref=e106]: SQL/XSS | URL 分析 → 爬蟲 → XSS/SQL 測試 → 漏洞驗證 → 報告
+              - generic [ref=e107]:
+                - generic [ref=e108]: SQLMap
+                - generic [ref=e109]: Burp Suite
+            - generic [ref=e111] [cursor=pointer]:
+              - img [ref=e113]
+              - heading "API 測試" [level=3] [ref=e117]
+              - paragraph [ref=e118]: REST/GraphQL | Endpoints 發現 → Auth 測試 → Injection → 報告
+              - generic [ref=e119]:
+                - generic [ref=e120]: Postman
+                - generic [ref=e121]: GraphQL
+            - generic [ref=e123] [cursor=pointer]:
+              - img [ref=e125]
+              - heading "紅隊演練" [level=3] [ref=e129]
+              - paragraph [ref=e130]: 攻擊路徑 | recon → initial access → lateral movement → persistence → report
+              - generic [ref=e131]:
+                - generic [ref=e132]: Metasploit
+                - generic [ref=e133]: Cobalt Strike
+            - generic [ref=e135] [cursor=pointer]:
+              - img [ref=e137]
+              - heading "暴力破解" [level=3] [ref=e140]
+              - paragraph [ref=e141]: SSH/HTTP | 目標識別 → 用戶枚舉 → 密碼猜測 → 報告
+              - generic [ref=e142]:
+                - generic [ref=e143]: Hydra
+                - generic [ref=e144]: John
+            - generic [ref=e146] [cursor=pointer]:
+              - img [ref=e148]
+              - heading "自訂" [level=3] [ref=e151]
+              - paragraph [ref=e152]: 自由設定 | 用戶自定義步驟流程
+              - generic [ref=e154]: Custom
+        - generic [ref=e155]:
+          - heading "Test Progress (0/5)" [level=2] [ref=e159]
+          - generic [ref=e160]:
+            - generic [ref=e163]:
+              - img [ref=e166]
+              - generic [ref=e169]:
+                - generic [ref=e170]:
+                  - generic [ref=e171]:
+                    - heading "接收告警" [level=3] [ref=e172]
+                    - generic [ref=e173]:
+                      - img
+                      - generic [ref=e174]: 待執行
+                  - button [ref=e175]:
+                    - img [ref=e176]
+                - paragraph [ref=e178]: 等待接收安全告警...
+            - generic [ref=e181]:
+              - img [ref=e184]
+              - generic [ref=e187]:
+                - generic [ref=e188]:
+                  - generic [ref=e189]:
+                    - heading "威脅情報" [level=3] [ref=e190]
+                    - generic [ref=e191]:
+                      - img
+                      - generic [ref=e192]: 待執行
+                  - button [ref=e193]:
+                    - img [ref=e194]
+                - paragraph [ref=e196]: 正在關聯威脅情報...
+            - generic [ref=e199]:
+              - img [ref=e202]
+              - generic [ref=e205]:
+                - generic [ref=e206]:
+                  - generic [ref=e207]:
+                    - heading "攻擊還原" [level=3] [ref=e208]
+                    - generic [ref=e209]:
+                      - img
+                      - generic [ref=e210]: 待執行
+                  - button [ref=e211]:
+                    - img [ref=e212]
+                - paragraph [ref=e214]: 正在還原攻擊過程...
+            - generic [ref=e217]:
+              - img [ref=e220]
+              - generic [ref=e223]:
+                - generic [ref=e224]:
+                  - generic [ref=e225]:
+                    - heading "影響評估" [level=3] [ref=e226]
+                    - generic [ref=e227]:
+                      - img
+                      - generic [ref=e228]: 待執行
+                  - button [ref=e229]:
+                    - img [ref=e230]
+                - paragraph [ref=e232]: 正在評估業務影響...
+            - generic [ref=e234]:
+              - img [ref=e237]
+              - generic [ref=e240]:
+                - generic [ref=e241]:
+                  - generic [ref=e242]:
+                    - heading "處置建議" [level=3] [ref=e243]
+                    - generic [ref=e244]:
+                      - img
+                      - generic [ref=e245]: 待執行
+                  - button [ref=e246]:
+                    - img [ref=e247]
+                - paragraph [ref=e249]: 正在生成處置建議...
+        - generic [ref=e251]:
+          - img [ref=e253]
+          - generic [ref=e255]:
+            - heading "No template selected" [level=3] [ref=e256]
+            - paragraph [ref=e257]: Choose a pentest template above to begin

@@ -9,6 +9,14 @@ import { FileText, Search, Network, Shield, Clock, ChevronRight } from 'lucide-r
 import Link from 'next/link';
 import { api, type SessionDetail } from '@/lib/api';
 
+function InputDisplay({ input }: { input: unknown }) {
+  if (!input || typeof input !== 'object') return null;
+  const obj = input as Record<string, unknown>;
+  const value = obj.indicator as string ?? obj.value as string ?? obj.target as string ?? obj.alert as string ?? null;
+  if (!value) return null;
+  return <span className="text-[--color-threat]">{String(value)}</span>;
+}
+
 const moduleIcons: Record<string, React.ReactNode> = {
   soc: <Shield className="h-5 w-5" />,
   threat: <Search className="h-5 w-5" />,
@@ -22,9 +30,9 @@ const moduleLabels: Record<string, string> = {
 };
 
 const moduleColors: Record<string, string> = {
-  soc: 'bg-red-100 text-red-700',
-  threat: 'bg-blue-100 text-blue-700',
-  pentest: 'bg-purple-100 text-purple-700',
+  soc: 'bg-[--color-soc]/10 text-[--color-soc]',
+  threat: 'bg-[--color-threat]/10 text-[--color-threat]',
+  pentest: 'bg-[--color-pentest]/10 text-[--color-pentest]',
 };
 
 function formatDate(dateString: string): string {
@@ -166,6 +174,12 @@ export default function HistoryPage() {
                         >
                           {session.status === 'completed' ? '已完成' : '進行中'}
                         </Badge>
+                      </div>
+                      {/* Input 值 + Session ID */}
+                      <div className="flex items-center gap-2 mt-1 text-sm text-gray-500 font-mono">
+                        <InputDisplay input={session.input} />
+                        <span className="text-gray-400 text-xs">·</span>
+                        <span className="text-gray-400 text-xs font-mono">ID: {session.id.slice(0, 8)}</span>
                       </div>
                       <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
                         <Clock className="h-3 w-3" />

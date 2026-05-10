@@ -1,0 +1,166 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - generic [ref=e14]:
+          - link "SOC 告警分析" [ref=e15] [cursor=pointer]:
+            - /url: /soc/analyze
+            - img [ref=e16]
+            - text: SOC 告警分析
+          - generic [ref=e18]:
+            - link "深度調查" [ref=e19] [cursor=pointer]:
+              - /url: /soc/analyze
+              - img [ref=e20]
+              - text: 深度調查
+            - link "快速分析處置" [ref=e22] [cursor=pointer]:
+              - /url: /soc/quick
+              - img [ref=e23]
+              - text: 快速分析處置
+            - link "歷史分析記錄" [ref=e25] [cursor=pointer]:
+              - /url: /soc/history
+              - img [ref=e26]
+              - text: 歷史分析記錄
+        - link "威脅情報調查" [ref=e29] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e30]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e34] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e35]
+          - text: 滲透測試輔助
+      - generic [ref=e40]: 安全智能體 v1.0
+    - main [ref=e41]:
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e45]:
+            - button "告警資訊" [ref=e46]:
+              - img [ref=e47]
+              - generic [ref=e49]: 告警資訊
+            - button "快速處置" [ref=e50]:
+              - img [ref=e51]
+              - generic [ref=e53]: 快速處置
+            - button "工具箱" [ref=e54]:
+              - img [ref=e55]
+              - generic [ref=e57]: 工具箱
+            - button "歷史" [ref=e58]:
+              - img [ref=e59]
+              - generic [ref=e63]: 歷史
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - generic [ref=e68]:
+                - heading "告警概覽" [level=3] [ref=e69]
+                - generic [ref=e70]: 待處理
+              - generic [ref=e71]: 暂无活跃工作階段
+            - generic [ref=e72]:
+              - generic [ref=e73]:
+                - generic [ref=e74]: "12"
+                - generic [ref=e75]: IOC
+              - generic [ref=e76]:
+                - generic [ref=e77]: "5"
+                - generic [ref=e78]: TTP
+              - generic [ref=e79]:
+                - generic [ref=e80]: 高
+                - generic [ref=e81]: 風險
+        - generic [ref=e82]:
+          - generic [ref=e84]:
+            - heading "威脅分析工作流" [level=2] [ref=e86]
+            - generic [ref=e87]:
+              - generic [ref=e88]: 0 / 5 步驟
+              - button "隱藏對話" [ref=e89]
+          - generic [ref=e91]:
+            - generic [ref=e94]:
+              - generic [ref=e95]:
+                - heading "告警上傳" [level=3] [ref=e97]:
+                  - img [ref=e98]
+                  - text: 告警上傳
+                - generic [ref=e101]:
+                  - generic [ref=e103] [cursor=pointer]:
+                    - img [ref=e104]
+                    - paragraph [ref=e107]: 拖拽檔案到此處，或 點擊上傳
+                    - paragraph [ref=e108]: 支援 JSON、CSV、TXT 格式
+                  - generic [ref=e113]: 或
+                  - generic [ref=e114]:
+                    - generic [ref=e115]: 貼上原始告警內容
+                    - textbox "貼上 JSON、CSV 或文字格式的告警內容..." [ref=e116]
+                  - generic [ref=e117]:
+                    - button "開始 AI 分析" [disabled]:
+                      - img
+                      - text: 開始 AI 分析
+              - generic [ref=e118]:
+                - generic [ref=e121]:
+                  - generic [ref=e122]:
+                    - img [ref=e125]
+                    - generic [ref=e127]: "1"
+                  - generic [ref=e129] [cursor=pointer]:
+                    - heading "接收告警" [level=3] [ref=e132]
+                    - generic [ref=e133]:
+                      - generic [ref=e134]:
+                        - img
+                        - generic [ref=e135]: 待執行
+                      - img [ref=e136]
+                - generic [ref=e140]:
+                  - generic [ref=e141]:
+                    - img [ref=e144]
+                    - generic [ref=e146]: "2"
+                  - generic [ref=e148] [cursor=pointer]:
+                    - heading "威脅情報" [level=3] [ref=e151]
+                    - generic [ref=e152]:
+                      - generic [ref=e153]:
+                        - img
+                        - generic [ref=e154]: 待執行
+                      - img [ref=e155]
+                - generic [ref=e159]:
+                  - generic [ref=e160]:
+                    - img [ref=e163]
+                    - generic [ref=e165]: "3"
+                  - generic [ref=e167] [cursor=pointer]:
+                    - heading "攻擊還原" [level=3] [ref=e170]
+                    - generic [ref=e171]:
+                      - generic [ref=e172]:
+                        - img
+                        - generic [ref=e173]: 待執行
+                      - img [ref=e174]
+                - generic [ref=e178]:
+                  - generic [ref=e179]:
+                    - img [ref=e182]
+                    - generic [ref=e184]: "4"
+                  - generic [ref=e186] [cursor=pointer]:
+                    - heading "影響評估" [level=3] [ref=e189]
+                    - generic [ref=e190]:
+                      - generic [ref=e191]:
+                        - img
+                        - generic [ref=e192]: 待執行
+                      - img [ref=e193]
+                - generic [ref=e196]:
+                  - generic [ref=e197]:
+                    - img [ref=e200]
+                    - generic [ref=e202]: "5"
+                  - generic [ref=e204] [cursor=pointer]:
+                    - heading "處置建議" [level=3] [ref=e207]
+                    - generic [ref=e208]:
+                      - generic [ref=e209]:
+                        - img
+                        - generic [ref=e210]: 待執行
+                      - img [ref=e211]
+              - paragraph [ref=e214]: 上傳告警數據開始分析
+            - generic [ref=e216]:
+              - heading "AI 對話助手" [level=3] [ref=e218]:
+                - img [ref=e219]
+                - text: AI 對話助手
+              - generic [ref=e224]:
+                - img [ref=e225]
+                - paragraph [ref=e228]: 可以在分析過程中隨時提問
+                - paragraph [ref=e229]: 例如：「幫我查這個 IP 的情報」
+              - generic [ref=e231]:
+                - textbox "輸入問題..." [disabled]
+                - button [disabled]:
+                  - img
+  - alert [ref=e232]

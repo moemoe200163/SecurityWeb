@@ -1,0 +1,17 @@
+[  132291ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=1mslj:0
+[  133642ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=5qso8:0
+[  133671ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history:0
+[  133748ms] Error: Minified React error #418; visit https://react.dev/errors/418?args[]=HTML&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+    at rX (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:47213)
+    at iu (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:98254)
+    at sd (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:138944)
+    at http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:133830
+    at se (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:133931)
+    at s$ (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:160495)
+    at MessagePort.O (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:8660)
+[  133748ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=19hu7:0
+[  133760ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=1dg5o:0
+[  133763ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=29cf6:0
+[  133764ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=1kodi:0
+[  139308ms] [WARNING] The resource http://localhost:3000/_next/static/media/797e433ab948586e-s.p.0.q-h669a_dqa.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/threat/bgp:0
+[  139308ms] [WARNING] The resource http://localhost:3000/_next/static/media/caa3a2e1cccd8315-s.p.16t1db8_9y2o~.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://localhost:3000/threat/bgp:0

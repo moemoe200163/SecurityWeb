@@ -1,0 +1,24 @@
+[     151ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/acaa43be-0465-411d-9810-b525f86be31a:0
+[     151ms] [ERROR] Failed to load session: TypeError: Failed to fetch
+    at t (http://localhost:3000/_next/static/chunks/10aa8tv1d_94h.js:1:362)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/10aa8tv1d_94h.js:1:656)
+    at http://localhost:3000/_next/static/chunks/10aa8tv1d_94h.js:1:17735
+    at http://localhost:3000/_next/static/chunks/10aa8tv1d_94h.js:1:15880
+    at iv (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:102969)
+    at e (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:128131)
+    at e (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:128263)
+    at e (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:128376)
+    at e (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:128376)
+    at e (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:128376) @ http://localhost:3000/_next/static/chunks/10aa8tv1d_94h.js:0
+[   12463ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/acaa43be-0465-411d-9810-b525f86be31a:0
+[   12463ms] [ERROR] Failed to load session: TypeError: Failed to fetch
+    at t (http://localhost:3000/_next/static/chunks/10aa8tv1d_94h.js:1:362)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/10aa8tv1d_94h.js:1:656)
+    at http://localhost:3000/_next/static/chunks/10aa8tv1d_94h.js:1:16428
+    at http://localhost:3000/_next/static/chunks/10aa8tv1d_94h.js:1:17650
+    at iv (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:102969)
+    at e (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:128131)
+    at e (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:128118)
+    at up (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:128402)
+    at ud (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:126670)
+    at up (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:127053) @ http://localhost:3000/_next/static/chunks/10aa8tv1d_94h.js:0

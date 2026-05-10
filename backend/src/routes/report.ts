@@ -1,7 +1,14 @@
 import type { FastifyInstance } from 'fastify';
-import PDFDocument from 'pdfkit';
+import { spawn } from 'child_process';
 import { miniMaxAdapter } from '../services/minimaxAdapter.js';
 import type { PentestInput, SessionData } from '../services/types.js';
+import PDFDocument from 'pdfkit';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 interface Vulnerability {
   name: string;
@@ -37,8 +44,32 @@ export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
       const riskAssessment = generateRiskAssessment(vulnerabilities, input);
       const remediation = generateRemediation(vulnerabilities);
 
-      // Generate PDF
-      const pdfBuffer = await generatePDF(session, input, steps, vulnerabilities, riskAssessment, remediation);
+      // Build report data for WeasyPrint
+      const reportData = {
+        session_id: session.id,
+        created_at: session.createdAt,
+        status: session.status,
+        input: input || {},
+        summary: {
+          critical: vulnerabilities.filter(v => v.riskLevel === 'Critical').length,
+          high: vulnerabilities.filter(v => v.riskLevel === 'High').length,
+          medium: vulnerabilities.filter(v => v.riskLevel === 'Medium').length,
+          low: vulnerabilities.filter(v => v.riskLevel === 'Low').length,
+          info: vulnerabilities.filter(v => v.riskLevel === 'Info').length,
+        },
+        vulnerabilities: vulnerabilities.map(v => ({
+          name: v.name,
+          description: v.description,
+          riskLevel: v.riskLevel,
+          cvss: v.cvss,
+          cve: v.cve,
+        })),
+        risk_assessment: riskAssessment,
+        remediation: remediation,
+      };
+
+      // Generate PDF using WeasyPrint
+      const pdfBuffer = await generatePDFWeasyPrint(reportData);
 
       // Set headers for PDF download
       reply.header('Content-Type', 'application/pdf');
@@ -48,6 +79,51 @@ export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
     } catch (error) {
       console.error('Report generation error:', error);
       return reply.status(500).send({ error: 'Failed to generate report' });
+    }
+  });
+
+  // GET /api/report/:sessionId/json - Get structured report data for frontend PDF generation
+  fastify.get<{ Params: { sessionId: string } }>('/:sessionId/json', async (request, reply) => {
+    try {
+      const { sessionId } = request.params;
+
+      const session = await miniMaxAdapter.getSession(sessionId);
+      if (!session) {
+        return reply.status(404).send({ error: 'Session not found' });
+      }
+
+      const input = session.input as PentestInput | undefined;
+      const steps = session.steps.sort((a, b) => a.order - b.order);
+      const vulnerabilities = extractVulnerabilities(session, steps);
+      const riskAssessment = generateRiskAssessment(vulnerabilities, input);
+      const remediation = generateRemediation(vulnerabilities);
+
+      return reply.send({
+        sessionId: session.id,
+        createdAt: session.createdAt,
+        status: session.status,
+        input,
+        steps: steps.map(s => ({ title: s.title, content: s.content, status: s.status })),
+        vulnerabilities: vulnerabilities.map(v => ({
+          name: v.name,
+          description: v.description,
+          riskLevel: v.riskLevel,
+          cvss: v.cvss,
+          cve: v.cve,
+        })),
+        riskAssessment,
+        remediation,
+        summary: {
+          critical: vulnerabilities.filter(v => v.riskLevel === 'Critical').length,
+          high: vulnerabilities.filter(v => v.riskLevel === 'High').length,
+          medium: vulnerabilities.filter(v => v.riskLevel === 'Medium').length,
+          low: vulnerabilities.filter(v => v.riskLevel === 'Low').length,
+          info: vulnerabilities.filter(v => v.riskLevel === 'Info').length,
+        },
+      });
+    } catch (error) {
+      console.error('Report JSON error:', error);
+      return reply.status(500).send({ error: 'Failed to get report data' });
     }
   });
 }
@@ -237,6 +313,18 @@ async function generatePDF(
           Subject: 'Penetration Test Report',
         },
       });
+
+      // Register Chinese font
+      // Use absolute path for font file
+      const fontPath = '/app/fonts/NotoSansCJK-Regular.otf';
+      if (fs.existsSync(fontPath)) {
+        const fontBuffer = fs.readFileSync(fontPath);
+        doc.registerFont('NotoSansCJK', fontBuffer, 'NotoSansCJK-Regular');
+        doc.font('NotoSansCJK');
+      } else {
+        console.warn('Chinese font not found, using fallback');
+        doc.font('Helvetica');
+      }
 
       const chunks: Buffer[] = [];
       doc.on('data', (chunk: Buffer) => chunks.push(chunk));
@@ -548,6 +636,86 @@ async function generatePDF(
       // End the PDF document
       doc.end();
     } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+// WeasyPrint PDF generation function
+async function generatePDFWeasyPrint(reportData: {
+  session_id: string;
+  created_at: string;
+  status: string;
+  input: Record<string, string>;
+  summary: { critical: number; high: number; medium: number; low: number; info: number };
+  vulnerabilities: Array<{ name: string; description: string; riskLevel: string; cvss: string; cve?: string }>;
+  risk_assessment: { scope: string; attackVector: string; impact: string };
+  remediation: { shortTerm: string[]; longTerm: string[] };
+}): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    // Use /tmp for temp files (writable by any user)
+    const tmpDir = '/tmp';
+    const tmpJsonFile = path.join(tmpDir, `report_${Date.now()}.json`);
+    const tmpPdfFile = path.join(tmpDir, `report_${Date.now()}.pdf`);
+
+    try {
+      // Write JSON data to temp file
+      fs.writeFileSync(tmpJsonFile, JSON.stringify(reportData, null, 2), 'utf-8');
+
+      // Call Python WeasyPrint script
+      const pythonCmd = process.env.PYTHON_CMD || 'python3';
+      // Use absolute path for script
+      const scriptPath = '/app/scripts/generate_pdf.py';
+
+      const proc = spawn(pythonCmd, [scriptPath, tmpJsonFile, '-o', tmpPdfFile], {
+        cwd: path.join(__dirname, '..'),
+        stdio: ['pipe', 'pipe', 'pipe'],
+      });
+
+      let stderr = '';
+
+      proc.stderr.on('data', (data: Buffer) => {
+        stderr += data.toString();
+      });
+
+      proc.on('close', (code: number) => {
+        // Clean up temp JSON file
+        try {
+          fs.unlinkSync(tmpJsonFile);
+        } catch (e) {
+          // Ignore cleanup errors
+        }
+
+        if (code === 0) {
+          try {
+            const pdfBuffer = fs.readFileSync(tmpPdfFile);
+            // Clean up temp PDF file
+            fs.unlinkSync(tmpPdfFile);
+            resolve(pdfBuffer);
+          } catch (e) {
+            reject(new Error('Failed to read generated PDF'));
+          }
+        } else {
+          console.error('WeasyPrint error:', stderr);
+          reject(new Error(`WeasyPrint failed: ${stderr}`));
+        }
+      });
+
+      proc.on('error', (err: Error) => {
+        try {
+          fs.unlinkSync(tmpJsonFile);
+        } catch (e) {
+          // Ignore cleanup errors
+        }
+        reject(err);
+      });
+    } catch (error) {
+      // Clean up temp files on error
+      try {
+        if (fs.existsSync(tmpJsonFile)) fs.unlinkSync(tmpJsonFile);
+      } catch (e) {
+        // Ignore cleanup errors
+      }
       reject(error);
     }
   });

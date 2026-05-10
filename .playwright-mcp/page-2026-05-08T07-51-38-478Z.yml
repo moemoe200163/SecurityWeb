@@ -1,0 +1,34 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "SOC 告警分析" [ref=e18] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e19]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e22] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e23]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e27] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e28]
+          - text: 滲透測試輔助
+      - generic [ref=e33]: 安全智能體 v1.0
+    - main [ref=e34]:
+      - generic [ref=e36]:
+        - heading "404" [level=1] [ref=e37]
+        - heading "This page could not be found." [level=2] [ref=e39]
+  - alert [ref=e40]

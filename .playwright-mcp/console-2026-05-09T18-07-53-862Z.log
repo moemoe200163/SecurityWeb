@@ -1,0 +1,5 @@
+[    9815ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/ip/check?ip=8.8.8.8:0
+[    9816ms] [ERROR] IP reputation check failed: Error: Internal server error
+    at t (http://localhost:3000/_next/static/chunks/11f484lsd76oa.js:1:456)
+    at async O (http://localhost:3000/_next/static/chunks/11f484lsd76oa.js:1:9308) @ http://localhost:3000/_next/static/chunks/11f484lsd76oa.js:0
+[    9835ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/threat/investigate:0

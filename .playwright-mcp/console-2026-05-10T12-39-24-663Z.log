@@ -1,0 +1,1063 @@
+[      93ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:2431
+[     105ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:2431
+[  200194ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  200196ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  202164ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  202165ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  204170ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  204171ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  206165ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  206165ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  208166ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  208167ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  210165ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  210166ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  212171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  212172ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  214166ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  214166ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  216168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  216169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  218168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  218168ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  220171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  220172ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  222169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  222170ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  224170ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  224170ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  226167ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  226167ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  228173ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  228174ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  230169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  230170ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  232170ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  232170ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  234171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  234172ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  236168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  236169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  238168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  238168ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  240170ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  240171ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  242169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  242170ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  244168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  244168ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  246173ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  246174ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  248172ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  248174ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  250178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  250179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  252171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  252171ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  254171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  254172ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  256169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  256169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  258174ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  258175ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  260174ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  260174ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  262173ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  262174ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  264172ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  264172ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  266168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  266168ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  268169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  268169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  270172ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  270173ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  272175ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  272176ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  274168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  274169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  276168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  276168ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  278171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  278172ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  280172ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  280172ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  282170ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  282171ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  284174ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  284175ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  286169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  286169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  288171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  288171ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  290171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  290172ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  292171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  292172ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  294173ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  294174ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  296168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  296168ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  298169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  298169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  300176ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  300177ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  302174ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  302175ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  304168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  304169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  306170ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  306170ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  308171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  308171ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  310180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  310181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  312176ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  312177ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  314178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  314179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  316169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  316169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  318171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  318172ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  320173ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  320174ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  322171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  322171ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  324178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  324179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  326168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  326169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  328170ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  328171ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  330184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  330184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  332177ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  332178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  334168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  334168ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  336170ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  336170ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  338173ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  338174ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  340175ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  340176ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  342177ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  342178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  344173ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  344174ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  346169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  346169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  348174ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  348174ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  350170ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  350170ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  352172ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  352173ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  354174ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  354175ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  356169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  356169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  358169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  358169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  360171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  360171ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  362169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  362170ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  364168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  364169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  366169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  366170ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  368171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  368171ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  370174ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  370175ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  372175ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  372176ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  374173ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  374173ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  376168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  376168ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  378173ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  378173ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  380173ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  380173ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  382173ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  382174ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  384174ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  384175ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  386169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  386169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  388170ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  388170ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  390174ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  390175ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  392171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  392172ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  394168ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  394169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  396169ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  396169ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  398171ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  398171ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  400198ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  400198ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  402186ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  402187ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  404185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  404186ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  406178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  406178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  408186ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  408187ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  410187ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  410188ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  412180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  412181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  414187ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  414188ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  416176ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  416177ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  418177ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  418178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  420192ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  420193ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  422186ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  422186ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  424177ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  424178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  426179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  426179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  428181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  428182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  430181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  430182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  432186ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  432186ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  434181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  434182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  436176ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  436176ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  438175ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  438175ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  440182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  440184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  442186ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  442186ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  444185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  444186ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  446187ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  446187ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  448179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  448180ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  450181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  450182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  452188ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  452190ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  454188ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  454189ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  456179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  456180ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  458180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  458181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  460177ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  460178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  462186ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  462186ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  464179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  464179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  466177ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  466177ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  468188ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  468188ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  470179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  470179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  472175ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  472176ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  474190ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  474190ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  476177ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  476177ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  478182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  478183ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  480185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  480185ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  482189ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  482190ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  484180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  484180ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  486179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  486179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  488181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  488182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  490179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  490180ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  492183ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  492183ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  494180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  494181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  496177ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  496177ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  498180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  498180ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  500180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  500181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  502182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  502183ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  504184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  504185ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  506181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  506181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  508178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  508178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  510182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  510184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  512179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  512180ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  514179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  514179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  516178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  516179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  518178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  518179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  520182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  520182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  522181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  522181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  524180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  524181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  526177ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  526177ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  528184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  528184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  530182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  530182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  532178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  532179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  534184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  534184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  536177ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  536178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  538180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  538181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  540182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  540183ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  542181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  542181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  544180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  544181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  546180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  546181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  548180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  548181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  550181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  550182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  552184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  552184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  554185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  554185ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  556178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  556178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  558178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  558179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  560180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  560181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  562185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  562186ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  564182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  564182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  566178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  566178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  568181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  568182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  570184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  570184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  572181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  572181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  574179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  574179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  576181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  576182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  578182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  578182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  580182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  580183ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  582184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  582185ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  584180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  584180ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  586179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  586179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  588184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  588184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  590189ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  590190ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  592186ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  592187ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  594186ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  594187ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  596178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  596178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  598179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  598179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  600189ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  600189ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  602181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  602181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  604188ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  604188ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  606182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  606183ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  608185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  608186ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  610181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  610181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  612188ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  612189ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  614182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  614182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  616178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  616178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  618178ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  618178ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  620190ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  620191ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  622182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  622182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  624185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  624185ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  626179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  626179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  628181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  628181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  630185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  630186ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  632181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  632181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  634180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  634180ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  636181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  636182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  638182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  638182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  640186ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  640186ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  642184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  642184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  644185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  644185ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  646180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  646180ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  648181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  648182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  650184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  650184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  652183ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  652184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  654185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  654186ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  656183ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  656183ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  658184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  658184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  660182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  660182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  662183ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  662184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  664181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  664181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  666186ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  666187ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  668184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  668184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  670184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  670184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  672187ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  672188ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  674181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  674182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  676180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  676181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  678179ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  678179ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  680187ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  680188ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  682184ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  682184ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  684191ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  684192ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  686180ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  686181ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  688185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  688185ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  690185ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  690185ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  692192ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  692193ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  694182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  694183ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  696181ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  696182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  698189ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  698189ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  700182ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  700182ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  702187ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  702188ms] [ERROR] Polling error: Error: Internal server error
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:33:15)
+    at async poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:46) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  704174ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  704174ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:27:28)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:50:20)
+    at poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:60) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  706171ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  706171ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:27:28)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:50:20)
+    at poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:60) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  708172ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  708172ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:27:28)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:50:20)
+    at poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:60) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  710172ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  710172ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:27:28)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:50:20)
+    at poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:60) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  712172ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  712172ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:27:28)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:50:20)
+    at poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:60) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  714171ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  714171ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:27:28)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:50:20)
+    at poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:60) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  716171ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  716171ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:27:28)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:50:20)
+    at poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:60) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  718172ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/661f9b71-57aa-4c8a-a673-5ef232107d94:0
+[  718172ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at request (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:27:28)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:50:20)
+    at poll (http://localhost:3000/_next/static/chunks/frontend_src_0j-in8r._.js:192:60) @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[  727862ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed:  @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[  728868ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[  729871ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[  730876ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: Connection closed before receiving a handshake response @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[  971883ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: WebSocket opening handshake timed out @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[ 1158243ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: Connection closed before receiving a handshake response @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[ 1163247ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[ 1168250ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[ 1173254ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[ 1178260ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[ 1183270ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[ 1188281ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[ 1193299ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=C70ERS4FxtRkElAHoG7XQ' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299

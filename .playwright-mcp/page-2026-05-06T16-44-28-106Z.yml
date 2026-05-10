@@ -1,0 +1,89 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - generic [ref=e14]:
+          - link "SOC 告警分析" [ref=e15] [cursor=pointer]:
+            - /url: /soc/analyze
+            - img [ref=e16]
+            - text: SOC 告警分析
+          - generic [ref=e18]:
+            - link "深度調查" [ref=e19] [cursor=pointer]:
+              - /url: /soc/analyze
+              - img [ref=e20]
+              - text: 深度調查
+            - link "歷史分析記錄" [ref=e22] [cursor=pointer]:
+              - /url: /soc/history
+              - img [ref=e23]
+              - text: 歷史分析記錄
+        - link "威脅情報調查" [ref=e26] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e27]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e31] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e32]
+          - text: 滲透測試輔助
+      - generic [ref=e37]: 安全智能體 v1.0
+    - main [ref=e38]:
+      - generic [ref=e40]:
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - heading "威脅分析工作流" [level=2] [ref=e44]
+            - generic [ref=e45]:
+              - img [ref=e46]
+              - generic [ref=e49]: 分析完成
+          - generic [ref=e50]:
+            - generic [ref=e51]: 5 / 5 步驟
+            - generic [ref=e52]:
+              - button "複製報告" [ref=e53]:
+                - img [ref=e54]
+              - button "下載報告" [ref=e57]:
+                - img [ref=e58]
+              - button "分享連結" [ref=e61]:
+                - img [ref=e62]
+              - button "刷新數據" [ref=e68]:
+                - img [ref=e69]
+              - button "終止工作階段" [ref=e74]:
+                - img [ref=e75]
+            - button "重新分析" [ref=e79]
+        - generic [ref=e85]:
+          - generic [ref=e88]:
+            - img [ref=e90]
+            - generic [ref=e93]:
+              - paragraph [ref=e94]: 接收告警
+              - paragraph [ref=e95]: "## 接收告警"
+            - generic [ref=e96]: "1"
+          - generic [ref=e99]:
+            - img [ref=e101]
+            - generic [ref=e104]:
+              - paragraph [ref=e105]: 威脅情報
+              - paragraph [ref=e106]: "## 威脅情報"
+            - generic [ref=e107]: "2"
+          - generic [ref=e110]:
+            - img [ref=e112]
+            - generic [ref=e115]:
+              - paragraph [ref=e116]: 攻擊還原
+              - paragraph [ref=e117]: "## 攻擊還原"
+            - generic [ref=e118]: "3"
+          - generic [ref=e121]:
+            - img [ref=e123]
+            - generic [ref=e126]:
+              - paragraph [ref=e127]: 影響評估
+              - paragraph [ref=e128]: "## 影響評估"
+            - generic [ref=e129]: "4"
+          - generic [ref=e131]:
+            - img [ref=e133]
+            - generic [ref=e136]:
+              - paragraph [ref=e137]: 處置建議
+              - paragraph [ref=e138]: 攻擊者透過 SSH 暴力破解或憑證填充取得兩台主機 root 權限後，部署自動化破壞性攻擊。攻擊鏈包含：停止 Wazuh 安全代理 → 修改 crontab 建立持久化 → 批量刪除系統/日誌檔案並篡改完整性校驗值，典型勒索軟體或資料破壞攻擊前兆。⚠️ **待查詢攻擊者來源 IP 與遭濫用帳戶**。
+            - generic [ref=e139]: "5"
+  - alert [ref=e140]

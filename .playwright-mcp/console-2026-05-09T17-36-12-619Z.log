@@ -1,0 +1,12 @@
+[   11713ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/ip/check?ip=1.1.1.1:0
+[   11713ms] [ERROR] IP reputation check failed: TypeError: Failed to fetch
+    at t (http://localhost:3000/_next/static/chunks/11f484lsd76oa.js:1:362)
+    at Object.check (http://localhost:3000/_next/static/chunks/11f484lsd76oa.js:1:1608)
+    at O (http://localhost:3000/_next/static/chunks/11f484lsd76oa.js:1:9323)
+    at sJ (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:162749)
+    at http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:168645
+    at tD (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:30679)
+    at s4 (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:163982)
+    at fz (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:200718)
+    at fT (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:200540) @ http://localhost:3000/_next/static/chunks/11f484lsd76oa.js:0
+[   11716ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/threat/investigate:0

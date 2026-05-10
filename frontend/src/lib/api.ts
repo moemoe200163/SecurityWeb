@@ -309,14 +309,28 @@ export const api = {
 
   // Settings
   settings: {
-    async getAI(): Promise<{ provider: string; model?: string; baseUrl?: string }> {
+    async getAI(): Promise<{
+      provider: string;
+      minimaxApiKey?: string;
+      minimaxApiEndpoint?: string;
+      minimaxModel?: string;
+      ollamaEndpoint?: string;
+      hasMinimaxKey: boolean;
+      hasOllamaEndpoint: boolean;
+    }> {
       return request('/api/settings/ai');
     },
-    async updateAI(data: { provider?: string; model?: string; baseUrl?: string }): Promise<{ success: boolean }> {
+    async updateAI(data: {
+      provider?: string;
+      minimaxApiKey?: string;
+      minimaxApiEndpoint?: string;
+      minimaxModel?: string;
+      ollamaEndpoint?: string;
+    }): Promise<{ success: boolean; message?: string }> {
       return request('/api/settings/ai', { method: 'POST', body: data });
     },
-    async testAI(provider: string): Promise<{ success: boolean; message: string }> {
-      return request('/api/settings/ai/test', { method: 'POST', body: { provider } });
+    async testAI(data: { provider: string; ollamaEndpoint?: string }): Promise<{ success: boolean; message: string }> {
+      return request('/api/settings/ai/test', { method: 'POST', body: data });
     },
   },
 

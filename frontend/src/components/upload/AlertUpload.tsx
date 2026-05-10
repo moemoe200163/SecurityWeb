@@ -27,6 +27,18 @@ export function AlertUpload({ onSubmit, disabled = false }: AlertUploadProps) {
     setIsDragOver(false);
   }, []);
 
+  const processFile = async (file: File) => {
+    const validTypes = ['application/json', 'text/csv', 'text/plain'];
+    if (!validTypes.includes(file.type) && !file.name.endsWith('.json') && !file.name.endsWith('.csv') && !file.name.endsWith('.txt')) {
+      alert('請上傳 JSON、CSV 或 TXT 檔案');
+      return;
+    }
+
+    setFileName(file.name);
+    const content = await file.text();
+    setPasteContent(content);
+  };
+
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
@@ -45,18 +57,6 @@ export function AlertUpload({ onSubmit, disabled = false }: AlertUploadProps) {
     if (file) {
       processFile(file);
     }
-  };
-
-  const processFile = async (file: File) => {
-    const validTypes = ['application/json', 'text/csv', 'text/plain'];
-    if (!validTypes.includes(file.type) && !file.name.endsWith('.json') && !file.name.endsWith('.csv') && !file.name.endsWith('.txt')) {
-      alert('請上傳 JSON、CSV 或 TXT 檔案');
-      return;
-    }
-
-    setFileName(file.name);
-    const content = await file.text();
-    setPasteContent(content);
   };
 
   const handleSubmit = () => {

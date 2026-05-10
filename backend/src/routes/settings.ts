@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../db/client.js';
-import { getAIService, invalidateCache, getCurrentProvider } from '../services/AIServiceFactory.js';
+import { getAIService, invalidateCache } from '../services/AIServiceFactory.js';
 
 const updateAISettingsSchema = z.object({
   provider: z.enum(['minimax', 'ollama']).optional(),

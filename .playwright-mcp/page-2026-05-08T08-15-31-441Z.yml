@@ -1,0 +1,324 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - generic [ref=e17]:
+          - link "SOC 告警分析" [ref=e18] [cursor=pointer]:
+            - /url: /soc/analyze
+            - img [ref=e19]
+            - text: SOC 告警分析
+          - generic [ref=e21]:
+            - link "深度調查" [ref=e22] [cursor=pointer]:
+              - /url: /soc/analyze
+              - img [ref=e23]
+              - text: 深度調查
+            - link "歷史分析記錄" [ref=e25] [cursor=pointer]:
+              - /url: /soc/history
+              - img [ref=e26]
+              - text: 歷史分析記錄
+            - link "分析Demo" [ref=e28] [cursor=pointer]:
+              - /url: /soc/demo
+              - img [ref=e29]
+              - text: 分析Demo
+        - link "威脅情報調查" [ref=e32] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e33]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e37] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e38]
+          - text: 滲透測試輔助
+      - generic [ref=e43]: 安全智能體 v1.0
+    - main [ref=e44]:
+      - generic [ref=e45]:
+        - generic [ref=e48]:
+          - generic [ref=e49]:
+            - img [ref=e51]
+            - generic [ref=e53]:
+              - heading "SOC 告警分析" [level=1] [ref=e54]
+              - paragraph [ref=e55]: 安全事件智能分析与响应系统
+          - generic [ref=e57]:
+            - img [ref=e58]
+            - text: 分析完成
+        - main [ref=e61]:
+          - generic [ref=e64]:
+            - generic [ref=e65]:
+              - img [ref=e66]
+              - generic [ref=e69]: 2025-03-27 23:10:20
+            - generic [ref=e71]:
+              - img [ref=e72]
+              - generic [ref=e75]: 英国
+            - generic [ref=e77]:
+              - img [ref=e78]
+              - generic [ref=e82]: 84.17.51.2
+              - generic [ref=e83]: →
+              - generic [ref=e84]: 45.78.218.192:25976
+            - generic [ref=e85]:
+              - generic [ref=e86]: 中危
+              - generic [ref=e87]: 成功
+          - generic [ref=e88]:
+            - heading "分析步骤" [level=2] [ref=e89]
+            - generic [ref=e90]:
+              - generic [ref=e91]:
+                - button "任务规划 生成分析计划，多角度分析告警" [ref=e92]:
+                  - img [ref=e94]
+                  - img [ref=e97]
+                  - generic [ref=e99]:
+                    - generic [ref=e100]: 任务规划
+                    - generic [ref=e101]: 生成分析计划，多角度分析告警
+                - generic [ref=e104]: ✓ 步骤1已完成 - 生成分析计划，多角度分析告警
+              - generic [ref=e105]:
+                - button "告警分析 模拟安全运营专家，进行溯源分析" [ref=e106]:
+                  - img [ref=e108]
+                  - img [ref=e111]
+                  - generic [ref=e113]:
+                    - generic [ref=e114]: 告警分析
+                    - generic [ref=e115]: 模拟安全运营专家，进行溯源分析
+                - generic [ref=e118]: ✓ 步骤2已完成 - 模拟安全运营专家，进行溯源分析
+              - generic [ref=e119]:
+                - button "威胁情报 模拟威胁情报专家，收集IOCs信息" [ref=e120]:
+                  - img [ref=e122]
+                  - img [ref=e125]
+                  - generic [ref=e128]:
+                    - generic [ref=e129]: 威胁情报
+                    - generic [ref=e130]: 模拟威胁情报专家，收集IOCs信息
+                - generic [ref=e133]: ✓ 步骤3已完成 - 模拟威胁情报专家，收集IOCs信息
+              - generic [ref=e134]:
+                - button "事件分析 模拟威胁分析专家，评估业务影响" [ref=e135]:
+                  - img [ref=e137]
+                  - img [ref=e140]
+                  - generic [ref=e142]:
+                    - generic [ref=e143]: 事件分析
+                    - generic [ref=e144]: 模拟威胁分析专家，评估业务影响
+                - generic [ref=e147]: ✓ 步骤4已完成 - 模拟威胁分析专家，评估业务影响
+              - generic [ref=e148]:
+                - button "代码生成 模拟编码专家，创建响应脚本" [ref=e149]:
+                  - img [ref=e151]
+                  - img [ref=e154]
+                  - generic [ref=e159]:
+                    - generic [ref=e160]: 代码生成
+                    - generic [ref=e161]: 模拟编码专家，创建响应脚本
+                - generic [ref=e164]: ✓ 步骤5已完成 - 模拟编码专家，创建响应脚本
+              - generic [ref=e165]:
+                - button "剧本执行 生成完整响应剧本和事件报告" [ref=e166]:
+                  - img [ref=e168]
+                  - img [ref=e171]
+                  - generic [ref=e173]:
+                    - generic [ref=e174]: 剧本执行
+                    - generic [ref=e175]: 生成完整响应剧本和事件报告
+                - generic [ref=e178]: ✓ 步骤6已完成 - 生成完整响应剧本和事件报告
+          - generic [ref=e179]:
+            - generic [ref=e180]:
+              - generic [ref=e181]:
+                - img [ref=e182]
+                - heading "威胁情报分析" [level=2] [ref=e186]
+              - generic [ref=e187]:
+                - generic [ref=e188]:
+                  - img [ref=e190]
+                  - generic [ref=e193]:
+                    - generic [ref=e194]: 微步验证
+                    - generic [ref=e195]: IP 84.17.51.2 风险等级(高危)
+                  - generic [ref=e196]: 高
+                - generic [ref=e197]:
+                  - img [ref=e199]
+                  - generic [ref=e202]:
+                    - generic [ref=e203]: VirusTotal
+                    - generic [ref=e204]: 检测率 15/70，发现恶意文件
+                  - generic [ref=e205]: 中
+                - generic [ref=e206]:
+                  - img [ref=e208]
+                  - generic [ref=e211]:
+                    - generic [ref=e212]: Shodan
+                    - generic [ref=e213]: 目标IP存在HTTP服务(端口25976)
+                  - generic [ref=e214]: 低
+                - generic [ref=e215]:
+                  - img [ref=e217]
+                  - generic [ref=e220]:
+                    - generic [ref=e221]: CrowdSec
+                    - generic [ref=e222]: 该IP曾参与自动化扫描活动
+                  - generic [ref=e223]: 中
+            - generic [ref=e224]:
+              - generic [ref=e225]:
+                - img [ref=e226]
+                - heading "IOC 清单" [level=2] [ref=e230]
+              - table [ref=e232]:
+                - rowgroup [ref=e233]:
+                  - row "类型 值 置信度" [ref=e234]:
+                    - columnheader "类型" [ref=e235]
+                    - columnheader "值" [ref=e236]
+                    - columnheader "置信度" [ref=e237]
+                - rowgroup [ref=e238]:
+                  - row "IP地址 84.17.51.2 85%" [ref=e239]:
+                    - cell "IP地址" [ref=e240]
+                    - cell "84.17.51.2" [ref=e241]
+                    - cell "85%" [ref=e242]
+                  - row "HTTP URI /flhaagfkjw?cb540194=1 90%" [ref=e243]:
+                    - cell "HTTP URI" [ref=e244]
+                    - cell "/flhaagfkjw?cb540194=1" [ref=e245]
+                    - cell "90%" [ref=e246]
+                  - 'row "HTTP头部 zzzheadertest: test1\\rtest1 95%" [ref=e247]':
+                    - cell "HTTP头部" [ref=e248]
+                    - 'cell "zzzheadertest: test1\\rtest1" [ref=e249]'
+                    - cell "95%" [ref=e250]
+                  - row "端口 25976/TCP 75%" [ref=e251]:
+                    - cell "端口" [ref=e252]
+                    - cell "25976/TCP" [ref=e253]
+                    - cell "75%" [ref=e254]
+                  - row "主机地址 10.211.55.4 (Host头) 70%" [ref=e255]:
+                    - cell "主机地址" [ref=e256]
+                    - cell "10.211.55.4 (Host头)" [ref=e257]
+                    - cell "70%" [ref=e258]
+          - generic [ref=e259]:
+            - generic [ref=e260]:
+              - img [ref=e261]
+              - heading "攻击链分析 (ATT&CK)" [level=2] [ref=e263]
+            - table [ref=e265]:
+              - rowgroup [ref=e266]:
+                - row "时间 阶段 TTP IOC 描述" [ref=e267]:
+                  - columnheader "时间" [ref=e268]
+                  - columnheader "阶段" [ref=e269]
+                  - columnheader "TTP" [ref=e270]
+                  - columnheader "IOC" [ref=e271]
+                  - columnheader "描述" [ref=e272]
+              - rowgroup [ref=e273]:
+                - 'row "23:10:20 侦察 T1595 IP: 84.17.51.2 主动扫描" [ref=e274]':
+                  - cell "23:10:20" [ref=e275]
+                  - cell "侦察" [ref=e276]
+                  - cell "T1595" [ref=e277]
+                  - 'cell "IP: 84.17.51.2" [ref=e278]'
+                  - cell "主动扫描" [ref=e279]
+                - 'row "23:10:20 初始访问 T1190 URI: /flhaagfkjw 利用公共应用漏洞" [ref=e280]':
+                  - cell "23:10:20" [ref=e281]
+                  - cell "初始访问" [ref=e282]
+                  - cell "T1190" [ref=e283]
+                  - 'cell "URI: /flhaagfkjw" [ref=e284]'
+                  - cell "利用公共应用漏洞" [ref=e285]
+                - 'row "23:10:20 防御规避 T1562.003 HTTP头: zzzheadertest CRLF注入" [ref=e286]':
+                  - cell "23:10:20" [ref=e287]
+                  - cell "防御规避" [ref=e288]
+                  - cell "T1562.003" [ref=e289]
+                  - 'cell "HTTP头: zzzheadertest" [ref=e290]'
+                  - cell "CRLF注入" [ref=e291]
+                - 'row "23:10:20 发现 T1083 HTTP状态码: 200 文件与目录发现" [ref=e292]':
+                  - cell "23:10:20" [ref=e293]
+                  - cell "发现" [ref=e294]
+                  - cell "T1083" [ref=e295]
+                  - 'cell "HTTP状态码: 200" [ref=e296]'
+                  - cell "文件与目录发现" [ref=e297]
+                - 'row "23:10:20 收集 T1213 攻击结果: 成功 信息库数据收集" [ref=e298]':
+                  - cell "23:10:20" [ref=e299]
+                  - cell "收集" [ref=e300]
+                  - cell "T1213" [ref=e301]
+                  - 'cell "攻击结果: 成功" [ref=e302]'
+                  - cell "信息库数据收集" [ref=e303]
+          - generic [ref=e304]:
+            - generic [ref=e305]:
+              - img [ref=e306]
+              - heading "处置追踪" [level=2] [ref=e308]
+            - table [ref=e310]:
+              - rowgroup [ref=e311]:
+                - row "阶段 操作 系统 结果" [ref=e312]:
+                  - columnheader "阶段" [ref=e313]
+                  - columnheader "操作" [ref=e314]
+                  - columnheader "系统" [ref=e315]
+                  - columnheader "结果" [ref=e316]
+              - rowgroup [ref=e317]:
+                - row "初始响应 network_isolation 边界防火墙 成功" [ref=e318]:
+                  - cell "初始响应" [ref=e319]
+                  - cell "network_isolation" [ref=e320]
+                  - cell "边界防火墙" [ref=e321]
+                  - cell "成功" [ref=e322]:
+                    - generic [ref=e323]:
+                      - img [ref=e324]
+                      - text: 成功
+                - row "取证分析 resource_security Web服务器 成功" [ref=e327]:
+                  - cell "取证分析" [ref=e328]
+                  - cell "resource_security" [ref=e329]
+                  - cell "Web服务器" [ref=e330]
+                  - cell "成功" [ref=e331]:
+                    - generic [ref=e332]:
+                      - img [ref=e333]
+                      - text: 成功
+                - row "详细调查 log_collection 日志系统 成功" [ref=e336]:
+                  - cell "详细调查" [ref=e337]
+                  - cell "log_collection" [ref=e338]
+                  - cell "日志系统" [ref=e339]
+                  - cell "成功" [ref=e340]:
+                    - generic [ref=e341]:
+                      - img [ref=e342]
+                      - text: 成功
+                - row "缓解措施 resource_hardening WAF 成功" [ref=e345]:
+                  - cell "缓解措施" [ref=e346]
+                  - cell "resource_hardening" [ref=e347]
+                  - cell "WAF" [ref=e348]
+                  - cell "成功" [ref=e349]:
+                    - generic [ref=e350]:
+                      - img [ref=e351]
+                      - text: 成功
+                - row "报告通知 threat_reporting SOC 成功" [ref=e354]:
+                  - cell "报告通知" [ref=e355]
+                  - cell "threat_reporting" [ref=e356]
+                  - cell "SOC" [ref=e357]
+                  - cell "成功" [ref=e358]:
+                    - generic [ref=e359]:
+                      - img [ref=e360]
+                      - text: 成功
+          - generic [ref=e363]:
+            - generic [ref=e364]:
+              - img [ref=e365]
+              - heading "安全事件分析报告" [level=2] [ref=e367]
+            - generic [ref=e368]:
+              - generic [ref=e369]:
+                - heading "一、事件概要" [level=3] [ref=e370]
+                - generic [ref=e371]:
+                  - generic [ref=e372]:
+                    - generic [ref=e373]: 首次发现时间
+                    - generic [ref=e374]: 2025-03-27 23:10:20
+                  - generic [ref=e375]:
+                    - generic [ref=e376]: 当前状态
+                    - generic [ref=e377]: 已遏制
+                  - generic [ref=e378]:
+                    - generic [ref=e379]: 事件类型
+                    - generic [ref=e380]: HTTP头部注入
+                  - generic [ref=e381]:
+                    - generic [ref=e382]: 事件严重性
+                    - generic [ref=e383]: 中危 (CVSS 5.3)
+              - generic [ref=e384]:
+                - heading "二、事件详细描述" [level=3] [ref=e385]
+                - paragraph [ref=e386]: 本次安全事件捕获到一个来自英国IP地址(84.17.51.2)对多云线上环境资产(45.78.218.192)发起的可疑HTTP请求。 请求包含明显的CRLF注入尝试，通过在HTTP头部"zzzheadertest"中插入单个回车符试图拆分HTTP头， 这是典型的HTTP头部注入攻击特征。请求针对非常规路径，且服务器返回了HTTP 200状态码， 表明请求"成功"，可能导致敏感文件被未授权访问。
+              - generic [ref=e387]:
+                - heading "三、影响评估" [level=3] [ref=e388]
+                - generic [ref=e389]:
+                  - generic [ref=e390]:
+                    - generic [ref=e391]: 受影响资产
+                    - generic [ref=e392]: 多云线上环境
+                  - generic [ref=e393]:
+                    - generic [ref=e394]: 资产重要性
+                    - generic [ref=e395]: 高（生产环境）
+                  - generic [ref=e396]:
+                    - generic [ref=e397]: 数据泄露风险
+                    - generic [ref=e398]: 中等
+                  - generic [ref=e399]:
+                    - generic [ref=e400]: 扩散风险
+                    - generic [ref=e401]: 中等
+              - generic [ref=e402]:
+                - heading "四、安全建议" [level=3] [ref=e403]
+                - list [ref=e404]:
+                  - listitem [ref=e405]: 对Web服务器进行安全配置审查，特别是HTTP协议处理机制
+                  - listitem [ref=e406]: 实施严格的HTTP头部验证，拒绝处理包含CRLF注入的请求
+                  - listitem [ref=e407]: 对敏感路径实施访问控制，定期扫描识别未授权访问的资源
+                  - listitem [ref=e408]: 加强Host头验证，防止Host头注入和SSRF攻击
+                  - listitem [ref=e409]: 部署专用WAF规则拦截类似的HTTP头部注入尝试
+  - alert [ref=e410]

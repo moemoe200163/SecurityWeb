@@ -1,0 +1,194 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "SOC 告警分析" [ref=e15] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e16]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e19] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e20]
+          - text: 威脅情報調查
+        - generic [ref=e23]:
+          - link "滲透測試輔助" [ref=e24] [cursor=pointer]:
+            - /url: /pentest/assist
+            - img [ref=e25]
+            - text: 滲透測試輔助
+          - generic [ref=e30]:
+            - link "新建任務" [ref=e31] [cursor=pointer]:
+              - /url: /pentest/assist
+              - img [ref=e32]
+              - text: 新建任務
+            - link "任務歷史" [ref=e34] [cursor=pointer]:
+              - /url: /pentest/history
+              - img [ref=e35]
+              - text: 任務歷史
+      - generic [ref=e37]: 安全智能體 v1.0
+    - main [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e41]:
+          - generic [ref=e43]:
+            - generic [ref=e45]: "1"
+            - generic [ref=e46]: 目標枚舉
+          - generic [ref=e49]:
+            - generic [ref=e51]: "2"
+            - generic [ref=e52]: 漏洞掃描
+          - generic [ref=e55]:
+            - generic [ref=e57]: "3"
+            - generic [ref=e58]: 漏洞驗證
+          - generic [ref=e61]:
+            - generic [ref=e63]: "4"
+            - generic [ref=e64]: 漏洞利用
+          - generic [ref=e67]:
+            - generic [ref=e69]: "5"
+            - generic [ref=e70]: 報告生成
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - img [ref=e75]
+            - generic [ref=e77]:
+              - heading "Penetration Testing Assistant" [level=1] [ref=e78]
+              - paragraph [ref=e79]: Select a template and configure target to begin automated security testing
+          - generic [ref=e80]:
+            - generic [ref=e81]:
+              - img [ref=e82]
+              - heading "Select Test Template" [level=2] [ref=e84]
+            - generic [ref=e85]:
+              - generic [ref=e87] [cursor=pointer]:
+                - img [ref=e89]
+                - heading "網路掃描" [level=3] [ref=e94]
+                - paragraph [ref=e95]: Nmap/Nessus | 主機發現 → 端口掃描 → 服務枚舉 → 漏洞掃描 → 報告
+                - generic [ref=e96]:
+                  - generic [ref=e97]: Nmap
+                  - generic [ref=e98]: Nessus
+              - generic [ref=e100] [cursor=pointer]:
+                - img [ref=e102]
+                - heading "Web 滲透" [level=3] [ref=e105]
+                - paragraph [ref=e106]: SQL/XSS | URL 分析 → 爬蟲 → XSS/SQL 測試 → 漏洞驗證 → 報告
+                - generic [ref=e107]:
+                  - generic [ref=e108]: SQLMap
+                  - generic [ref=e109]: Burp Suite
+              - generic [ref=e111] [cursor=pointer]:
+                - img [ref=e113]
+                - heading "API 測試" [level=3] [ref=e117]
+                - paragraph [ref=e118]: REST/GraphQL | Endpoints 發現 → Auth 測試 → Injection → 報告
+                - generic [ref=e119]:
+                  - generic [ref=e120]: Postman
+                  - generic [ref=e121]: GraphQL
+              - generic [ref=e123] [cursor=pointer]:
+                - img [ref=e125]
+                - heading "紅隊演練" [level=3] [ref=e129]
+                - paragraph [ref=e130]: 攻擊路徑 | recon → initial access → lateral movement → persistence → report
+                - generic [ref=e131]:
+                  - generic [ref=e132]: Metasploit
+                  - generic [ref=e133]: Cobalt Strike
+              - generic [ref=e135] [cursor=pointer]:
+                - img [ref=e137]
+                - heading "暴力破解" [level=3] [ref=e140]
+                - paragraph [ref=e141]: SSH/HTTP | 目標識別 → 用戶枚舉 → 密碼猜測 → 報告
+                - generic [ref=e142]:
+                  - generic [ref=e143]: Hydra
+                  - generic [ref=e144]: John
+              - generic [ref=e146] [cursor=pointer]:
+                - img [ref=e148]
+                - heading "自訂" [level=3] [ref=e151]
+                - paragraph [ref=e152]: 自由設定 | 用戶自定義步驟流程
+                - generic [ref=e154]: Custom
+          - generic [ref=e261]:
+            - generic [ref=e262]:
+              - generic [ref=e263]: 目標設定
+              - generic [ref=e264]: 輸入滲透測試目標參數
+            - generic [ref=e265]:
+              - generic [ref=e266]:
+                - generic [ref=e267]:
+                  - generic [ref=e268]:
+                    - text: 目標 URL
+                    - generic [ref=e269]: "*"
+                  - textbox "目標 URL *" [ref=e270]:
+                    - /placeholder: https://example.com
+                - generic [ref=e271]:
+                  - generic [ref=e272]: 認證方式
+                  - textbox "認證方式" [ref=e273]:
+                    - /placeholder: Basic / Bearer / JWT
+                - generic [ref=e274]:
+                  - generic [ref=e275]: Cookies
+                  - textbox "Cookies" [ref=e276]:
+                    - /placeholder: session=abc123; token=xyz789
+              - generic [ref=e278]:
+                - img [ref=e279]
+                - generic [ref=e281]: URL 為必填欄位
+              - button "開始滲透測試" [disabled]:
+                - img
+                - text: 開始滲透測試
+          - generic [ref=e155]:
+            - heading "Test Progress (0/5)" [level=2] [ref=e159]
+            - generic [ref=e160]:
+              - generic [ref=e163]:
+                - img [ref=e166]
+                - generic [ref=e169]:
+                  - generic [ref=e170]:
+                    - generic [ref=e171]:
+                      - heading "目標枚舉" [level=3] [ref=e172]
+                      - generic [ref=e173]:
+                        - img
+                        - generic [ref=e174]: 待執行
+                    - button [ref=e175]:
+                      - img [ref=e176]
+                  - paragraph [ref=e178]: 正在枚舉目標範圍...
+              - generic [ref=e181]:
+                - img [ref=e184]
+                - generic [ref=e187]:
+                  - generic [ref=e188]:
+                    - generic [ref=e189]:
+                      - heading "漏洞掃描" [level=3] [ref=e190]
+                      - generic [ref=e191]:
+                        - img
+                        - generic [ref=e192]: 待執行
+                    - button [ref=e193]:
+                      - img [ref=e194]
+                  - paragraph [ref=e196]: 正在掃描潛在漏洞...
+              - generic [ref=e199]:
+                - img [ref=e202]
+                - generic [ref=e205]:
+                  - generic [ref=e206]:
+                    - generic [ref=e207]:
+                      - heading "漏洞驗證" [level=3] [ref=e208]
+                      - generic [ref=e209]:
+                        - img
+                        - generic [ref=e210]: 待執行
+                    - button [ref=e211]:
+                      - img [ref=e212]
+                  - paragraph [ref=e214]: 正在驗證發現的漏洞...
+              - generic [ref=e217]:
+                - img [ref=e220]
+                - generic [ref=e223]:
+                  - generic [ref=e224]:
+                    - generic [ref=e225]:
+                      - heading "漏洞利用" [level=3] [ref=e226]
+                      - generic [ref=e227]:
+                        - img
+                        - generic [ref=e228]: 待執行
+                    - button [ref=e229]:
+                      - img [ref=e230]
+                  - paragraph [ref=e232]: 正在評估漏洞利用可行性...
+              - generic [ref=e234]:
+                - img [ref=e237]
+                - generic [ref=e240]:
+                  - generic [ref=e241]:
+                    - generic [ref=e242]:
+                      - heading "報告生成" [level=3] [ref=e243]
+                      - generic [ref=e244]:
+                        - img
+                        - generic [ref=e245]: 待執行
+                    - button [ref=e246]:
+                      - img [ref=e247]
+                  - paragraph [ref=e249]: 正在生成滲透測試報告...
+  - alert [ref=e258]

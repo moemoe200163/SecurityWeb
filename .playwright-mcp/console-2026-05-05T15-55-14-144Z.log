@@ -1,0 +1,19 @@
+[   15850ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4000/api/soc/sessions/09abaab2-0b0f-4e1d-9275-9aa6de9d4ad1/messages:0
+[   15851ms] [ERROR] Initial message error: Error: Internal server error
+    at t (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:2408)
+    at async http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:96:145 @ http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:95
+[  278743ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/09abaab2-0b0f-4e1d-9275-9aa6de9d4ad1:0
+[  278743ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at t (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:2373)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:2649)
+    at i (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:3825) @ http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:0
+[  524741ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/09abaab2-0b0f-4e1d-9275-9aa6de9d4ad1:0
+[  524742ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at t (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:2373)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:2649)
+    at i (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:3825) @ http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:0
+[  824627ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/soc/sessions/09abaab2-0b0f-4e1d-9275-9aa6de9d4ad1:0
+[  824627ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at t (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:2373)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:2649)
+    at i (http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:1:3825) @ http://localhost:3000/_next/static/chunks/0sbst1gm8tmm4.js:0

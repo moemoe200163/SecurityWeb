@@ -1,0 +1,16 @@
+[     125ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/pentest/history?_rsc=1mslj:0
+[  100483ms] [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:4000/api/pentest/sessions/95ddc11b-c2b8-4956-bed5-c65f0e1a7059:0
+[  100484ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at r (http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:1:517)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:1:1352)
+    at d (http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:1:2861) @ http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:0
+[  102491ms] [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:4000/api/pentest/sessions/95ddc11b-c2b8-4956-bed5-c65f0e1a7059:0
+[  102491ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at r (http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:1:517)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:1:1352)
+    at d (http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:1:2861) @ http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:0
+[  104490ms] [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ http://localhost:4000/api/pentest/sessions/95ddc11b-c2b8-4956-bed5-c65f0e1a7059:0
+[  104490ms] [ERROR] Polling error: TypeError: Failed to fetch
+    at r (http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:1:517)
+    at Object.getSession (http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:1:1352)
+    at d (http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:1:2861) @ http://localhost:3000/_next/static/chunks/0n-ws2bv~_k_f.js:0

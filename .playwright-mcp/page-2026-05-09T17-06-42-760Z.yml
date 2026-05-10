@@ -1,0 +1,96 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "SOC 告警分析" [ref=e18] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e19]
+          - text: SOC 告警分析
+        - generic [ref=e21]:
+          - link "威脅情報調查" [ref=e22] [cursor=pointer]:
+            - /url: /threat/investigate
+            - img [ref=e23]
+            - text: 威脅情報調查
+          - generic [ref=e26]:
+            - link "IP/域名查詢" [ref=e27] [cursor=pointer]:
+              - /url: /threat/investigate
+              - img [ref=e28]
+              - text: IP/域名查詢
+            - link "IP 黑名單" [ref=e30] [cursor=pointer]:
+              - /url: /threat/blacklist
+              - img [ref=e31]
+              - text: IP 黑名單
+            - link "BGP 路由查詢" [ref=e33] [cursor=pointer]:
+              - /url: /threat/bgp
+              - img [ref=e34]
+              - text: BGP 路由查詢
+            - link "歷史記錄" [ref=e36] [cursor=pointer]:
+              - /url: /soc/history
+              - img [ref=e37]
+              - text: 歷史記錄
+        - link "滲透測試輔助" [ref=e40] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e41]
+          - text: 滲透測試輔助
+      - generic [ref=e46]: 安全智能體 v1.0
+    - main [ref=e47]:
+      - generic [ref=e48]:
+        - generic [ref=e50]:
+          - heading "威脅情報調查" [level=1] [ref=e51]
+          - paragraph [ref=e52]: 輸入 IP、域名或雜湊值進行威脅情報分析
+        - generic [ref=e53]:
+          - generic [ref=e55]:
+            - combobox [ref=e56]:
+              - option "IP 地址" [selected]
+              - option "域名"
+              - option "檔案雜湊"
+            - textbox "例如：1.1.1.1" [ref=e57]: 1.1.1.1
+            - button "分析中" [disabled] [ref=e69]:
+              - img [ref=e70]
+              - text: 分析中
+          - generic [ref=e73]:
+            - img [ref=e74]
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - generic [ref=e79]: 1.1.1.1
+                - generic [ref=e80]: ✅ 良性 IP
+              - generic [ref=e81]:
+                - generic [ref=e82]:
+                  - paragraph [ref=e83]: ISP
+                  - paragraph [ref=e84]: APNIC and Cloudflare DNS Resolver project
+                - generic [ref=e85]:
+                  - paragraph [ref=e86]: 信心分數
+                  - paragraph [ref=e87]: 0%
+                - generic [ref=e88]:
+                  - paragraph [ref=e89]: 舉報次數
+                  - paragraph [ref=e90]: "216"
+              - generic [ref=e91]:
+                - paragraph [ref=e92]: 資料來源
+                - generic [ref=e93]:
+                  - generic [ref=e94]: AbuseIPDB
+                  - generic [ref=e95]: AlienVault OTX
+          - generic [ref=e96]:
+            - generic [ref=e97]:
+              - generic [ref=e98]:
+                - img [ref=e99]
+                - generic [ref=e101]: 分析中...
+              - generic [ref=e102]: 0 / 5 步驟
+            - generic [ref=e104]:
+              - paragraph [ref=e108]: 1. 收集資料
+              - paragraph [ref=e112]: 2. 擴展線索
+              - paragraph [ref=e116]: 3. 關聯分析
+              - paragraph [ref=e120]: 4. 攻擊路徑
+              - paragraph [ref=e124]: 5. 威脅報告
+  - alert [ref=e68]

@@ -1,0 +1,13 @@
+[     337ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/bgp/query?page=1&limit=50:0
+[     337ms] [ERROR] Failed to load BGP data: TypeError: Failed to fetch
+    at t (http://localhost:3000/_next/static/chunks/0738p22sf-v81.js:1:517)
+    at Object.query (http://localhost:3000/_next/static/chunks/0738p22sf-v81.js:1:2223)
+    at http://localhost:3000/_next/static/chunks/0738p22sf-v81.js:1:4409
+    at http://localhost:3000/_next/static/chunks/0738p22sf-v81.js:1:4615
+    at iv (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:102969)
+    at up (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:127008)
+    at ud (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:126670)
+    at up (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:126988)
+    at ud (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:126670)
+    at up (http://localhost:3000/_next/static/chunks/0bmpc66o4m-9z.js:1:127053) @ http://localhost:3000/_next/static/chunks/0738p22sf-v81.js:0
+[     337ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:4000/api/bgp/stats:0

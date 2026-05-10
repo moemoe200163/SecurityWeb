@@ -172,6 +172,35 @@ export class MiniMaxAdapter implements AIService {
   // Clear expired cache entries periodically
   constructor() {
     setInterval(() => this.cleanupCache(), SESSION_CACHE_TTL_MS);
+    // 热启动：预加载最近活跃的 session
+    this.warmUpCache().catch(console.error);
+  }
+
+  /**
+   * 热启动：预加载最近活跃的 session 到内存缓存
+   */
+  private async warmUpCache(): Promise<void> {
+    try {
+      const recentSessions = await prisma.session.findMany({
+        where: { status: 'running' },
+        take: 20,
+        orderBy: { updatedAt: 'desc' },
+        include: {
+          steps: { orderBy: { order: 'asc' } },
+          messages: { orderBy: { createdAt: 'asc' } },
+        },
+      });
+
+      for (const session of recentSessions) {
+        const data = formatSession(session);
+        this.setCachedSession(session.id, data);
+      }
+      if (recentSessions.length > 0) {
+        console.log(`[MiniMaxAdapter] 热启动：预加载 ${recentSessions.length} 个活跃 session`);
+      }
+    } catch (error) {
+      console.error('[MiniMaxAdapter] 热启动失败:', error);
+    }
   }
 
   private cleanupCache(): void {
@@ -337,38 +366,44 @@ export class MiniMaxAdapter implements AIService {
   }
 
   async sendMessage(sessionId: string, content: string): Promise<MessageData> {
-    // 取得 session 以獲取對話歷史
-    const session = await prisma.session.findUnique({
-      where: { id: sessionId },
-      include: {
-        steps: { orderBy: { order: 'asc' } },
-        messages: { orderBy: { createdAt: 'asc' } },
-      },
+    // 在事务中执行：获取session + 创建消息
+    const result = await prisma.$transaction(async (tx) => {
+      // 获取 session
+      const session = await tx.session.findUnique({
+        where: { id: sessionId },
+        include: {
+          steps: { orderBy: { order: 'asc' } },
+          messages: { orderBy: { createdAt: 'asc' } },
+        },
+      });
+      if (!session) throw new Error('Session not found');
+
+      // 儲存用戶訊息
+      const userMessage = await tx.message.create({
+        data: { sessionId, role: 'user', content },
+      });
+
+      // 儲存 AI 回應
+      const aiMessage = await tx.message.create({
+        data: { sessionId, role: 'assistant', content: '' },
+      });
+
+      return { session, userMessage, aiMessage };
     });
 
-    if (!session) {
-      throw new Error('Session not found');
-    }
-
-    // 儲存用戶訊息
-    const userMessage = await prisma.message.create({
-      data: {
-        sessionId,
-        role: 'user',
-        content,
-      },
-    });
+    // 从结果中提取数据
+    const { session: dbSession, userMessage, aiMessage } = result;
 
     // 建構 MiniMax 訊息列表
-    const systemPrompt = session.module === 'soc'
+    const systemPrompt = dbSession.module === 'soc'
       ? SOC_SYSTEM_PROMPT
-      : session.module === 'threat'
+      : dbSession.module === 'threat'
       ? THREAT_SYSTEM_PROMPT
       : '你是一個專業的滲透測試助手，擅長協助安全測試。';
 
     const miniMaxMessages: MiniMaxMessage[] = [
       { role: 'system', content: systemPrompt },
-      ...session.messages.map((msg) => ({
+      ...dbSession.messages.map((msg) => ({
         role: msg.role as 'user' | 'assistant',
         content: msg.content,
       })),
@@ -378,17 +413,14 @@ export class MiniMaxAdapter implements AIService {
     // 呼叫 MiniMax API
     const aiResponse = await this.callMiniMax(miniMaxMessages);
 
-    // 儲存 AI 回應
-    const aiMessage = await prisma.message.create({
-      data: {
-        sessionId,
-        role: 'assistant',
-        content: aiResponse,
-      },
+    // 批量更新 AI 响应+步骤
+    await prisma.$transaction(async (tx) => {
+      await tx.message.update({
+        where: { id: aiMessage.id },
+        data: { content: aiResponse },
+      });
+      await this.updateStepsFromAIResponseTx(tx, dbSession, aiResponse);
     });
-
-    // 更新步驟內容（模擬逐步輸出動畫）
-    await this.updateStepsFromAIResponse(session, aiResponse);
 
     return {
       id: aiMessage.id,
@@ -413,11 +445,11 @@ export class MiniMaxAdapter implements AIService {
       { order: 4, title: '影響評估', patterns: ['第4步', '編碼專家', 'Python'] },
       { order: 5, title: '處置建議', patterns: ['第5步', '安全事件分析報告', '攻擊鏈'] },
     ] : [
-      { order: 1, title: '收集資料', patterns: ['指標概況', '1.', '指標'] },
-      { order: 2, title: '擴展線索', patterns: ['威脅評估', '2.', 'TTPs'] },
-      { order: 3, title: '關聯分析', patterns: ['被動 DNS', '3.', '攻擊者'] },
-      { order: 4, title: '攻擊路徑', patterns: ['攻擊路徑', '4.', 'Kill Chain'] },
-      { order: 5, title: '威脅報告', patterns: ['防護建議', '5.', '防護'] },
+      { order: 1, title: '收集資料', patterns: ['第1步', '收集資料', '威脅判定'] },
+      { order: 2, title: '擴展線索', patterns: ['第2步', '擴展線索', '關鍵發現'] },
+      { order: 3, title: '關聯分析', patterns: ['第3步', '關聯分析', '關聯服務'] },
+      { order: 4, title: '攻擊路徑', patterns: ['第4步', '攻擊路徑', '攻擊方式'] },
+      { order: 5, title: '威脅報告', patterns: ['第5步', '威脅報告', '建議'] },
     ];
 
     // 嘗試解析並更新每個步驟
@@ -426,10 +458,10 @@ export class MiniMaxAdapter implements AIService {
       let stepContent = this.extractStepContent(aiResponse, stepPattern);
 
       if (stepContent) {
-        // 逐步更新每個步驟，中間有延遲以產生動畫效果
-        await new Promise(resolve => setTimeout(resolve, 300));
+        // 逐步更新每個步驟，中間有延遲以產生動畫效果（每步 3 秒）
+        await new Promise(resolve => setTimeout(resolve, 1500));
         await this.updateStepContent(step.id, stepContent);
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 1500));
         await this.completeStep(step.id);
       } else {
         // 沒有匹配內容，標記為完成
@@ -443,19 +475,50 @@ export class MiniMaxAdapter implements AIService {
   }
 
   /**
+   * 事务版本：解析 AI 响应并更新步骤（用于事务中）
+   */
+  private async updateStepsFromAIResponseTx(tx: any, session: any, aiResponse: string): Promise<void> {
+    const steps = session.steps.sort((a: any, b: any) => a.order - b.order);
+
+    const stepPatterns = session.module === 'soc' ? [
+      { order: 1, title: '接收告警', patterns: ['第1步', '安全運營專家', '威脅情報溯源'] },
+      { order: 2, title: '威脅情報', patterns: ['第2步', '威脅情報專家', '搜索結果'] },
+      { order: 3, title: '攻擊還原', patterns: ['第3步', '威脅分析專家', '日誌特徵'] },
+      { order: 4, title: '影響評估', patterns: ['第4步', '編碼專家', 'Python'] },
+      { order: 5, title: '處置建議', patterns: ['第5步', '安全事件分析報告', '攻擊鏈'] },
+    ] : [
+      { order: 1, title: '收集資料', patterns: ['第1步', '收集資料', '威脅判定'] },
+      { order: 2, title: '擴展線索', patterns: ['第2步', '擴展線索', '關鍵發現'] },
+      { order: 3, title: '關聯分析', patterns: ['第3步', '關聯分析', '關聯服務'] },
+      { order: 4, title: '攻擊路徑', patterns: ['第4步', '攻擊路徑', '攻擊方式'] },
+      { order: 5, title: '威脅報告', patterns: ['第5步', '威脅報告', '建議'] },
+    ];
+
+    // 批量更新所有步骤（无动画延迟）
+    for (const step of steps) {
+      const stepPattern = stepPatterns.find(p => p.order === step.order);
+      const stepContent = this.extractStepContent(aiResponse, stepPattern) || `## ${step.title}\n\n已完成分析`;
+      await tx.step.update({ where: { id: step.id }, data: { content: stepContent, status: 'success' } });
+    }
+
+    // 完成 session
+    await tx.session.update({ where: { id: session.id }, data: { status: 'completed' } });
+  }
+
+  /**
    * 從 AI 回應中提取特定步驟的內容
    */
   private extractStepContent(aiResponse: string, stepPattern: { order: number; title: string; patterns: string[] } | undefined): string | null {
     if (!stepPattern) return null;
 
-    const { patterns } = stepPattern;
+    const { patterns, order } = stepPattern;
     const lines = aiResponse.split('\n');
 
-    // 找出第 N 步的位置
+    // 找出第 N 步的位置 - 支援多種格式
     let startIdx = -1;
     let endIdx = lines.length;
 
-    // 找到起始模式
+    // 找到起始模式（支援 "## 第1步", "## 步驟1", "第1步:" 等格式）
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
       if (patterns.some(p => line.includes(p))) {
@@ -466,10 +529,14 @@ export class MiniMaxAdapter implements AIService {
 
     if (startIdx === -1) return null;
 
-    // 找到下一個 "第N步" 的位置（作為結束）
-    const nextStepMatch = aiResponse.indexOf('## 第', startIdx + 1);
-    if (nextStepMatch !== -1) {
-      endIdx = nextStepMatch;
+    // 嘗試找下一個步驟標記 (支援多種格式)
+    const nextMarkers = ['## 第', '## 步驟', '**【', '---'];
+    for (const marker of nextMarkers) {
+      const nextMatch = aiResponse.indexOf(marker, startIdx + 1);
+      if (nextMatch !== -1 && nextMatch < endIdx) {
+        endIdx = nextMatch;
+        break;
+      }
     }
 
     return lines.slice(startIdx, endIdx).join('\n').trim();
@@ -592,143 +659,6 @@ export class MiniMaxAdapter implements AIService {
     if (next) {
       setTimeout(next, 0);
     }
-  }
-
-  /**
-   * Generate mock AI response for demo when no API key is available
-   */
-  private getMockAIResponse(messages: MiniMaxMessage[]): string {
-    const userMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
-    const isThreatModule = messages.some(m => m.content?.includes('威脅情報') || m.content?.includes('威脅評估'));
-
-    if (isThreatModule || userMessage.includes('1.1.1') || userMessage.includes('8.8.8')) {
-      return `## 第1步：威脅情報收集
-### 指標概況
-| 項目 | 內容 |
-|------|------|
-| IP 地址 | 1.1.1.1 |
-| 類型 | IPv4 |
-| 狀態 | 正常 |
-
-### 威脅評估
-- **風險等級**: 低
-- **置信度**: 95%
-- **威脅類型**: 無
-
-## 第2步：被動 DNS 分析
-### DNS 記錄
-- **反向 DNS**: one.one.one.one
-- **ASN**: AS13335 (Cloudflare)
-- **網路**: Cloudflare
-
-## 第3步：威脅情報關聯
-### 情IOC 列表
-此 IP 未被標記為惡意。
-
-## 第4步：攻擊路徑評估
-此 IP 為公共 DNS 服務，不存在已知攻擊路徑。
-
-## 第5步：防護建議
-- 建議：無需處置，繼續監控即可。`;
-    }
-
-    return `## 第1步：安全運營專家
-### 威脅情報溯源分析
-- **Agent ID**: ${userMessage.substring(0, 20)}...
-- **觸發規則**:可能的暴力破解攻擊 (SSH)
-- **攻擊行為模式識別**: 多次登入失敗，來源 IP 來自外部網路
-
-### 安全防禦策略
-- 阻擋該來源 IP
-- 加強登入驗證機制
-- 啟用 Fail2Ban
-
-## 第2步：威脅情報專家
-### 搜索結果摘要
-- **VirusTotal**: 無不良記錄
-- **AbuseIPDB**: 5 次報告
-- **OTX**: 0 脈衝
-
-### 情報摘要
-該 IP 為住宅 IP，過去有少量報告，屬於低風險威脅。
-
-### 處置建議
-可列入觀察名單，暫時無需封鎖。
-
-## 第3步：威脅分析專家
-### 日誌特徵提取
-- 嘗試 SSH 連線
-- 失敗次數: 150+
-- 目標 port: 22
-
-### ATT&CK 映射
-- T1110.001 - 暴力破解 SSH
-
-### 業務影響
-- **嚴重性**: 中
-- **影響範圍**: 單一伺服器
-
-## 第4步：編碼專家
-~~~python
-#!/usr/bin/env python3
-# Fail2Ban 配置腳本
-import subprocess
-
-# 自動封鎖惡意 IP
-malicious_ip = "185.220.101.34"
-subprocess.run(["fail2ban-client", "set", "sshd", "banip", malicious_ip])
-print(f"已封鎖 IP: {malicious_ip}")
-~~~
-
-~~~ini
-# /etc/fail2ban/jail.local
-[sshd]
-enabled = true
-port = ssh
-filter = sshd
-logpath = /var/log/auth.log
-maxretry = 3
-bantime = 3600
-~~~
-
-## 第5步：安全事件分析報告
-
-### 一、事件概要
-| 項目 | 內容 |
-|------|------|
-| 時間 | ${new Date().toLocaleString('zh-TW')} |
-| 類型 | SSH 暴力破解攻擊 |
-| 嚴重性 | 中 |
-
-### 二、攻擊鏈分析
-| TTP | 階段 | IOC | 置信度 |
-|-----|------|-----|--------|
-| T1110.001 | 初始訪問 | 185.220.101.34 | 高 |
-
-### 三、IOC 清單
-| Type | Value | Confidence |
-|------|-------|------------|
-| IP | 185.220.101.34 | 75% |
-
-### 四、技術分析
-攻擊者嘗試透過 SSH 暴力破解取得伺服器存取權限。
-
-### 五、業務影響
-| 項目 | 評估 |
-|------|------|
-| 可用性 | 低影響 |
-| 機密性 | 無影響 |
-
-### 六、處置追蹤
-| 階段 | 操作 | 狀態 |
-|------|------|------|
-| 1 | IP 封鎖 | 待執行 |
-| 2 | 帳戶鎖定 | 待執行 |
-
-### 七、安全建議
-- 【立即動作】封鎖攻擊者 IP
-- 【短期加固】啟用 Fail2Ban
-- 【長期改善】金鑰登入`;
   }
 }
 

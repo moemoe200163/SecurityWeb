@@ -1,0 +1,152 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "SOC 告警分析" [ref=e15] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e16]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e19] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e20]
+          - text: 威脅情報調查
+        - generic [ref=e23]:
+          - link "滲透測試輔助" [ref=e24] [cursor=pointer]:
+            - /url: /pentest/assist
+            - img [ref=e25]
+            - text: 滲透測試輔助
+          - generic [ref=e30]:
+            - link "新建任務" [ref=e31] [cursor=pointer]:
+              - /url: /pentest/assist
+              - img [ref=e32]
+              - text: 新建任務
+            - link "任務歷史" [ref=e34] [cursor=pointer]:
+              - /url: /pentest/history
+              - img [ref=e35]
+              - text: 任務歷史
+      - generic [ref=e37]: 安全智能體 v1.0
+    - main [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e41]:
+          - generic [ref=e43]:
+            - img [ref=e196]
+            - generic [ref=e46]: 目標枚舉
+          - generic [ref=e49]:
+            - img [ref=e198]
+            - generic [ref=e52]: 漏洞掃描
+          - generic [ref=e55]:
+            - img [ref=e200]
+            - generic [ref=e58]: 漏洞驗證
+          - generic [ref=e61]:
+            - img [ref=e216]
+            - generic [ref=e64]: 漏洞利用
+          - generic [ref=e67]:
+            - img [ref=e224]
+            - generic [ref=e70]: 報告生成
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - heading "滲透測試輔助" [level=3] [ref=e74]:
+              - img [ref=e75]
+              - text: 滲透測試輔助
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - generic [ref=e79]: 目標範圍
+                - textbox "目標範圍" [ref=e80]:
+                  - /placeholder: 例如：10.10.10.0/24
+                  - text: 192.168.1.1
+              - generic [ref=e81]:
+                - generic [ref=e82]: 測試類型
+                - textbox "測試類型" [ref=e83]:
+                  - /placeholder: 例如：network_full, web_app, api
+                  - text: network_scan
+              - button "開始輔助滲透測試" [ref=e84]:
+                - img
+                - text: 開始輔助滲透測試
+          - button "重新開始" [ref=e227]
+          - generic [ref=e85]:
+            - generic [ref=e88]:
+              - img [ref=e202]
+              - generic [ref=e94]:
+                - generic [ref=e95]:
+                  - generic [ref=e96]:
+                    - heading "目標枚舉" [level=3] [ref=e97]
+                    - generic [ref=e98]:
+                      - img
+                      - generic [ref=e99]: 已完成
+                  - button [ref=e100]:
+                    - img [ref=e101]
+                - paragraph [ref=e103]: 正在枚舉目標範圍...
+                - paragraph [ref=e195]: 上午9:35:54
+            - generic [ref=e106]:
+              - img [ref=e205]
+              - generic [ref=e112]:
+                - generic [ref=e113]:
+                  - generic [ref=e114]:
+                    - heading "漏洞掃描" [level=3] [ref=e115]
+                    - generic [ref=e116]:
+                      - img
+                      - generic [ref=e117]: 已完成
+                  - button [ref=e118]:
+                    - img [ref=e119]
+                - paragraph [ref=e121]: 正在掃描潛在漏洞...
+                - paragraph [ref=e208]: 上午9:35:56
+            - generic [ref=e124]:
+              - img [ref=e209]
+              - generic [ref=e130]:
+                - generic [ref=e131]:
+                  - generic [ref=e132]:
+                    - heading "漏洞驗證" [level=3] [ref=e133]
+                    - generic [ref=e134]:
+                      - img
+                      - generic [ref=e135]: 已完成
+                  - button [ref=e136]:
+                    - img [ref=e137]
+                - paragraph [ref=e139]: 正在驗證發現的漏洞...
+                - paragraph [ref=e212]: 上午9:35:58
+            - generic [ref=e142]:
+              - img [ref=e218]
+              - generic [ref=e148]:
+                - generic [ref=e149]:
+                  - generic [ref=e150]:
+                    - heading "漏洞利用" [level=3] [ref=e151]
+                    - generic [ref=e152]:
+                      - img
+                      - generic [ref=e153]: 已完成
+                  - button [ref=e154]:
+                    - img [ref=e155]
+                - paragraph [ref=e157]: 正在評估漏洞利用可行性...
+                - paragraph [ref=e215]: 上午9:36:00
+            - generic [ref=e159]:
+              - img [ref=e228]
+              - generic [ref=e165]:
+                - generic [ref=e166]:
+                  - generic [ref=e167]:
+                    - heading "報告生成" [level=3] [ref=e168]
+                    - generic [ref=e169]:
+                      - img
+                      - generic [ref=e170]: 已完成
+                  - button [ref=e171]:
+                    - img [ref=e172]
+                - paragraph [ref=e174]: 正在生成滲透測試報告...
+                - paragraph [ref=e223]: 上午9:36:02
+          - generic [ref=e175]:
+            - heading "AI 對話助手" [level=3] [ref=e177]:
+              - img [ref=e178]
+              - text: AI 對話助手
+            - generic [ref=e183]:
+              - img [ref=e184]
+              - paragraph [ref=e187]: 可以在分析過程中隨時提問
+              - paragraph [ref=e188]: 例如：「幫我查這個 IP 的情報」
+            - generic [ref=e190]:
+              - textbox "輸入問題..." [ref=e191]
+              - button [disabled]:
+                - img
+  - alert [ref=e192]

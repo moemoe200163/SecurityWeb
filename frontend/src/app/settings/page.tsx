@@ -7,15 +7,23 @@ import { Button } from '@/components/ui/button';
 
 interface AISettings {
   provider: string;
-  model?: string;
-  baseUrl?: string;
+  minimaxApiKey: string;
+  minimaxApiEndpoint: string;
+  minimaxModel: string;
+  ollamaEndpoint: string;
+  hasMinimaxKey: boolean;
+  hasOllamaEndpoint: boolean;
 }
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<AISettings>({
     provider: 'minimax',
-    model: '',
-    baseUrl: '',
+    minimaxApiKey: '',
+    minimaxApiEndpoint: '',
+    minimaxModel: '',
+    ollamaEndpoint: '',
+    hasMinimaxKey: false,
+    hasOllamaEndpoint: false,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -30,8 +38,12 @@ export default function SettingsPage() {
         const data = await api.settings.getAI();
         setSettings({
           provider: data.provider || 'minimax',
-          model: data.model || '',
-          baseUrl: data.baseUrl || '',
+          minimaxApiKey: data.minimaxApiKey || '',
+          minimaxApiEndpoint: data.minimaxApiEndpoint || '',
+          minimaxModel: data.minimaxModel || '',
+          ollamaEndpoint: data.ollamaEndpoint || '',
+          hasMinimaxKey: data.hasMinimaxKey || false,
+          hasOllamaEndpoint: data.hasOllamaEndpoint || false,
         });
       } catch (err) {
         console.error('Failed to load settings:', err);
@@ -48,12 +60,12 @@ export default function SettingsPage() {
   };
 
   const handleModelChange = (model: string) => {
-    setSettings((prev) => ({ ...prev, model: model }));
+    setSettings((prev) => ({ ...prev, minimaxModel: model }));
     setTestResult(null);
   };
 
-  const handleBaseUrlChange = (baseUrl: string) => {
-    setSettings((prev) => ({ ...prev, baseUrl: baseUrl }));
+  const handleEndpointChange = (endpoint: string) => {
+    setSettings((prev) => ({ ...prev, ollamaEndpoint: endpoint }));
     setTestResult(null);
   };
 
@@ -63,8 +75,10 @@ export default function SettingsPage() {
       setSaveResult(null);
       await api.settings.updateAI({
         provider: settings.provider,
-        model: settings.provider === 'ollama' ? settings.model : undefined,
-        baseUrl: settings.provider === 'ollama' ? settings.baseUrl : undefined,
+        minimaxApiKey: settings.minimaxApiKey || undefined,
+        minimaxApiEndpoint: settings.minimaxApiEndpoint || undefined,
+        minimaxModel: settings.minimaxModel || undefined,
+        ollamaEndpoint: settings.ollamaEndpoint || undefined,
       });
       setSaveResult('設定已儲存');
     } catch (err) {
@@ -79,7 +93,10 @@ export default function SettingsPage() {
     try {
       setTesting(true);
       setTestResult(null);
-      const result = await api.settings.testAI(settings.provider);
+      const result = await api.settings.testAI({
+        provider: settings.provider,
+        ollamaEndpoint: settings.provider === 'ollama' ? settings.ollamaEndpoint : undefined,
+      });
       setTestResult(result);
     } catch (err) {
       console.error('Failed to test connection:', err);
@@ -120,7 +137,7 @@ export default function SettingsPage() {
               />
               <div>
                 <div className="font-medium">MiniMax</div>
-                <div className="text-sm text-gray-500">使用 MiniMax API</div>
+                <div className="text-sm text-gray-500">使用 MiniMax API {settings.hasMinimaxKey ? '✓ 已設定 API Key' : '✗ 未設定 API Key'}</div>
               </div>
             </label>
             <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
@@ -134,7 +151,7 @@ export default function SettingsPage() {
               />
               <div>
                 <div className="font-medium">Ollama</div>
-                <div className="text-sm text-gray-500">使用本地 Ollama 模型</div>
+                <div className="text-sm text-gray-500">使用本地 Ollama 模型 {settings.hasOllamaEndpoint ? '✓ 已設定端點' : '✗ 未設定端點'}</div>
               </div>
             </label>
           </div>
@@ -144,11 +161,11 @@ export default function SettingsPage() {
         {settings.provider === 'ollama' && (
           <div className="space-y-4 pt-4 border-t">
             <div>
-              <label className="block text-sm font-medium mb-2">Base URL</label>
+              <label className="block text-sm font-medium mb-2">Ollama Endpoint</label>
               <input
                 type="text"
-                value={settings.baseUrl || ''}
-                onChange={(e) => handleBaseUrlChange(e.target.value)}
+                value={settings.ollamaEndpoint || ''}
+                onChange={(e) => handleEndpointChange(e.target.value)}
                 placeholder="http://localhost:11434"
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -157,7 +174,7 @@ export default function SettingsPage() {
               <label className="block text-sm font-medium mb-2">Model</label>
               <input
                 type="text"
-                value={settings.model || ''}
+                value={settings.minimaxModel || ''}
                 onChange={(e) => handleModelChange(e.target.value)}
                 placeholder="llama3"
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
