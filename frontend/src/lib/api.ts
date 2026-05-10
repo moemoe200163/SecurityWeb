@@ -88,6 +88,7 @@ export interface IpReputationResult {
   isWhitelisted?: boolean;
   sources: Array<{
     name: string;
+    listCount?: number;
     confidenceScore?: number;
     totalReports?: number;
     lastReported?: string;
@@ -115,6 +116,10 @@ export interface BgpUpdate {
   type: 'A' | 'W';
   source: string | null;
   country: string | null;
+  org: string | null;
+  hijack_suspicion: boolean;
+  suspicion_level: 'none' | 'low' | 'medium' | 'high';
+  suspicion_reasons: string[];
 }
 
 export interface BgpQueryResult {
@@ -147,7 +152,7 @@ export interface PaginationInfo {
 export const api = {
   // SOC
   soc: {
-    async analyze(input: { alertId?: string; rawContent?: string; type?: 'simulation' | 'live' }): Promise<SessionResponse> {
+    async analyze(input: { alertId?: string; rawContent?: string }): Promise<SessionResponse> {
       return request<SessionResponse>('/api/soc/analyze', {
         method: 'POST',
         body: input,
@@ -191,7 +196,24 @@ export const api = {
 
   // Pentest
   pentest: {
-    async assist(input: { target: string; scope: string; testType: string; type?: 'simulation' | 'live' }): Promise<SessionResponse> {
+    async assist(input: {
+      template?: string;
+      target: string;
+      scope?: string;
+      testType?: string;
+      ports?: string;
+      intensity?: string;
+      url?: string;
+      auth?: string;
+      cookies?: string;
+      endpoint?: string;
+      method?: string;
+      headers?: string;
+      service?: string;
+      username?: string;
+      customInput?: string;
+      timeLimit?: string;
+    }): Promise<SessionResponse> {
       return request<SessionResponse>('/api/pentest/assist', {
         method: 'POST',
         body: input,
@@ -208,6 +230,26 @@ export const api = {
         method: 'POST',
         body: { content },
       });
+    },
+    async downloadReport(sessionId: string): Promise<Blob> {
+      const response = await fetch(`/api/report/${sessionId}/pdf`);
+      if (!response.ok) {
+        throw new Error('Failed to download report');
+      }
+      return response.blob();
+    },
+    async getReportData(sessionId: string): Promise<{
+      sessionId: string;
+      createdAt: string;
+      status: string;
+      input: Record<string, string>;
+      steps: Array<{ title: string; content: string; status: string }>;
+      vulnerabilities: Array<{ name: string; description: string; riskLevel: string; cvss: string; cve?: string }>;
+      riskAssessment: { scope: string; attackVector: string; impact: string };
+      remediation: { shortTerm: string[]; longTerm: string[] };
+      summary: { critical: number; high: number; medium: number; low: number; info: number };
+    }> {
+      return request(`/api/report/${sessionId}/json`);
     },
   },
 
@@ -262,6 +304,19 @@ export const api = {
     },
     async stats(): Promise<BgpStats> {
       return request('/api/bgp/stats');
+    },
+  },
+
+  // Settings
+  settings: {
+    async getAI(): Promise<{ provider: string; model?: string; baseUrl?: string }> {
+      return request('/api/settings/ai');
+    },
+    async updateAI(data: { provider?: string; model?: string; baseUrl?: string }): Promise<{ success: boolean }> {
+      return request('/api/settings/ai', { method: 'POST', body: data });
+    },
+    async testAI(provider: string): Promise<{ success: boolean; message: string }> {
+      return request('/api/settings/ai/test', { method: 'POST', body: { provider } });
     },
   },
 

@@ -11,6 +11,8 @@ import {
   Home,
   Menu,
   X,
+  Terminal,
+  Settings,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ModuleType } from '@/lib/types';
@@ -30,8 +32,8 @@ const navigation: Record<ModuleType, NavItem> = {
     icon: <Shield className="h-5 w-5" />,
     children: [
       { label: '深度調查', href: '/soc/analyze' },
-      { label: '快速分析處置', href: '/soc/quick' },
       { label: '歷史分析記錄', href: '/soc/history' },
+      { label: '分析Demo', href: '/soc/demo' },
     ],
   },
   threat: {
@@ -42,6 +44,7 @@ const navigation: Record<ModuleType, NavItem> = {
       { label: 'IP/域名查詢', href: '/threat/investigate' },
       { label: 'IP 黑名單', href: '/threat/blacklist' },
       { label: 'BGP 路由查詢', href: '/threat/bgp' },
+      { label: '歷史記錄', href: '/soc/history' },
     ],
   },
   pentest: {
@@ -124,6 +127,34 @@ export function Sidebar() {
           >
             <Home className="h-4 w-4" />
             首頁儀表板
+          </Link>
+
+          <Link
+            href="/tools"
+            onClick={closeMobile}
+            className={cn(
+              'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+              isActive('/tools')
+                ? 'bg-blue-50 text-blue-600'
+                : 'text-gray-700 hover:bg-gray-100'
+            )}
+          >
+            <Terminal className="h-4 w-4" />
+            API 工具
+          </Link>
+
+          <Link
+            href="/settings"
+            onClick={closeMobile}
+            className={cn(
+              'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+              isActive('/settings')
+                ? 'bg-blue-50 text-blue-600'
+                : 'text-gray-700 hover:bg-gray-100'
+            )}
+          >
+            <Settings className="h-4 w-4" />
+            設定
           </Link>
 
           {(Object.keys(navigation) as ModuleType[]).map((key) => {
