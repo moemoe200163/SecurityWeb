@@ -37,6 +37,24 @@ export interface MessageData {
   createdAt: string;
 }
 
+export interface PentestInput {
+  template: string;
+  target: string;
+  scope?: string;
+  testType?: string;
+  ports?: string;
+  intensity?: string;
+  url?: string;
+  auth?: string;
+  cookies?: string;
+  endpoint?: string;
+  method?: string;
+  headers?: string;
+  service?: string;
+  username?: string;
+  customInput?: string;
+}
+
 // API Request types
 export interface SOCAnalyzeRequest {
   alertId?: string;
@@ -47,7 +65,7 @@ export interface SOCAnalyzeRequest {
 export interface ThreatInvestigateRequest {
   type: 'ip' | 'domain' | 'hash';
   value: string;
-  type2: 'simulation' | 'live';
+  requestMode: 'simulation' | 'live';
 }
 
 export interface PentestAssistRequest {
@@ -64,4 +82,7 @@ export interface AIService {
   getAllSessions(): Promise<SessionData[]>;
   sendMessage(sessionId: string, content: string): Promise<MessageData>;
   getStepStatus(sessionId: string, stepId: string): Promise<StepData | null>;
+  updateStepContent(stepId: string, content: string): Promise<void>;
+  completeStep(stepId: string): Promise<void>;
+  completeSession(sessionId: string): Promise<void>;
 }
