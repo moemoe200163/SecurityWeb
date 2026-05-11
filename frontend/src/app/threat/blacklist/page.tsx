@@ -110,7 +110,7 @@ export default function BlacklistPage() {
       case 'normal':
         return <ShieldCheck className="h-5 w-5 text-emerald-500" />;
       default:
-        return <ShieldQuestion className="h-5 w-5 text-gray-400" />;
+        return <ShieldQuestion className="h-5 w-5 text-[var(--muted-foreground)]" />;
     }
   };
 
@@ -160,13 +160,13 @@ export default function BlacklistPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--muted)]">
       {/* Header */}
-      <div className="bg-white border-b px-6 py-4">
+      <div className="bg-[var(--card)] border-b border-[var(--border)] px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">IP 黑名單</h1>
-            <p className="text-sm text-gray-500 mt-1">已收錄的威脅 IP 列表</p>
+            <h1 className="text-xl font-semibold text-[var(--foreground)]">IP 黑名單</h1>
+            <p className="text-sm text-[var(--muted-foreground)] mt-1">已收錄的威脅 IP 列表</p>
           </div>
           <button
             onClick={loadData}
@@ -184,29 +184,29 @@ export default function BlacklistPage() {
         {/* Stats Cards */}
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-lg border p-4">
-              <p className="text-sm text-gray-500">總數</p>
-              <p className="text-2xl font-semibold text-gray-900">{stats.total.toLocaleString()}</p>
+            <div className="bg-[var(--card)] rounded-lg border border-[var(--border)] p-4">
+              <p className="text-sm text-[var(--muted-foreground)]">總數</p>
+              <p className="text-2xl font-semibold text-[var(--foreground)]">{stats.total.toLocaleString()}</p>
             </div>
-            <div className="bg-red-50 rounded-lg border border-red-200 p-4">
-              <p className="text-sm text-red-600">惡意 IP</p>
-              <p className="text-2xl font-semibold text-red-700">{stats.malicious.toLocaleString()}</p>
+            <div className="bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800 p-4">
+              <p className="text-sm text-red-600 dark:text-red-400">惡意 IP</p>
+              <p className="text-2xl font-semibold text-red-700 dark:text-red-300">{stats.malicious.toLocaleString()}</p>
             </div>
-            <div className="bg-yellow-50 rounded-lg border border-yellow-200 p-4">
-              <p className="text-sm text-yellow-600">可疑 IP</p>
-              <p className="text-2xl font-semibold text-yellow-700">{stats.suspicious.toLocaleString()}</p>
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800 p-4">
+              <p className="text-sm text-yellow-600 dark:text-yellow-400">可疑 IP</p>
+              <p className="text-2xl font-semibold text-yellow-700 dark:text-yellow-300">{stats.suspicious.toLocaleString()}</p>
             </div>
-            <div className="bg-emerald-50 rounded-lg border border-emerald-200 p-4">
-              <p className="text-sm text-emerald-600">良性 IP</p>
-              <p className="text-2xl font-semibold text-emerald-700">{stats.normal.toLocaleString()}</p>
+            <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800 p-4">
+              <p className="text-sm text-emerald-600 dark:text-emerald-400">良性 IP</p>
+              <p className="text-2xl font-semibold text-emerald-700 dark:text-emerald-300">{stats.normal.toLocaleString()}</p>
             </div>
           </div>
         )}
 
         {/* Search and Filter */}
-        <div className="bg-white rounded-lg border p-4 mb-6 flex flex-col sm:flex-row gap-4">
+        <div className="bg-[var(--card)] rounded-lg border border-[var(--border)] p-4 mb-6 flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[var(--muted-foreground)]" />
             <input
               type="text"
               value={searchIp}
@@ -215,7 +215,7 @@ export default function BlacklistPage() {
                 setCurrentPage(1);
               }}
               placeholder="搜尋 IP 地址..."
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--card)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <select
@@ -224,7 +224,7 @@ export default function BlacklistPage() {
               setFilter(e.target.value as typeof filter);
               setCurrentPage(1);
             }}
-            className="border rounded-lg px-4 py-2 bg-white"
+            className="border border-[var(--border)] rounded-lg px-4 py-2 bg-[var(--card)] text-[var(--foreground)]"
           >
             <option value="all">全部</option>
             <option value="malicious">惡意</option>
@@ -233,45 +233,45 @@ export default function BlacklistPage() {
         </div>
 
         {/* Blacklist Table */}
-        <div className="bg-white rounded-lg border overflow-hidden">
+        <div className="bg-[var(--card)] rounded-lg border border-[var(--border)] overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
             </div>
           ) : data.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
-              <Shield className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+            <div className="text-center py-12 text-[var(--muted-foreground)]">
+              <Shield className="h-12 w-12 mx-auto mb-4 text-[var(--muted-foreground)] opacity-50" />
               <p>沒有找到符合條件的 IP</p>
             </div>
           ) : (
             <>
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[800px]">
-                  <thead className="bg-gray-50 border-b">
+                  <thead className="bg-[var(--muted)] border-b border-[var(--border)]">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">狀態</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">IP 地址</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">國家</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ISP</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted-foreground)] uppercase">狀態</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted-foreground)] uppercase">IP 地址</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted-foreground)] uppercase">國家</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-[var(--muted-foreground)] uppercase">ISP</th>
                       <th
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                        className="px-6 py-3 text-left text-xs font-medium text-[var(--muted-foreground)] uppercase cursor-pointer hover:bg-[var(--accent)]"
                         onClick={() => handleSort('totalReports')}
                       >
                         舉報次數 {sortField === 'totalReports' && (sortOrder === 'desc' ? '↓' : '↑')}
                       </th>
                       <th
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                        className="px-6 py-3 text-left text-xs font-medium text-[var(--muted-foreground)] uppercase cursor-pointer hover:bg-[var(--accent)]"
                         onClick={() => handleSort('updatedAt')}
                       >
                         更新時間 {sortField === 'updatedAt' && (sortOrder === 'desc' ? '↓' : '↑')}
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y">
+                  <tbody className="divide-y divide-[var(--border)]">
                     {data.map((item) => (
                       <tr
                         key={item.ip}
-                        className="hover:bg-gray-50 cursor-pointer"
+                        className="hover:bg-[var(--accent)] cursor-pointer"
                         onClick={() => setSelectedIp(item)}
                       >
                         <td className="px-6 py-4">
@@ -280,11 +280,11 @@ export default function BlacklistPage() {
                             {getStatusBadge(item.status)}
                           </div>
                         </td>
-                        <td className="px-6 py-4 font-mono text-sm">{item.ip}</td>
-                        <td className="px-6 py-4 text-sm">{getCountryDisplay(item.countryCode)}</td>
-                        <td className="px-6 py-4 text-sm truncate max-w-xs">{item.isp || '-'}</td>
-                        <td className="px-6 py-4 text-sm">{item.totalReports?.toLocaleString() ?? '-'}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
+                        <td className="px-6 py-4 font-mono text-sm text-[var(--foreground)]">{item.ip}</td>
+                        <td className="px-6 py-4 text-sm text-[var(--foreground)]">{getCountryDisplay(item.countryCode)}</td>
+                        <td className="px-6 py-4 text-sm text-[var(--foreground)] truncate max-w-xs">{item.isp || '-'}</td>
+                        <td className="px-6 py-4 text-sm text-[var(--foreground)]">{item.totalReports?.toLocaleString() ?? '-'}</td>
+                        <td className="px-6 py-4 text-sm text-[var(--muted-foreground)]">
                           {new Date(item.updatedAt).toLocaleString('zh-TW')}
                         </td>
                       </tr>
@@ -294,25 +294,25 @@ export default function BlacklistPage() {
               </div>
 
               {/* Pagination */}
-              <div className="flex items-center justify-between px-6 py-4 border-t">
-                <p className="text-sm text-gray-500">
+              <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--border)]">
+                <p className="text-sm text-[var(--muted-foreground)]">
                   顯示 {(currentPage - 1) * limit + 1} - {Math.min(currentPage * limit, pagination?.total || 0)}，共 {pagination?.total || 0} 筆
                 </p>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="p-2 rounded-lg border hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
-                  <span className="text-sm">
+                  <span className="text-sm text-[var(--foreground)]">
                     第 {currentPage} / {totalPages} 頁
                   </span>
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="p-2 rounded-lg border hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-2 rounded-lg border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
@@ -326,62 +326,62 @@ export default function BlacklistPage() {
       {/* Detail Modal */}
       {selectedIp && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setSelectedIp(null)}>
-          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">IP 詳細資料</h2>
-              <button onClick={() => setSelectedIp(null)} className="p-1 hover:bg-gray-100 rounded">
+          <div className="bg-[var(--card)] rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="sticky top-0 bg-[var(--card)] border-b border-[var(--border)] px-6 py-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-[var(--foreground)]">IP 詳細資料</h2>
+              <button onClick={() => setSelectedIp(null)} className="p-1 hover:bg-[var(--accent)] rounded">
                 <X className="h-5 w-5" />
               </button>
             </div>
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xl">{selectedIp.ip}</span>
+                <span className="font-mono text-xl text-[var(--foreground)]">{selectedIp.ip}</span>
                 {getStatusBadge(selectedIp.status)}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500">國家</p>
-                  <p className="font-medium">{selectedIp.countryName || selectedIp.countryCode || '-'}</p>
+                  <p className="text-sm text-[var(--muted-foreground)]">國家</p>
+                  <p className="font-medium text-[var(--foreground)]">{selectedIp.countryName || selectedIp.countryCode || '-'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500"> ISP</p>
-                  <p className="font-medium">{selectedIp.isp || '-'}</p>
+                  <p className="text-sm text-[var(--muted-foreground)]"> ISP</p>
+                  <p className="font-medium text-[var(--foreground)]">{selectedIp.isp || '-'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">信心分數</p>
-                  <p className="font-medium">{selectedIp.confidenceScore !== null ? `${selectedIp.confidenceScore}%` : '-'}</p>
+                  <p className="text-sm text-[var(--muted-foreground)]">信心分數</p>
+                  <p className="font-medium text-[var(--foreground)]">{selectedIp.confidenceScore !== null ? `${selectedIp.confidenceScore}%` : '-'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">舉報次數</p>
-                  <p className="font-medium">{selectedIp.totalReports?.toLocaleString() ?? '-'}</p>
+                  <p className="text-sm text-[var(--muted-foreground)]">舉報次數</p>
+                  <p className="font-medium text-[var(--foreground)]">{selectedIp.totalReports?.toLocaleString() ?? '-'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">使用類型</p>
-                  <p className="font-medium">{selectedIp.usageType || '-'}</p>
+                  <p className="text-sm text-[var(--muted-foreground)]">使用類型</p>
+                  <p className="font-medium text-[var(--foreground)]">{selectedIp.usageType || '-'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">網域</p>
-                  <p className="font-medium">{selectedIp.domain || '-'}</p>
+                  <p className="text-sm text-[var(--muted-foreground)]">網域</p>
+                  <p className="font-medium text-[var(--foreground)]">{selectedIp.domain || '-'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">白名單</p>
-                  <p className="font-medium">{selectedIp.isWhitelisted ? '是' : '否'}</p>
+                  <p className="text-sm text-[var(--muted-foreground)]">白名單</p>
+                  <p className="font-medium text-[var(--foreground)]">{selectedIp.isWhitelisted ? '是' : '否'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">威脅等級</p>
-                  <p className="font-medium">{selectedIp.threatLevel || '-'}</p>
+                  <p className="text-sm text-[var(--muted-foreground)]">威脅等級</p>
+                  <p className="font-medium text-[var(--foreground)]">{selectedIp.threatLevel || '-'}</p>
                 </div>
               </div>
 
               {selectedIp.sources && selectedIp.sources.length > 0 && (
-                <div className="pt-4 border-t">
-                  <p className="text-sm text-gray-500 mb-2">資料來源</p>
+                <div className="pt-4 border-t border-[var(--border)]">
+                  <p className="text-sm text-[var(--muted-foreground)] mb-2">資料來源</p>
                   <div className="space-y-2">
                     {selectedIp.sources.map((source, i) => (
-                      <div key={i} className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg">
-                        <span className="font-medium">{source.name}</span>
-                        <span className="text-sm text-gray-500">
+                      <div key={i} className="flex items-center justify-between bg-[var(--muted)] px-3 py-2 rounded-lg">
+                        <span className="font-medium text-[var(--foreground)]">{source.name}</span>
+                        <span className="text-sm text-[var(--muted-foreground)]">
                           出現在 {'listCount' in source ? source.listCount : source.totalReports || source.pulseCount || '-'} 個黑名單
                         </span>
                       </div>
@@ -390,9 +390,9 @@ export default function BlacklistPage() {
                 </div>
               )}
 
-              <div className="pt-4 border-t">
-                <p className="text-sm text-gray-500">更新時間</p>
-                <p className="text-sm">{new Date(selectedIp.updatedAt).toLocaleString('zh-TW')}</p>
+              <div className="pt-4 border-t border-[var(--border)]">
+                <p className="text-sm text-[var(--muted-foreground)]">更新時間</p>
+                <p className="text-sm text-[var(--foreground)]">{new Date(selectedIp.updatedAt).toLocaleString('zh-TW')}</p>
               </div>
             </div>
           </div>

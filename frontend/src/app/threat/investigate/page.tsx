@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { api, pollSession, type SessionDetail, type IpReputationResult } from '@/lib/api';
-import { Loader2, Search, AlertCircle, CheckCircle2, XCircle, Shield, ShieldAlert, ShieldCheck, ShieldQuestion } from 'lucide-react';
+import { Loader2, Search, AlertCircle, CheckCircle2, XCircle, Shield, ShieldAlert, ShieldCheck, ShieldQuestion, Terminal } from 'lucide-react';
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer';
+import { cn } from '@/lib/utils';
 
 function ThreatInvestigateContent() {
   const searchParams = useSearchParams();
@@ -125,13 +126,13 @@ function ThreatInvestigateContent() {
     switch (status) {
       case 'success':
       case 'completed':
-        return <CheckCircle2 className="h-4 w-4 text-emerald-500" />;
+        return <CheckCircle2 className="h-4 w-4 text-[var(--terminal-green)]" />;
       case 'running':
-        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />;
+        return <Loader2 className="h-4 w-4 text-[var(--color-soc)] animate-spin" />;
       case 'error':
-        return <XCircle className="h-4 w-4 text-red-500" />;
+        return <XCircle className="h-4 w-4 text-[var(--color-threat)]" />;
       default:
-        return <div className="h-4 w-4 rounded-full border-2 border-gray-300" />;
+        return <div className="h-4 w-4 rounded-full border-2 border-[var(--border)]" />;
     }
   };
 
@@ -143,88 +144,108 @@ function ThreatInvestigateContent() {
   const getReputationIcon = (status: string) => {
     switch (status) {
       case 'malicious':
-        return <ShieldAlert className="h-8 w-8 text-red-500" />;
+        return <ShieldAlert className="h-8 w-8 text-[var(--color-threat)]" />;
       case 'suspicious':
-        return <Shield className="h-8 w-8 text-yellow-500" />;
+        return <Shield className="h-8 w-8 text-[var(--terminal-amber)]" />;
       case 'normal':
-        return <ShieldCheck className="h-8 w-8 text-emerald-500" />;
+        return <ShieldCheck className="h-8 w-8 text-[var(--terminal-green)]" />;
       default:
-        return <ShieldQuestion className="h-8 w-8 text-gray-400" />;
+        return <ShieldQuestion className="h-8 w-8 text-[var(--muted-foreground)]" />;
     }
   };
 
-  const getReputationColor = (status: string) => {
+  const getReputationBgColor = (status: string) => {
     switch (status) {
       case 'malicious':
-        return 'bg-red-50 border-red-200';
+        return 'bg-[var(--color-threat)]/10 border-[var(--color-threat)]/30';
       case 'suspicious':
-        return 'bg-yellow-50 border-yellow-200';
+        return 'bg-[var(--terminal-amber)]/10 border-[var(--terminal-amber)]/30';
       case 'normal':
-        return 'bg-emerald-50 border-emerald-200';
+        return 'bg-[var(--terminal-green)]/10 border-[var(--terminal-green)]/30';
       default:
-        return 'bg-gray-50 border-gray-200';
+        return 'bg-[var(--muted)]/50 border-[var(--border)]';
     }
   };
 
   const getStatusBadge = (status: string, _threatLevel: string) => {
     switch (status) {
       case 'malicious':
-        return <span className="px-3 py-1 bg-red-500 text-white text-sm font-medium rounded-full">❌ 惡意 IP</span>;
+        return <span className="px-3 py-1 bg-[var(--color-threat)] text-white text-sm font-medium rounded-full">MALICIOUS</span>;
       case 'suspicious':
-        return <span className="px-3 py-1 bg-yellow-500 text-white text-sm font-medium rounded-full">⚠️ 需調查</span>;
+        return <span className="px-3 py-1 bg-[var(--terminal-amber)] text-white text-sm font-medium rounded-full">SUSPICIOUS</span>;
       case 'normal':
-        return <span className="px-3 py-1 bg-emerald-500 text-white text-sm font-medium rounded-full">✅ 良性 IP</span>;
+        return <span className="px-3 py-1 bg-[var(--terminal-green)] text-white text-sm font-medium rounded-full">SAFE</span>;
       default:
-        return <span className="px-3 py-1 bg-gray-500 text-white text-sm font-medium rounded-full">❓ 未知</span>;
+        return <span className="px-3 py-1 bg-[var(--muted-foreground)] text-white text-sm font-medium rounded-full">UNKNOWN</span>;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--background)]">
       {/* Header */}
-      <div className="bg-white border-b px-6 py-4">
+      <div className="bg-[var(--card)] border-b border-[var(--border)] px-6 py-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-xl font-semibold text-gray-900">威脅情報調查</h1>
-          <p className="text-sm text-gray-500 mt-1">輸入 IP、域名或雜湊值進行威脅情報分析</p>
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-[var(--color-threat)]/10 text-[var(--color-threat)]">
+              <Terminal className="h-5 w-5" />
+            </div>
+            <div>
+              <h1 className="text-xl font-semibold text-[var(--foreground)]">威脅情報調查</h1>
+              <p className="text-sm text-[var(--muted-foreground)] mt-1">輸入 IP、域名或雜湊值進行威脅情報分析</p>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto p-6">
-        {/* Input Section */}
-        <div className="bg-white rounded-lg border p-6 mb-6">
-          <div className="flex gap-4">
+        {/* Command Input Section */}
+        <div className="group relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 mb-6 hover:border-[var(--terminal-green)]/50 transition-all duration-300 animate-fade-in-up">
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-[var(--terminal-green)]/5 to-transparent" />
+          {/* Corner decorations */}
+          <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 right-0 w-[1px] h-8 bg-gradient-to-l from-[var(--terminal-green)]/30 to-transparent" />
+            <div className="absolute top-0 right-0 h-[1px] w-8 bg-gradient-to-b from-[var(--terminal-green)]/30 to-transparent" />
+          </div>
+
+          <div className="flex gap-4 items-center relative">
+            {/* $ Command prefix */}
+            <div className="flex items-center gap-2 text-[var(--terminal-green)] font-mono text-lg">
+              <span>$</span>
+              <span className="text-[var(--muted-foreground)]">/investigate</span>
+            </div>
+
             <select
               value={type}
               onChange={e => setType(e.target.value as typeof type)}
-              className="border rounded-lg px-4 py-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-[var(--border)] rounded-lg px-4 py-2 text-[var(--foreground)] bg-[var(--background)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)] font-mono"
             >
-              <option value="ip">IP 地址</option>
-              <option value="domain">域名</option>
-              <option value="hash">檔案雜湊</option>
+              <option value="ip">--type ip</option>
+              <option value="domain">--type domain</option>
+              <option value="hash">--type hash</option>
             </select>
             <input
               type="text"
               value={indicator}
               onChange={e => setIndicator(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder={type === 'ip' ? '例如：1.1.1.1' : type === 'domain' ? '例如：example.com' : '例如：44f4b6e2...'}
-              className="flex-1 border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder={type === 'ip' ? '1.1.1.1' : type === 'domain' ? 'example.com' : '44f4b6e2...'}
+              className="flex-1 border border-[var(--border)] rounded-lg px-4 py-2 text-[var(--foreground)] bg-[var(--background)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)] font-mono placeholder:text-[var(--muted-foreground)]"
             />
             <button
               onClick={handleInvestigate}
               disabled={loading || !indicator.trim()}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="bg-[var(--color-threat)] text-white px-6 py-2 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-mono transition-all"
             >
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  分析中
+                  <span>ANALYZING...</span>
                 </>
               ) : (
                 <>
                   <Search className="h-4 w-4" />
-                  調查
+                  <span>EXECUTE</span>
                 </>
               )}
             </button>
@@ -233,52 +254,55 @@ function ThreatInvestigateContent() {
 
         {/* IP Reputation Result */}
         {(ipLoading || ipReputation) && type === 'ip' && (
-          <div className={`rounded-lg border p-6 mb-6 ${ipReputation ? getReputationColor(ipReputation.status) : 'bg-gray-50 border-gray-200'}`}>
+          <div className={cn(
+            'rounded-xl border p-6 mb-6 animate-fade-in-up',
+            ipReputation ? getReputationBgColor(ipReputation.status) : 'bg-[var(--muted)]/50 border-[var(--border)]'
+          )}>
             {ipLoading ? (
               <div className="flex items-center gap-3">
-                <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
-                <span className="text-gray-600">正在查詢 IP 信譽資料庫...</span>
+                <Loader2 className="h-6 w-6 animate-spin text-[var(--color-soc)]" />
+                <span className="text-[var(--foreground)] font-mono">{'>'} Querying IP reputation database...</span>
               </div>
             ) : ipReputation ? (
               <div className="flex items-start gap-4">
                 {getReputationIcon(ipReputation.status)}
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="font-mono text-lg font-semibold text-gray-900">{ipReputation.ip}</span>
+                    <span className="font-mono text-lg font-semibold text-[var(--foreground)]">{ipReputation.ip}</span>
                     {getStatusBadge(ipReputation.status, ipReputation.threatLevel)}
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                     {ipReputation.countryName && (
                       <div>
-                        <p className="text-xs text-gray-500">國家</p>
-                        <p className="text-sm font-medium text-gray-700">{ipReputation.countryName}</p>
+                        <p className="text-xs text-[var(--muted-foreground)] font-mono">COUNTRY</p>
+                        <p className="text-sm font-medium text-[var(--foreground)]">{ipReputation.countryName}</p>
                       </div>
                     )}
                     {ipReputation.isp && (
                       <div>
-                        <p className="text-xs text-gray-500">ISP</p>
-                        <p className="text-sm font-medium text-gray-700">{ipReputation.isp}</p>
+                        <p className="text-xs text-[var(--muted-foreground)] font-mono">ISP</p>
+                        <p className="text-sm font-medium text-[var(--foreground)]">{ipReputation.isp}</p>
                       </div>
                     )}
                     {ipReputation.confidenceScore !== null && (
                       <div>
-                        <p className="text-xs text-gray-500">信心分數</p>
-                        <p className="text-sm font-medium text-gray-700">{ipReputation.confidenceScore}%</p>
+                        <p className="text-xs text-[var(--muted-foreground)] font-mono">CONFIDENCE</p>
+                        <p className="text-sm font-medium text-[var(--foreground)] font-mono">{ipReputation.confidenceScore}%</p>
                       </div>
                     )}
                     {ipReputation.totalReports !== undefined && (
                       <div>
-                        <p className="text-xs text-gray-500">舉報次數</p>
-                        <p className="text-sm font-medium text-gray-700">{ipReputation.totalReports}</p>
+                        <p className="text-xs text-[var(--muted-foreground)] font-mono">REPORTS</p>
+                        <p className="text-sm font-medium text-[var(--foreground)] font-mono">{ipReputation.totalReports}</p>
                       </div>
                     )}
                   </div>
                   {ipReputation.sources && ipReputation.sources.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <p className="text-xs text-gray-500 mb-2">資料來源</p>
+                    <div className="mt-4 pt-4 border-t border-[var(--border)]">
+                      <p className="text-xs text-[var(--muted-foreground)] mb-2 font-mono">SOURCES</p>
                       <div className="flex gap-2">
                         {ipReputation.sources.map((source, i) => (
-                          <span key={i} className="px-2 py-1 bg-white rounded text-xs font-medium text-gray-600">
+                          <span key={i} className="px-2 py-1 bg-[var(--card)] rounded text-xs font-medium text-[var(--foreground)] font-mono">
                             {source.name}
                           </span>
                         ))}
@@ -293,39 +317,50 @@ function ThreatInvestigateContent() {
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
+          <div className="bg-[var(--color-threat)]/10 border border-[var(--color-threat)]/30 rounded-xl p-4 mb-6 flex items-start gap-3 animate-fade-in-up">
+            <AlertCircle className="h-5 w-5 text-[var(--color-threat)] mt-0.5" />
             <div>
-              <p className="font-medium text-red-800">發生錯誤</p>
-              <p className="text-red-600 text-sm mt-1">{error}</p>
+              <p className="font-medium text-[var(--color-threat)] font-mono">ERROR</p>
+              <p className="text-[var(--foreground)] text-sm mt-1">{error}</p>
             </div>
           </div>
         )}
 
         {/* Progress Section */}
         {(loading || session) && (
-          <div className="bg-white rounded-lg border p-6 mb-6">
-            <div className="flex items-center justify-between mb-4">
+          <div className="group relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 mb-6 hover:border-[var(--terminal-green)]/50 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-[var(--terminal-green)]/5 to-transparent" />
+            {/* Corner decorations */}
+            <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden pointer-events-none">
+              <div className="absolute top-0 right-0 w-[1px] h-8 bg-gradient-to-l from-[var(--terminal-green)]/30 to-transparent" />
+              <div className="absolute top-0 right-0 h-[1px] w-8 bg-gradient-to-b from-[var(--terminal-green)]/30 to-transparent" />
+            </div>
+
+            <div className="flex items-center justify-between mb-4 relative">
               <div className="flex items-center gap-2">
                 {session?.status === 'completed' || session?.status === 'success' ? (
-                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                  <CheckCircle2 className="h-5 w-5 text-[var(--terminal-green)]" />
                 ) : loading ? (
-                  <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />
+                  <Loader2 className="h-5 w-5 text-[var(--color-soc)] animate-spin" />
                 ) : null}
-                <span className="font-medium text-gray-700">
-                  {session?.status === 'completed' || session?.status === 'success' ? '分析完成' : loading ? '分析中...' : '等待分析'}
+                <span className="font-medium text-[var(--foreground)] font-mono">
+                  {session?.status === 'completed' || session?.status === 'success'
+                    ? '[COMPLETED]'
+                    : loading
+                    ? '[ANALYZING...]'
+                    : '[PENDING]'}
                 </span>
               </div>
-              <span className="text-sm text-gray-500">
-                {completedSteps} / {totalSteps} 步驟
+              <span className="text-sm text-[var(--muted-foreground)] font-mono">
+                {completedSteps} / {totalSteps} STEPS
               </span>
             </div>
 
             {/* Progress Bar */}
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-[var(--muted)] rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
-                  session?.status === 'completed' || session?.status === 'success' ? 'bg-emerald-500' : 'bg-blue-500'
+                  session?.status === 'completed' || session?.status === 'success' ? 'bg-[var(--terminal-green)]' : 'bg-[var(--color-soc)]'
                 }`}
                 style={{ width: `${progressPercent}%` }}
               />
@@ -335,11 +370,15 @@ function ThreatInvestigateContent() {
             {session?.steps && session.steps.length > 0 && (
               <div className="mt-6 space-y-3">
                 {session.steps.map((step, index) => (
-                  <div key={step.id} className="flex items-center gap-3">
+                  <div key={step.id} className="flex items-center gap-3" style={{ animationDelay: `${(index + 1) * 100}ms` }}>
                     {getStatusIcon(step.status)}
                     <div className="flex-1">
-                      <p className={`text-sm ${step.status === 'success' ? 'text-gray-700' : 'text-gray-500'}`}>
-                        {index + 1}. {step.title}
+                      <p className={cn(
+                        'text-sm font-mono',
+                        step.status === 'success' ? 'text-[var(--foreground)]' : 'text-[var(--muted-foreground)]'
+                      )}>
+                        <span className="text-[var(--terminal-green)]">[{step.status === 'success' ? 'OK' : step.status === 'running' ? 'RUN' : 'PND'}]</span>
+                        {' '}{step.title}
                       </p>
                     </div>
                   </div>
@@ -351,16 +390,26 @@ function ThreatInvestigateContent() {
 
         {/* Results Section - show step content */}
         {session?.steps && session.steps.length > 0 && (
-          <div className="bg-white rounded-lg border">
-            <div className="border-b px-6 py-4">
-              <h2 className="font-medium text-gray-700">分析結果</h2>
+          <div className="group relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+            <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden pointer-events-none">
+              <div className="absolute top-0 right-0 w-[1px] h-8 bg-gradient-to-l from-[var(--terminal-green)]/30 to-transparent" />
+              <div className="absolute top-0 right-0 h-[1px] w-8 bg-gradient-to-b from-[var(--terminal-green)]/30 to-transparent" />
+            </div>
+            <div className="border-b border-[var(--border)] px-6 py-4">
+              <div className="flex items-center gap-2">
+                <span className="text-[var(--terminal-green)] font-mono">$</span>
+                <h2 className="font-medium text-[var(--foreground)]">分析結果</h2>
+              </div>
             </div>
             <div className="p-6">
               {session.steps
                 .filter(s => s.content && s.status === 'success')
-                .map(step => (
-                  <div key={step.id} className="mb-6">
-                    <h3 className="font-medium text-gray-800 mb-2">{step.title}</h3>
+                .map((step, index) => (
+                  <div key={step.id} className="mb-6" style={{ animationDelay: `${(index + 3) * 100}ms` }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-mono text-xs text-[var(--terminal-green)]">[OUTPUT]</span>
+                      <h3 className="font-medium text-[var(--foreground)]">{step.title}</h3>
+                    </div>
                     {step.content && (
                       <MarkdownRenderer content={step.content} />
                     )}
@@ -372,10 +421,12 @@ function ThreatInvestigateContent() {
 
         {/* Empty State */}
         {!session && !loading && !error && (
-          <div className="text-center py-12 text-gray-500">
-            <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-            <p>輸入威脅指標開始調查</p>
-            <p className="text-sm mt-2">支援 IP、域名和檔案雜湊</p>
+          <div className="text-center py-12 text-[var(--muted-foreground)] animate-fade-in-up">
+            <div className="inline-flex p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] mb-4">
+              <Terminal className="h-12 w-12 text-[var(--muted-foreground)]" />
+            </div>
+            <p className="font-mono text-lg mb-2">{'>'} Awaiting input...</p>
+            <p className="text-sm text-[var(--muted-foreground)]">支援 IP、域名和檔案雜湊</p>
           </div>
         )}
       </div>
@@ -385,7 +436,7 @@ function ThreatInvestigateContent() {
 
 export default function ThreatInvestigatePage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center">載入中...</div>}>
+    <Suspense fallback={<div className="p-8 text-center font-mono">Loading...</div>}>
       <ThreatInvestigateContent />
     </Suspense>
   );

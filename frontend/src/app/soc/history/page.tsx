@@ -84,11 +84,11 @@ export default function HistoryPage() {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="border-b bg-white px-6 py-4">
+      <div className="border-b border-[var(--border)] bg-[var(--card)] px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold text-gray-900">歷史分析記錄</h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <h1 className="text-lg font-semibold text-[var(--card-foreground)]">歷史分析記錄</h1>
+            <p className="text-sm text-[var(--muted-foreground)] mt-1">
               共 {sessions.length} 筆記錄
             </p>
           </div>
@@ -104,7 +104,7 @@ export default function HistoryPage() {
           {loading && (
             <>
               {[1, 2, 3].map((i) => (
-                <Card key={i} className="p-4">
+                <Card key={i} className="p-4 border-[var(--border)] bg-[var(--card)]">
                   <div className="flex items-center gap-4">
                     <Skeleton className="h-10 w-10 rounded-full" />
                     <div className="flex-1 space-y-2">
@@ -119,8 +119,8 @@ export default function HistoryPage() {
           )}
 
           {error && (
-            <Card className="p-8 text-center">
-              <p className="text-red-500">{error}</p>
+            <Card className="p-8 text-center border-[var(--border)] bg-[var(--card)]">
+              <p className="text-[var(--destructive)]">{error}</p>
               <Button variant="outline" className="mt-4" onClick={loadSessions}>
                 重試
               </Button>
@@ -128,10 +128,10 @@ export default function HistoryPage() {
           )}
 
           {!loading && !error && sessions.length === 0 && (
-            <Card className="p-8 text-center">
-              <FileText className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-              <h3 className="font-medium text-gray-900 mb-2">暫無歷史記錄</h3>
-              <p className="text-sm text-gray-500 mb-4">
+            <Card className="p-8 text-center border-[var(--border)] bg-[var(--card)]">
+              <FileText className="h-12 w-12 mx-auto text-[var(--muted-foreground)] mb-4" />
+              <h3 className="font-medium text-[var(--card-foreground)] mb-2">暫無歷史記錄</h3>
+              <p className="text-sm text-[var(--muted-foreground)] mb-4">
                 開始一個新的分析任務後，就能在這裡看到記錄
               </p>
               <Link href="/soc/analyze">
@@ -145,7 +145,7 @@ export default function HistoryPage() {
               {sessions.map((session) => (
                 <Card
                   key={session.id}
-                  className="p-4 hover:shadow-md transition-shadow cursor-pointer"
+                  className="p-4 hover:shadow-md transition-shadow cursor-pointer border-[var(--border)] bg-[var(--card)]"
                 >
                   <Link
                     href={`/${session.module === 'soc' ? 'soc/analyze' : session.module === 'threat' ? 'threat/investigate' : 'pentest/assist'}?session=${session.id}`}
@@ -153,7 +153,7 @@ export default function HistoryPage() {
                   >
                     {/* Icon */}
                     <div
-                      className={`h-10 w-10 rounded-full flex items-center justify-center ${moduleColors[session.module] || 'bg-gray-100 text-gray-600'}`}
+                      className={`h-10 w-10 rounded-full flex items-center justify-center ${moduleColors[session.module] || 'bg-[var(--muted)] text-[var(--muted-foreground)]'}`}
                     >
                       {moduleIcons[session.module] || <FileText className="h-5 w-5" />}
                     </div>
@@ -161,14 +161,14 @@ export default function HistoryPage() {
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-medium text-gray-900">
+                        <h3 className="font-medium text-[var(--card-foreground)]">
                           {moduleLabels[session.module] || session.module}
                         </h3>
                         <Badge
                           variant={session.status === 'completed' ? 'default' : 'secondary'}
                           className={
                             session.status === 'completed'
-                              ? 'bg-green-100 text-green-700 hover:bg-green-100'
+                              ? 'bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/10'
                               : ''
                           }
                         >
@@ -176,12 +176,12 @@ export default function HistoryPage() {
                         </Badge>
                       </div>
                       {/* Input 值 + Session ID */}
-                      <div className="flex items-center gap-2 mt-1 text-sm text-gray-500 font-mono">
+                      <div className="flex items-center gap-2 mt-1 text-sm text-[var(--muted-foreground)] font-mono">
                         <InputDisplay input={session.input} />
-                        <span className="text-gray-400 text-xs">·</span>
-                        <span className="text-gray-400 text-xs font-mono">ID: {session.id.slice(0, 8)}</span>
+                        <span className="text-[var(--muted-foreground)] text-xs">·</span>
+                        <span className="text-[var(--muted-foreground)] text-xs font-mono">ID: {session.id.slice(0, 8)}</span>
                       </div>
-                      <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
+                      <div className="flex items-center gap-2 mt-1 text-sm text-[var(--muted-foreground)]">
                         <Clock className="h-3 w-3" />
                         <span>{formatDate(session.createdAt)}</span>
                         {session.steps && (
@@ -196,7 +196,7 @@ export default function HistoryPage() {
                     </div>
 
                     {/* Arrow */}
-                    <ChevronRight className="h-5 w-5 text-gray-400" />
+                    <ChevronRight className="h-5 w-5 text-[var(--muted-foreground)]" />
                   </Link>
                 </Card>
               ))}

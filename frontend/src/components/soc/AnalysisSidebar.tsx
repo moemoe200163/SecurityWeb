@@ -98,9 +98,9 @@ export function AnalysisSidebar({
   ];
 
   return (
-    <div className="w-72 border-r bg-gray-50/30 flex flex-col h-full">
+    <div className="w-72 border-r border-[var(--border)] bg-[var(--muted)]/30 flex flex-col h-full">
       {/* Module tabs */}
-      <div className="border-b bg-white">
+      <div className="border-b bg-[var(--card)]">
         <div className="flex">
           {tabs.map((tab) => (
             <button
@@ -110,7 +110,7 @@ export function AnalysisSidebar({
                 'flex-1 flex flex-col items-center gap-1 py-3 text-xs font-medium transition-colors border-b-2',
                 activeSection === tab.id
                   ? 'border-[--color-soc] text-[--color-soc] bg-[--color-soc]/5'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                  : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--card-foreground)] hover:bg-[var(--muted)]'
               )}
             >
               {tab.icon}
@@ -126,17 +126,17 @@ export function AnalysisSidebar({
           {/* Alert Info Section */}
           {activeSection === 'info' && (
             <div className="space-y-4">
-              <div className="bg-white rounded-lg border p-4 space-y-3">
+              <div className="bg-[var(--card)] rounded-lg border border-[var(--border)] p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-medium text-gray-900">告警概覽</h3>
+                  <h3 className="font-medium text-[var(--card-foreground)]">告警概覽</h3>
                   <Badge
                     variant="outline"
                     className={cn(
                       session?.status === 'completed'
-                        ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                        ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
                         : session?.status === 'in_progress'
                         ? 'bg-[--color-soc]/10 text-[--color-soc] border-[--color-soc]/20'
-                        : 'bg-gray-100 text-gray-600 border-gray-200'
+                        : 'bg-[var(--muted)] text-[var(--muted-foreground)] border-[var(--border)]'
                     )}
                   >
                     {session?.status === 'completed' && <CheckCircle2 className="h-3 w-3 mr-1" />}
@@ -149,23 +149,23 @@ export function AnalysisSidebar({
                   <>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-500">工作階段</span>
-                        <span className="font-mono text-xs text-gray-700">{session.id.slice(0, 8)}...</span>
+                        <span className="text-[var(--muted-foreground)]">工作階段</span>
+                        <span className="font-mono text-xs text-[var(--card-foreground)]">{session.id.slice(0, 8)}...</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">模組</span>
-                        <span className="text-gray-700 capitalize">{session.module}</span>
+                        <span className="text-[var(--muted-foreground)]">模組</span>
+                        <span className="text-[var(--card-foreground)] capitalize">{session.module}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">創建時間</span>
-                        <span className="text-gray-700">{formatTimeAgo(session.createdAt)}</span>
+                        <span className="text-[var(--muted-foreground)]">創建時間</span>
+                        <span className="text-[var(--card-foreground)]">{formatTimeAgo(session.createdAt)}</span>
                       </div>
                     </div>
                   </>
                 )}
 
                 {!session && (
-                  <div className="text-sm text-gray-500 text-center py-4">
+                  <div className="text-sm text-[var(--muted-foreground)] text-center py-4">
                     暂无活跃工作階段
                   </div>
                 )}
@@ -174,31 +174,31 @@ export function AnalysisSidebar({
               {/* Alert stats */}
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { label: 'IOC', value: '12', color: 'text-amber-600' },
-                  { label: 'TTP', value: '5', color: 'text-red-600' },
-                  { label: '風險', value: '高', color: 'text-red-600' },
+                  { label: 'IOC', value: '12', color: 'text-amber-500' },
+                  { label: 'TTP', value: '5', color: 'text-red-500' },
+                  { label: '風險', value: '高', color: 'text-red-500' },
                 ].map((stat) => (
-                  <div key={stat.label} className="bg-white rounded-lg border p-3 text-center">
+                  <div key={stat.label} className="bg-[var(--card)] rounded-lg border border-[var(--border)] p-3 text-center">
                     <div className={cn('text-xl font-bold', stat.color)}>{stat.value}</div>
-                    <div className="text-xs text-gray-500">{stat.label}</div>
+                    <div className="text-xs text-[var(--muted-foreground)]">{stat.label}</div>
                   </div>
                 ))}
               </div>
 
               {/* Session ID */}
               {sessionId && (
-                <div className="bg-white rounded-lg border p-3">
+                <div className="bg-[var(--card)] rounded-lg border border-[var(--border)] p-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500">Session ID</span>
+                    <span className="text-xs text-[var(--muted-foreground)]">Session ID</span>
                     <button
-                      className="text-xs text-gray-700 hover:text-blue-600 transition-colors"
+                      className="text-xs text-[--color-soc] hover:text-[--color-soc]/80 transition-colors"
                       onClick={() => navigator.clipboard.writeText(sessionId)}
                       title="複製"
                     >
                       <Copy className="h-3 w-3" />
                     </button>
                   </div>
-                  <div className="font-mono text-xs text-gray-900 mt-1 truncate">{sessionId}</div>
+                  <div className="font-mono text-xs text-[var(--card-foreground)] mt-1 truncate">{sessionId}</div>
                 </div>
               )}
             </div>
@@ -207,7 +207,7 @@ export function AnalysisSidebar({
           {/* Quick Actions Section */}
           {activeSection === 'actions' && (
             <div className="space-y-3">
-              <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+              <div className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wide">
                 快速處置動作
               </div>
               <div className="space-y-2">
@@ -216,27 +216,27 @@ export function AnalysisSidebar({
                     key={action.id}
                     onClick={() => onQuickAction?.(action.id)}
                     className={cn(
-                      'w-full flex items-center gap-3 px-4 py-3 rounded-lg border bg-white transition-all',
+                      'w-full flex items-center gap-3 px-4 py-3 rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all',
                       'hover:border-[--color-soc]/30 hover:bg-[--color-soc]/5 hover:shadow-sm'
                     )}
                   >
-                    <div className="h-8 w-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600">
+                    <div className="h-8 w-8 rounded-lg bg-[var(--muted)] flex items-center justify-center text-[var(--muted-foreground)]">
                       {action.icon}
                     </div>
-                    <span className="text-sm font-medium text-gray-700">{action.label}</span>
-                    <ChevronRight className="h-4 w-4 text-gray-400 ml-auto" />
+                    <span className="text-sm font-medium text-[var(--card-foreground)]">{action.label}</span>
+                    <ChevronRight className="h-4 w-4 text-[var(--muted-foreground)] ml-auto" />
                   </button>
                 ))}
               </div>
 
               {/* Emergency actions */}
               <div className="pt-4">
-                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                <div className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wide mb-2">
                   緊急處置
                 </div>
                 <Button
                   variant="outline"
-                  className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                  className="w-full justify-start text-red-500 border-red-500/30 hover:bg-red-500/10 hover:border-red-500/50"
                 >
                   <XCircle className="h-4 w-4 mr-2" />
                   終止工作階段
@@ -248,7 +248,7 @@ export function AnalysisSidebar({
           {/* History Section */}
           {activeSection === 'history' && (
             <div className="space-y-3">
-              <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+              <div className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wide">
                 最近工作階段
               </div>
               <div className="space-y-2">
@@ -257,7 +257,7 @@ export function AnalysisSidebar({
                     key={s.id}
                     href={`/soc/analyze?session=${s.id}`}
                     className={cn(
-                      'block p-3 rounded-lg border bg-white transition-all',
+                      'block p-3 rounded-lg border border-[var(--border)] bg-[var(--card)] transition-all',
                       'hover:border-[--color-soc]/30 hover:shadow-sm'
                     )}
                   >
@@ -266,21 +266,21 @@ export function AnalysisSidebar({
                         'h-8 w-8 rounded-lg flex items-center justify-center',
                         s.module === 'soc' ? 'bg-[--color-soc]/10 text-[--color-soc]' :
                         s.module === 'threat' ? 'bg-[--color-threat]/10 text-[--color-threat]' :
-                        'bg-purple-100 text-purple-600'
+                        'bg-purple-500/10 text-purple-500'
                       )}>
                         <Shield className="h-4 w-4" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium text-gray-900 truncate">
+                        <div className="text-sm font-medium text-[var(--card-foreground)] truncate">
                           {s.title}
                         </div>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-gray-500">{formatTimeAgo(s.createdAt)}</span>
+                          <span className="text-xs text-[var(--muted-foreground)]">{formatTimeAgo(s.createdAt)}</span>
                           <Badge
                             variant="outline"
                             className={cn(
                               'text-xs',
-                              s.status === 'completed' && 'bg-emerald-50 text-emerald-600 border-emerald-200',
+                              s.status === 'completed' && 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
                               s.status === 'in_progress' && 'bg-[--color-soc]/10 text-[--color-soc] border-[--color-soc]/20'
                             )}
                           >

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
-import { Settings, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Settings, CheckCircle, XCircle, Loader2, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface AISettings {
@@ -109,75 +109,95 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--terminal-green)]" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-6 animate-fade-in-up">
+      {/* Header with Terminal style */}
       <div className="flex items-center gap-3 mb-6">
-        <Settings className="h-6 w-6 text-gray-600" />
-        <h1 className="text-2xl font-semibold">AI 設定</h1>
+        <div className="flex items-center justify-center w-10 h-10 rounded-xl border border-[var(--border)] bg-[var(--card)]">
+          <Terminal className="h-5 w-5 text-[var(--terminal-green)]" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-semibold text-[var(--foreground)]">
+            <span className="font-mono text-[var(--terminal-green)]">$</span> ai-config
+          </h1>
+          <p className="text-sm font-mono text-[var(--muted-foreground)]">--ai-provider-settings</p>
+        </div>
       </div>
 
-      <div className="bg-white rounded-lg border p-6 space-y-6">
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 space-y-6">
         {/* Provider Selection */}
         <div>
-          <label className="block text-sm font-medium mb-3">AI Provider</label>
+          <label className="block text-sm font-medium mb-3 text-[var(--foreground)]">
+            <span className="font-mono text-[var(--terminal-green)]">$</span> select-provider
+          </label>
           <div className="space-y-2">
-            <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+            <label className="group flex items-center gap-3 p-4 rounded-xl border border-[var(--border)] bg-[var(--card)] cursor-pointer hover:border-[var(--terminal-green)]/50 transition-all duration-300">
               <input
                 type="radio"
                 name="provider"
                 value="minimax"
                 checked={settings.provider === 'minimax'}
                 onChange={() => handleProviderChange('minimax')}
-                className="h-4 w-4 text-blue-600"
+                className="h-4 w-4 text-[var(--terminal-green)]"
               />
-              <div>
-                <div className="font-medium">MiniMax</div>
-                <div className="text-sm text-gray-500">使用 MiniMax API {settings.hasMinimaxKey ? '✓ 已設定 API Key' : '✗ 未設定 API Key'}</div>
+              <div className="flex-1">
+                <div className="font-medium text-[var(--foreground)]">MiniMax</div>
+                <div className="text-sm font-mono text-[var(--muted-foreground)]">
+                  {settings.hasMinimaxKey ? '[+] API Key configured' : '[-] API Key not set'}
+                </div>
               </div>
+              <div className={`w-2 h-2 rounded-full ${settings.provider === 'minimax' ? 'bg-[var(--terminal-green)] animate-pulse' : 'bg-[var(--border)]'}`} />
             </label>
-            <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+            <label className="group flex items-center gap-3 p-4 rounded-xl border border-[var(--border)] bg-[var(--card)] cursor-pointer hover:border-[var(--terminal-green)]/50 transition-all duration-300">
               <input
                 type="radio"
                 name="provider"
                 value="ollama"
                 checked={settings.provider === 'ollama'}
                 onChange={() => handleProviderChange('ollama')}
-                className="h-4 w-4 text-blue-600"
+                className="h-4 w-4 text-[var(--terminal-green)]"
               />
-              <div>
-                <div className="font-medium">Ollama</div>
-                <div className="text-sm text-gray-500">使用本地 Ollama 模型 {settings.hasOllamaEndpoint ? '✓ 已設定端點' : '✗ 未設定端點'}</div>
+              <div className="flex-1">
+                <div className="font-medium text-[var(--foreground)]">Ollama</div>
+                <div className="text-sm font-mono text-[var(--muted-foreground)]">
+                  {settings.hasOllamaEndpoint ? '[+] Endpoint configured' : '[-] Endpoint not set'}
+                </div>
               </div>
+              <div className={`w-2 h-2 rounded-full ${settings.provider === 'ollama' ? 'bg-[var(--terminal-green)] animate-pulse' : 'bg-[var(--border)]'}`} />
             </label>
           </div>
         </div>
 
         {/* Ollama Settings */}
         {settings.provider === 'ollama' && (
-          <div className="space-y-4 pt-4 border-t">
-            <div>
-              <label className="block text-sm font-medium mb-2">Ollama Endpoint</label>
+          <div className="space-y-4 pt-4 border-t border-[var(--border)]">
+            <div className="relative">
+              <label className="block text-sm font-medium mb-2 text-[var(--foreground)]">
+                <span className="font-mono text-[var(--terminal-green)]">$</span> ollama-endpoint
+              </label>
               <input
                 type="text"
                 value={settings.ollamaEndpoint || ''}
                 onChange={(e) => handleEndpointChange(e.target.value)}
                 placeholder="http://localhost:11434"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] font-mono focus:outline-none focus:ring-2 focus:ring-[var(--terminal-green)] focus:border-[var(--terminal-green)]/50 transition-all duration-300"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Model</label>
+            <div className="relative">
+              <label className="block text-sm font-medium mb-2 text-[var(--foreground)]">
+                <span className="font-mono text-[var(--terminal-green)]">$</span> model-name
+              </label>
               <input
                 type="text"
                 value={settings.minimaxModel || ''}
                 onChange={(e) => handleModelChange(e.target.value)}
                 placeholder="llama3"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] font-mono focus:outline-none focus:ring-2 focus:ring-[var(--terminal-green)] focus:border-[var(--terminal-green)]/50 transition-all duration-300"
               />
             </div>
           </div>
@@ -186,10 +206,10 @@ export default function SettingsPage() {
         {/* Test Result */}
         {testResult && (
           <div
-            className={`flex items-center gap-2 p-3 rounded-lg ${
+            className={`flex items-center gap-2 p-3 rounded-xl font-mono ${
               testResult.success
-                ? 'bg-green-50 text-green-700'
-                : 'bg-red-50 text-red-700'
+                ? 'bg-[var(--terminal-green)]/10 text-[var(--terminal-green)] border border-[var(--terminal-green)]/20'
+                : 'bg-[var(--terminal-amber)]/10 text-[var(--terminal-amber)] border border-[var(--terminal-amber)]/20'
             }`}
           >
             {testResult.success ? (
@@ -197,17 +217,17 @@ export default function SettingsPage() {
             ) : (
               <XCircle className="h-5 w-5" />
             )}
-            {testResult.message}
+            <span>{testResult.message}</span>
           </div>
         )}
 
         {/* Save Result */}
         {saveResult && (
           <div
-            className={`flex items-center gap-2 p-3 rounded-lg ${
+            className={`flex items-center gap-2 p-3 rounded-xl font-mono ${
               saveResult === '設定已儲存'
-                ? 'bg-green-50 text-green-700'
-                : 'bg-red-50 text-red-700'
+                ? 'bg-[var(--terminal-green)]/10 text-[var(--terminal-green)] border border-[var(--terminal-green)]/20'
+                : 'bg-[var(--terminal-amber)]/10 text-[var(--terminal-amber)] border border-[var(--terminal-amber)]/20'
             }`}
           >
             {saveResult === '設定已儲存' ? (
@@ -215,16 +235,16 @@ export default function SettingsPage() {
             ) : (
               <XCircle className="h-5 w-5" />
             )}
-            {saveResult}
+            <span>{saveResult}</span>
           </div>
         )}
 
         {/* Buttons */}
-        <div className="flex gap-3 pt-4">
+        <div className="flex gap-3 pt-4 border-t border-[var(--border)]">
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-[var(--terminal-green)] hover:bg-[var(--terminal-green)]/90 text-black font-medium"
           >
             {saving ? (
               <>
@@ -232,13 +252,16 @@ export default function SettingsPage() {
                 儲存中...
               </>
             ) : (
-              '儲存設定'
+              <>
+                <span className="font-mono mr-2">$</span> save-config
+              </>
             )}
           </Button>
           <Button
             variant="outline"
             onClick={handleTest}
             disabled={testing}
+            className="border-[var(--border)] text-[var(--foreground)] hover:border-[var(--terminal-green)]/50 hover:text-[var(--terminal-green)]"
           >
             {testing ? (
               <>
@@ -246,7 +269,9 @@ export default function SettingsPage() {
                 測試中...
               </>
             ) : (
-              '測試連線'
+              <>
+                <span className="font-mono mr-2">$</span> test-connection
+              </>
             )}
           </Button>
         </div>

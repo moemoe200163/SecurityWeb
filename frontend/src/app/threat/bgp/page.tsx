@@ -181,34 +181,33 @@ export default function BgpPage() {
     return data ? { flag: data.flag, name: data.name } : { flag: country, name: country };
   };
 
-  const getAsnType = (holder: string | null | undefined): { type: string; color: string } => {
-    if (!holder) return { type: 'Unknown', color: 'bg-gray-100 text-gray-600' };
+  const getAsnType = (holder: string | null | undefined): { type: string; bgColor: string; textColor: string } => {
+    if (!holder) return { type: 'Unknown', bgColor: 'var(--muted)', textColor: 'var(--muted-foreground)' };
     const h = holder.toUpperCase();
     if (h.includes('HOSTING') || h.includes('CLOUD') || h.includes('VPS')) {
-      return { type: 'Hosting', color: 'bg-purple-100 text-purple-700' };
+      return { type: 'Hosting', bgColor: '#ede9fe', textColor: '#7c3aed' }; // purple-100, purple-700
     }
     if (h.includes('VPN') || h.includes('PROXY') || h.includes('TOR')) {
-      return { type: 'VPN/Proxy', color: 'bg-orange-100 text-orange-700' };
+      return { type: 'VPN/Proxy', bgColor: '#ffedd5', textColor: '#c2410c' }; // orange-100, orange-700
     }
     if (h.includes('ISP') || h.includes('TELECOM') || h.includes('NETWORK')) {
-      return { type: 'ISP', color: 'bg-blue-100 text-blue-700' };
+      return { type: 'ISP', bgColor: '#dbeafe', textColor: '#1d4ed8' }; // blue-100, blue-700
     }
-    return { type: 'Org', color: 'bg-gray-100 text-gray-600' };
+    return { type: 'Org', bgColor: 'var(--muted)', textColor: 'var(--muted-foreground)' };
   };
 
-
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--background)' }}>
       {/* Header */}
-      <div className="bg-white border-b shadow-sm">
+      <div className="border-b shadow-sm" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
         <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--color-threat)' }}>
               <Shield className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-semibold text-gray-900">BGP ASN 情報查詢</h1>
-              <p className="text-sm text-gray-500">查詢 IP 或 ASN 所屬的 BGP 路由與威脅情報</p>
+              <h1 className="text-xl font-semibold" style={{ color: 'var(--foreground)' }}>BGP ASN 情報查詢</h1>
+              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>查詢 IP 或 ASN 所屬的 BGP 路由與威脅情報</p>
             </div>
           </div>
         </div>
@@ -217,17 +216,18 @@ export default function BgpPage() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-6">
         {/* Search Box */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border shadow-sm p-6 mb-6">
+        <div className="rounded-xl border shadow-sm p-6 mb-6" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
           <div className="flex flex-col md:flex-row gap-4">
             {/* Query Type Toggle */}
-            <div className="flex rounded-lg border overflow-hidden bg-gray-100 dark:bg-gray-700 p-1">
+            <div className="flex rounded-lg border overflow-hidden p-1" style={{ backgroundColor: 'var(--muted)', borderColor: 'var(--border)' }}>
               <button
                 onClick={() => setQueryType('ip')}
                 className={`px-4 py-2.5 text-sm font-medium rounded-md transition-all ${
                   queryType === 'ip'
                     ? 'bg-[--color-threat] text-white shadow-sm'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                    : 'hover:text-[var(--foreground)]'
                 }`}
+                style={queryType !== 'ip' ? { color: 'var(--muted-foreground)' } : undefined}
               >
                 IP / 前綴
               </button>
@@ -236,8 +236,9 @@ export default function BgpPage() {
                 className={`px-4 py-2.5 text-sm font-medium rounded-md transition-all ${
                   queryType === 'asn'
                     ? 'bg-[--color-threat] text-white shadow-sm'
-                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                    : 'hover:text-[var(--foreground)]'
                 }`}
+                style={queryType !== 'asn' ? { color: 'var(--muted-foreground)' } : undefined}
               >
                 ASN
               </button>
@@ -245,7 +246,7 @@ export default function BgpPage() {
 
             {/* Search Input */}
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: 'var(--muted-foreground)' }} />
               <input
                 type="text"
                 value={query}
@@ -256,7 +257,13 @@ export default function BgpPage() {
                     ? '輸入 IP 地址或前綴 (例如：1.1.1.0/24)'
                     : '輸入 ASN 號碼 (例如：15169 或 AS15169)'
                 }
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[--color-threat] focus:border-transparent focus:bg-white dark:focus:bg-gray-800 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                style={{
+                  backgroundColor: 'var(--muted)',
+                  color: 'var(--foreground)',
+                  borderColor: 'var(--border)',
+                  '--tw-ring-color': 'var(--color-threat)'
+                } as React.CSSProperties}
               />
             </div>
 
@@ -264,7 +271,8 @@ export default function BgpPage() {
             <button
               onClick={handleSearch}
               disabled={loading || !query.trim()}
-              className="px-6 py-2.5 bg-[--color-threat] text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 font-medium"
+              className="px-6 py-2.5 text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 font-medium"
+              style={{ backgroundColor: 'var(--color-threat)' }}
             >
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -279,24 +287,24 @@ export default function BgpPage() {
         {/* Results */}
         {!hasSearched && (
           <div className="text-center py-16">
-            <Globe className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-            <h2 className="text-xl font-medium text-gray-700 mb-2">輸入 IP 或 ASN 開始查詢</h2>
-            <p className="text-gray-500">快速取得 BGP 路由資訊與威脅情報</p>
+            <Globe className="h-16 w-16 mx-auto mb-4" style={{ color: 'var(--muted-foreground)' }} />
+            <h2 className="text-xl font-medium mb-2" style={{ color: 'var(--foreground)' }}>輸入 IP 或 ASN 開始查詢</h2>
+            <p style={{ color: 'var(--muted-foreground)' }}>快速取得 BGP 路由資訊與威脅情報</p>
           </div>
         )}
 
         {hasSearched && loading && (
           <div className="text-center py-16">
-            <Loader2 className="h-8 w-8 mx-auto mb-4 animate-spin text-blue-500" />
-            <p className="text-gray-500">查詢中...</p>
+            <Loader2 className="h-8 w-8 mx-auto mb-4 animate-spin" style={{ color: 'var(--color-threat)' }} />
+            <p style={{ color: 'var(--muted-foreground)' }}>查詢中...</p>
           </div>
         )}
 
         {hasSearched && !loading && error && (
           <div className="text-center py-16">
-            <Globe className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-            <h2 className="text-xl font-medium text-gray-700 mb-2">找不到資料</h2>
-            <p className="text-gray-500">嘗試不同的 IP 或 ASN</p>
+            <Globe className="h-16 w-16 mx-auto mb-4" style={{ color: 'var(--muted-foreground)' }} />
+            <h2 className="text-xl font-medium mb-2" style={{ color: 'var(--foreground)' }}>找不到資料</h2>
+            <p style={{ color: 'var(--muted-foreground)' }}>嘗試不同的 IP 或 ASN</p>
           </div>
         )}
 
@@ -305,75 +313,74 @@ export default function BgpPage() {
             {/* Stats Summary */}
             {stats && (
               <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="bg-white rounded-xl border p-4 shadow-sm">
-                  <div className="text-sm text-gray-500 mb-1">資料庫總計</div>
-                  <div className="text-2xl font-bold text-gray-900">{stats.totalUpdates.toLocaleString()}</div>
-                  <div className="text-xs text-gray-400">24h 更新</div>
+                <div className="rounded-xl border p-4 shadow-sm" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+                  <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>資料庫總計</div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{stats.totalUpdates.toLocaleString()}</div>
+                  <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>24h 更新</div>
                 </div>
-                <div className="bg-white rounded-xl border p-4 shadow-sm">
-                  <div className="text-sm text-gray-500 mb-1">唯一 ASN</div>
-                  <div className="text-2xl font-bold text-gray-900">{stats.uniqueAsns.toLocaleString()}</div>
-                  <div className="text-xs text-gray-400">資料庫中</div>
+                <div className="rounded-xl border p-4 shadow-sm" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+                  <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>唯一 ASN</div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{stats.uniqueAsns.toLocaleString()}</div>
+                  <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>資料庫中</div>
                 </div>
-                <div className="bg-white rounded-xl border p-4 shadow-sm">
-                  <div className="text-sm text-gray-500 mb-1">查詢結果</div>
-                  <div className="text-2xl font-bold text-blue-600">{result.asns.length}</div>
-                  <div className="text-xs text-gray-400">ASN 記錄</div>
+                <div className="rounded-xl border p-4 shadow-sm" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+                  <div className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>查詢結果</div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--color-threat)' }}>{result.asns.length}</div>
+                  <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>ASN 記錄</div>
                 </div>
               </div>
             )}
 
             {/* Lookup Result Card */}
-            <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
-              <div className="px-6 py-4 border-b bg-gray-50">
+            <div className="rounded-xl border shadow-sm overflow-hidden" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
+              <div className="px-6 py-4 border-b" style={{ backgroundColor: 'var(--muted)', borderColor: 'var(--border)' }}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-semibold text-gray-900">查詢結果</h3>
-                    <p className="text-sm text-gray-500 font-mono">{result.resource}</p>
+                    <h3 className="font-semibold" style={{ color: 'var(--foreground)' }}>查詢結果</h3>
+                    <p className="text-sm font-mono" style={{ color: 'var(--muted-foreground)' }}>{result.resource}</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${
-                      result.announced ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
-                    }`}>
+                    <span className="px-3 py-1 text-sm font-medium rounded-full" style={result.announced ? { backgroundColor: '#dcfce7', color: '#15803d' } : { backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)' }}>
                       {result.announced ? '已公告' : '未公告'}
                     </span>
-                    <span className="px-3 py-1 text-sm font-medium rounded-full bg-blue-100 text-blue-700">
-                      {result.type === 'prefix' ? '前綴' : result.type}
+                    <span className="px-3 py-1 text-sm font-medium rounded-full" style={{ backgroundColor: '#dbeafe', color: '#1d4ed8' }}>
+                      {result.type === '前綴' ? '前綴' : result.type}
                     </span>
                   </div>
                 </div>
               </div>
 
               {/* ASN List */}
-              <div className="divide-y">
+              <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
                 {result.asns.length === 0 ? (
-                  <div className="px-6 py-12 text-center text-gray-500">
+                  <div className="px-6 py-12 text-center" style={{ color: 'var(--muted-foreground)' }}>
                     <p>No BGP data found for this resource</p>
                   </div>
                 ) : (
                   result.asns.map((asnInfo, index) => {
                     const asnType = getAsnType(asnInfo.holder);
                     return (
-                      <div key={index} className="px-6 py-4 hover:bg-gray-50 transition-colors">
+                      <div key={index} className="px-6 py-4 transition-colors hover:bg-[var(--accent)]">
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-4">
                               <div>
-                                <p className="text-sm text-gray-500 mb-1">ASN</p>
+                                <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>ASN</p>
                                 <button
                                   onClick={(e) => handleAsnClick(String(asnInfo.asn), e)}
-                                  className="font-mono text-lg font-bold text-blue-600 hover:text-blue-800 hover:underline"
+                                  className="font-mono text-lg font-bold hover:underline"
+                                  style={{ color: 'var(--color-threat)' }}
                                 >
                                   AS{asnInfo.asn}
                                 </button>
                               </div>
                               <div className="flex-1">
-                                <p className="text-sm text-gray-500 mb-1">組織名稱</p>
-                                <p className="font-medium text-gray-900">{asnInfo.holder || '-'}</p>
+                                <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>組織名稱</p>
+                                <p className="font-medium" style={{ color: 'var(--foreground)' }}>{asnInfo.holder || '-'}</p>
                               </div>
                               <div>
-                                <p className="text-sm text-gray-500 mb-1">類型</p>
-                                <span className={`inline-block px-2 py-0.5 text-xs font-medium rounded ${asnType.color}`}>
+                                <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>類型</p>
+                                <span className="inline-block px-2 py-0.5 text-xs font-medium rounded" style={{ backgroundColor: asnType.bgColor, color: asnType.textColor }}>
                                   {asnType.type}
                                 </span>
                               </div>
@@ -382,7 +389,8 @@ export default function BgpPage() {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={(e) => handleAsnClick(String(asnInfo.asn), e)}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg transition-colors"
+                              style={{ color: 'var(--color-threat)', backgroundColor: 'transparent' }}
                             >
                               <ExternalLink className="h-4 w-4" />
                               WHOIS
@@ -397,9 +405,9 @@ export default function BgpPage() {
 
               {/* Block Info */}
               {result.block && (
-                <div className="px-6 py-4 border-t bg-gray-50">
-                  <p className="text-sm text-gray-500 mb-1">IP 區塊</p>
-                  <p className="font-mono text-sm text-gray-700">
+                <div className="px-6 py-4 border-t" style={{ backgroundColor: 'var(--muted)', borderColor: 'var(--border)' }}>
+                  <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>IP 區塊</p>
+                  <p className="font-mono text-sm" style={{ color: 'var(--foreground)' }}>
                     {result.block.resource}
                     {result.block.desc && ` - ${result.block.desc}`}
                   </p>
@@ -412,70 +420,68 @@ export default function BgpPage() {
 
       {/* WHOIS Modal */}
       {selectedAsn && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={handleCloseWhoIsModal}>
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full" onClick={e => e.stopPropagation()}>
-            <div className="border-b px-6 py-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">ASN 詳細資訊</h2>
-              <button onClick={handleCloseWhoIsModal} className="p-1 hover:bg-gray-100 rounded-lg transition-colors">
-                <X className="h-5 w-5" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={handleCloseWhoIsModal}>
+          <div className="rounded-xl shadow-2xl max-w-md w-full" style={{ backgroundColor: 'var(--card)' }} onClick={e => e.stopPropagation()}>
+            <div className="border-b px-6 py-4 flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
+              <h2 className="text-lg font-semibold" style={{ color: 'var(--foreground)' }}>ASN 詳細資訊</h2>
+              <button onClick={handleCloseWhoIsModal} className="p-1 rounded-lg transition-colors">
+                <X className="h-5 w-5" style={{ color: 'var(--muted-foreground)' }} />
               </button>
             </div>
             <div className="p-6">
               {whoIsLoading ? (
                 <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+                  <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--color-threat)' }} />
                 </div>
               ) : whoIsData ? (
                 <div className="space-y-5">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-500 mb-1">ASN</p>
-                      <p className="text-2xl font-bold font-mono">{whoIsData.asn}</p>
+                      <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>ASN</p>
+                      <p className="text-2xl font-bold font-mono" style={{ color: 'var(--foreground)' }}>{whoIsData.asn}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm text-gray-500 mb-1">國家</p>
+                      <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>國家</p>
                       <p className="text-2xl">{getCountryDisplay(whoIsData.country).flag}</p>
-                      <p className="text-xs text-gray-500">{getCountryDisplay(whoIsData.country).name}</p>
+                      <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{getCountryDisplay(whoIsData.country).name}</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">組織名稱</p>
-                    <p className="font-medium text-gray-900">{whoIsData.holder || '-'}</p>
+                    <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>組織名稱</p>
+                    <p className="font-medium" style={{ color: 'var(--foreground)' }}>{whoIsData.holder || '-'}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">IP 區塊</p>
-                    <p className="font-mono text-sm bg-gray-100 px-3 py-2 rounded-lg">{whoIsData.block || '-'}</p>
+                    <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>IP 區塊</p>
+                    <p className="font-mono text-sm rounded-lg px-3 py-2" style={{ backgroundColor: 'var(--muted)', color: 'var(--foreground)' }}>{whoIsData.block || '-'}</p>
                   </div>
 
                   {/* Prefix 列表 */}
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">
+                    <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>
                       宣告的 Prefix {prefixes.length > 0 && `(${prefixes.length})`}
                     </p>
                     {prefixesLoading ? (
                       <div className="flex items-center justify-center py-4">
-                        <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                        <Loader2 className="h-4 w-4 animate-spin" style={{ color: 'var(--muted-foreground)' }} />
                       </div>
                     ) : prefixes.length > 0 ? (
                       <div>
-                        <div className="max-h-48 overflow-y-auto border rounded-lg">
+                        <div className="max-h-48 overflow-y-auto rounded-lg" style={{ borderColor: 'var(--border)', borderWidth: 1 }}>
                           <table className="w-full text-sm">
-                            <thead className="bg-gray-50 sticky top-0">
+                            <thead className="sticky top-0" style={{ backgroundColor: 'var(--muted)' }}>
                               <tr>
-                                <th className="text-left px-3 py-2 font-medium text-gray-500">Prefix</th>
-                                <th className="text-right px-3 py-2 font-medium text-gray-500">Type</th>
+                                <th className="text-left px-3 py-2 font-medium" style={{ color: 'var(--muted-foreground)' }}>Prefix</th>
+                                <th className="text-right px-3 py-2 font-medium" style={{ color: 'var(--muted-foreground)' }}>Type</th>
                               </tr>
                             </thead>
-                            <tbody className="divide-y">
+                            <tbody className="divide-y" style={{ borderColor: 'var(--border)' }}>
                               {prefixes.slice((prefixPage - 1) * PREFIX_PAGE_SIZE, prefixPage * PREFIX_PAGE_SIZE).map((p, i) => (
-                                <tr key={i} className="hover:bg-gray-50">
-                                  <td className="px-3 py-2 font-mono text-xs">{p.prefix}</td>
+                                <tr key={i} className="transition-colors">
+                                  <td className="px-3 py-2 font-mono text-xs" style={{ color: 'var(--foreground)' }}>{p.prefix}</td>
                                   <td className="px-3 py-2 text-right">
-                                    <span className={`text-xs px-2 py-0.5 rounded ${
-                                      p.type === 'ipv4' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
-                                    }`}>
+                                    <span className="text-xs px-2 py-0.5 rounded" style={p.type === 'ipv4' ? { backgroundColor: '#dbeafe', color: '#1d4ed8' } : { backgroundColor: '#ede9fe', color: '#7c3aed' }}>
                                       {p.type.toUpperCase()}
                                     </span>
                                   </td>
@@ -486,21 +492,23 @@ export default function BgpPage() {
                         </div>
                         {/* Pagination */}
                         {prefixes.length > PREFIX_PAGE_SIZE && (
-                          <div className="flex items-center justify-between border-t px-3 py-2 bg-gray-50">
+                          <div className="flex items-center justify-between border-t px-3 py-2" style={{ backgroundColor: 'var(--muted)', borderColor: 'var(--border)' }}>
                             <button
                               onClick={() => setPrefixPage(p => Math.max(1, p - 1))}
                               disabled={prefixPage === 1}
-                              className="px-3 py-1 text-sm bg-white border rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="px-3 py-1 text-sm rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                              style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', borderWidth: 1, color: 'var(--foreground)' }}
                             >
                               上一頁
                             </button>
-                            <span className="text-sm text-gray-500">
+                            <span className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
                               第 {prefixPage} / {Math.ceil(prefixes.length / PREFIX_PAGE_SIZE)} 頁 (共 {prefixes.length} 個)
                             </span>
                             <button
                               onClick={() => setPrefixPage(p => Math.min(Math.ceil(prefixes.length / PREFIX_PAGE_SIZE), p + 1))}
                               disabled={prefixPage >= Math.ceil(prefixes.length / PREFIX_PAGE_SIZE)}
-                              className="px-3 py-1 text-sm bg-white border rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="px-3 py-1 text-sm rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                              style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', borderWidth: 1, color: 'var(--foreground)' }}
                             >
                               下一頁
                             </button>
@@ -508,21 +516,23 @@ export default function BgpPage() {
                         )}
                       </div>
                     ) : (
-                      <p className="text-sm text-gray-400 py-2">無 prefix 資料</p>
+                      <p className="text-sm py-2" style={{ color: 'var(--muted-foreground)' }}>無 prefix 資料</p>
                     )}
                   </div>
 
                   <div className="flex gap-2 pt-2">
                     <button
                       onClick={() => copyToClipboard(whoIsData.asn)}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm"
+                      style={{ backgroundColor: 'var(--muted)', color: 'var(--foreground)' }}
                     >
                       <Copy className="h-4 w-4" />
                       複製 ASN
                     </button>
                     <button
                       onClick={() => copyToClipboard(whoIsData.holder || '')}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors text-sm"
+                      style={{ backgroundColor: 'var(--muted)', color: 'var(--foreground)' }}
                     >
                       <Copy className="h-4 w-4" />
                       複製組織
@@ -530,7 +540,7 @@ export default function BgpPage() {
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8" style={{ color: 'var(--muted-foreground)' }}>
                   <p>無法載入 WHOIS 資料</p>
                 </div>
               )}

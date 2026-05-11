@@ -504,10 +504,10 @@ ${data.rawContent || data.alertId}
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Top Progress Bar */}
-        <div className="bg-white border-b px-6 py-4">
+        <div className="bg-[var(--card)] border-b border-[var(--border)] px-6 py-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
-              <h2 className="font-semibold text-gray-900">威脅分析工作流</h2>
+              <h2 className="font-semibold text-[var(--card-foreground)]">威脅分析工作流</h2>
               {isExecuting && (
                 <div className="flex items-center gap-2 text-sm text-[--color-soc]">
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -524,7 +524,7 @@ ${data.rawContent || data.alertId}
 
             <div className="flex items-center gap-4">
               {/* Progress text */}
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-[var(--muted-foreground)]">
                 {completedSteps} / {totalSteps} 步驟
               </span>
 
@@ -533,41 +533,41 @@ ${data.rawContent || data.alertId}
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleQuickAction('copy-report')}
-                    className="p-2 rounded-lg border bg-white hover:bg-gray-50 transition-colors"
+                    className="p-2 rounded-lg border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--muted)] transition-colors"
                     title="複製報告"
                   >
-                    <Copy className="h-4 w-4 text-gray-600" />
+                    <Copy className="h-4 w-4 text-[var(--muted-foreground)]" />
                   </button>
                   <button
                     onClick={() => handleQuickAction('download-report')}
-                    className="p-2 rounded-lg border bg-white hover:bg-gray-50 transition-colors"
+                    className="p-2 rounded-lg border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--muted)] transition-colors"
                     title="下載報告"
                   >
-                    <Download className="h-4 w-4 text-gray-600" />
+                    <Download className="h-4 w-4 text-[var(--muted-foreground)]" />
                   </button>
                   <button
                     onClick={() => handleQuickAction('share-report')}
-                    className="p-2 rounded-lg border bg-white hover:bg-gray-50 transition-colors"
+                    className="p-2 rounded-lg border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--muted)] transition-colors"
                     title="分享連結"
                   >
-                    <Share2 className="h-4 w-4 text-gray-600" />
+                    <Share2 className="h-4 w-4 text-[var(--muted-foreground)]" />
                   </button>
                   <button
                     onClick={() => handleQuickAction('refresh-data')}
-                    className="p-2 rounded-lg border bg-white hover:bg-gray-50 transition-colors"
+                    className="p-2 rounded-lg border border-[var(--border)] bg-[var(--card)] hover:bg-[var(--muted)] transition-colors"
                     title="刷新數據"
                   >
-                    <RefreshCw className="h-4 w-4 text-gray-600" />
+                    <RefreshCw className="h-4 w-4 text-[var(--muted-foreground)]" />
                   </button>
                   <button
                     onClick={() => {
                       resetAll();
                       setSidebarSession(undefined);
                     }}
-                    className="p-2 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 transition-colors"
+                    className="p-2 rounded-lg border border-red-200/50 bg-red-500/10 hover:bg-red-500/20 transition-colors"
                     title="終止工作階段"
                   >
-                    <XCircle className="h-4 w-4 text-red-600" />
+                    <XCircle className="h-4 w-4 text-red-500" />
                   </button>
                 </div>
               )}
@@ -585,7 +585,7 @@ ${data.rawContent || data.alertId}
           </div>
 
           {/* Progress bar */}
-          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-2 bg-[var(--muted)] rounded-full overflow-hidden">
             <div
               className={cn(
                 'h-full rounded-full transition-all duration-500 ease-out',
@@ -637,7 +637,7 @@ ${data.rawContent || data.alertId}
 
                 {/* No steps yet */}
                 {!currentSessionId && (
-                  <div className="text-center py-12 text-gray-500">
+                  <div className="text-center py-12 text-[var(--muted-foreground)]">
                     <p>上傳告警數據開始分析</p>
                   </div>
                 )}

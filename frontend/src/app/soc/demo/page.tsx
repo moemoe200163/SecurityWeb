@@ -72,9 +72,9 @@ export default function SOCDemoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="min-h-screen bg-[var(--muted)] text-[var(--foreground)]">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b shadow-sm">
+      <header className="sticky top-0 z-50 bg-[var(--card)] border-b border-[var(--border)] shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -82,8 +82,8 @@ export default function SOCDemoPage() {
                 <Shield className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-semibold text-gray-900">SOC 告警分析</h1>
-                <p className="text-xs text-gray-500">安全事件智能分析与响应系统</p>
+                <h1 className="text-lg font-semibold text-[var(--foreground)]">SOC 告警分析</h1>
+                <p className="text-xs text-[var(--muted-foreground)]">安全事件智能分析与响应系统</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -98,30 +98,30 @@ export default function SOCDemoPage() {
 
       <main className="max-w-7xl mx-auto px-6 py-6 space-y-6">
         {/* Alert Info Banner */}
-        <div className="relative overflow-hidden rounded-xl bg-white border shadow-sm p-5">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-transparent" />
+        <div className="relative overflow-hidden rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm p-5">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-950/30" />
           <div className="relative flex flex-wrap items-center gap-4 text-sm">
-            <div className="flex items-center gap-2 text-gray-500">
+            <div className="flex items-center gap-2 text-[var(--muted-foreground)]">
               <Clock className="h-4 w-4" />
               <span>{mockAlert.time}</span>
             </div>
-            <div className="w-px h-4 bg-gray-200 hidden sm:block" />
-            <div className="flex items-center gap-2 text-gray-500">
+            <div className="w-px h-4 bg-[var(--border)] hidden sm:block" />
+            <div className="flex items-center gap-2 text-[var(--muted-foreground)]">
               <Globe className="h-4 w-4" />
               <span>{mockAlert.country}</span>
             </div>
-            <div className="w-px h-4 bg-gray-200 hidden sm:block" />
-            <div className="flex items-center gap-2 text-gray-700 font-mono">
+            <div className="w-px h-4 bg-[var(--border)] hidden sm:block" />
+            <div className="flex items-center gap-2 font-mono">
               <Target className="h-4 w-4 text-blue-500" />
-              <span className="text-blue-600">{mockAlert.srcIp}</span>
-              <span className="text-gray-400">→</span>
+              <span className="text-blue-600 dark:text-blue-400">{mockAlert.srcIp}</span>
+              <span className="text-[var(--muted-foreground)]">→</span>
               <span>{mockAlert.dstIp}:{mockAlert.dstPort}</span>
             </div>
             <div className="flex items-center gap-3 ml-auto">
-              <span className="px-2.5 py-1 bg-orange-100 text-orange-600 rounded text-xs font-medium">
+              <span className="px-2.5 py-1 bg-orange-100 text-orange-600 dark:bg-orange-950/50 dark:text-orange-400 rounded text-xs font-medium">
                 {mockAlert.riskLevel}
               </span>
-              <span className="px-2.5 py-1 bg-red-100 text-red-600 rounded text-xs font-medium">
+              <span className="px-2.5 py-1 bg-red-100 text-red-600 dark:bg-red-950/50 dark:text-red-400 rounded text-xs font-medium">
                 {mockAlert.attackResult}
               </span>
             </div>
@@ -129,8 +129,8 @@ export default function SOCDemoPage() {
         </div>
 
         {/* Steps */}
-        <div className="rounded-xl bg-white border shadow-sm p-6">
-          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">分析步骤</h2>
+        <div className="rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm p-6">
+          <h2 className="text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-wider mb-4">分析步骤</h2>
           <div className="space-y-2">
             {steps.map((step) => {
               const Icon = step.icon;
@@ -138,25 +138,25 @@ export default function SOCDemoPage() {
               return (
                 <div
                   key={step.id}
-                  className="group relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 transition-all hover:border-blue-200"
+                  className="group relative overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--muted)] transition-all hover:border-blue-200 dark:hover:border-blue-800"
                 >
                   <button
                     onClick={() => toggleStep(step.id)}
-                    className="w-full flex items-center gap-4 p-4 text-left hover:bg-blue-50/50 transition-colors"
+                    className="w-full flex items-center gap-4 p-4 text-left hover:bg-[var(--accent)] transition-colors"
                   >
-                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                      <CheckCircle className="h-4 w-4 text-green-600" />
+                    <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
+                      <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
                     </div>
-                    <Icon className="h-5 w-5 text-gray-400" />
+                    <Icon className="h-5 w-5 text-[var(--muted-foreground)]" />
                     <div className="flex-1">
-                      <div className="text-sm font-medium text-gray-700">{step.title}</div>
-                      <div className="text-xs text-gray-400">{step.desc}</div>
+                      <div className="text-sm font-medium text-[var(--foreground)]">{step.title}</div>
+                      <div className="text-xs text-[var(--muted-foreground)]">{step.desc}</div>
                     </div>
-                    <div className={`w-4 h-4 rounded-full border-2 transition-transform ${isExpanded ? 'rotate-90 border-blue-500 border-t-transparent' : 'border-gray-300'}`} />
+                    <div className={`w-4 h-4 rounded-full border-2 transition-transform ${isExpanded ? 'rotate-90 border-blue-500 border-t-transparent' : 'border-[var(--border)]'}`} />
                   </button>
                   {isExpanded && (
-                    <div className="px-4 pb-4 pt-0 border-t border-gray-200 mt-0">
-                      <div className="mt-3 text-sm text-gray-500">
+                    <div className="px-4 pb-4 pt-0 border-t border-[var(--border)] mt-0">
+                      <div className="mt-3 text-sm text-[var(--muted-foreground)]">
                         ✓ 步骤{step.id}已完成 - {step.desc}
                       </div>
                     </div>
@@ -170,25 +170,25 @@ export default function SOCDemoPage() {
         {/* Two Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Threat intel */}
-          <div className="rounded-xl bg-white border shadow-sm p-6">
+          <div className="rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm p-6">
             <div className="flex items-center gap-2 mb-4">
               <Database className="h-4 w-4 text-blue-500" />
-              <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider">威胁情报分析</h2>
+              <h2 className="text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-wider">威胁情报分析</h2>
             </div>
             <div className="space-y-2">
               {threatIntel.map((item, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border">
-                  <div className="w-8 h-8 rounded bg-white border flex items-center justify-center">
-                    <Cpu className="h-4 w-4 text-gray-400" />
+                <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-[var(--muted)] border border-[var(--border)]">
+                  <div className="w-8 h-8 rounded bg-[var(--card)] border border-[var(--border)] flex items-center justify-center">
+                    <Cpu className="h-4 w-4 text-[var(--muted-foreground)]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-gray-700 truncate">{item.source}</div>
-                    <div className="text-xs text-gray-500 truncate">{item.result}</div>
+                    <div className="text-sm font-medium text-[var(--foreground)] truncate">{item.source}</div>
+                    <div className="text-xs text-[var(--muted-foreground)] truncate">{item.result}</div>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded ${
-                    item.confidence === '高' ? 'bg-red-100 text-red-600' :
-                    item.confidence === '中' ? 'bg-orange-100 text-orange-600' :
-                    'bg-gray-100 text-gray-500'
+                    item.confidence === '高' ? 'bg-red-100 text-red-600 dark:bg-red-950/50 dark:text-red-400' :
+                    item.confidence === '中' ? 'bg-orange-100 text-orange-600 dark:bg-orange-950/50 dark:text-orange-400' :
+                    'bg-[var(--muted)] text-[var(--muted-foreground)]'
                   }`}>
                     {item.confidence}
                   </span>
@@ -198,30 +198,30 @@ export default function SOCDemoPage() {
           </div>
 
           {/* IOC table */}
-          <div className="rounded-xl bg-white border shadow-sm p-6">
+          <div className="rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm p-6">
             <div className="flex items-center gap-2 mb-4">
               <Target className="h-4 w-4 text-blue-500" />
-              <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider">IOC 清单</h2>
+              <h2 className="text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-wider">IOC 清单</h2>
             </div>
-            <div className="overflow-x-auto rounded-lg border">
+            <div className="overflow-x-auto rounded-lg border border-[var(--border)]">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50">
+                <thead className="bg-[var(--muted)]">
                   <tr>
-                    <th className="text-left px-3 py-2 font-medium text-gray-500 text-xs uppercase">类型</th>
-                    <th className="text-left px-3 py-2 font-medium text-gray-500 text-xs uppercase">值</th>
-                    <th className="text-right px-3 py-2 font-medium text-gray-500 text-xs uppercase">置信度</th>
+                    <th className="text-left px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">类型</th>
+                    <th className="text-left px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">值</th>
+                    <th className="text-right px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">置信度</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y">
+                <tbody className="divide-y divide-[var(--border)]">
                   {iocList.map((ioc, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
-                      <td className="px-3 py-2.5 text-gray-500">{ioc.type}</td>
-                      <td className="px-3 py-2.5 font-mono text-xs text-blue-600 truncate max-w-[180px]">{ioc.value}</td>
+                    <tr key={idx} className="hover:bg-[var(--accent)] transition-colors">
+                      <td className="px-3 py-2.5 text-[var(--muted-foreground)]">{ioc.type}</td>
+                      <td className="px-3 py-2.5 font-mono text-xs text-blue-600 dark:text-blue-400 truncate max-w-[180px]">{ioc.value}</td>
                       <td className="px-3 py-2.5 text-right">
                         <span className={`text-xs px-2 py-0.5 rounded ${
-                          Number(ioc.confidence.replace('%', '')) >= 85 ? 'bg-red-100 text-red-600' :
-                          Number(ioc.confidence.replace('%', '')) >= 70 ? 'bg-orange-100 text-orange-600' :
-                          'bg-gray-100 text-gray-500'
+                          Number(ioc.confidence.replace('%', '')) >= 85 ? 'bg-red-100 text-red-600 dark:bg-red-950/50 dark:text-red-400' :
+                          Number(ioc.confidence.replace('%', '')) >= 70 ? 'bg-orange-100 text-orange-600 dark:bg-orange-950/50 dark:text-orange-400' :
+                          'bg-[var(--muted)] text-[var(--muted-foreground)]'
                         }`}>
                           {ioc.confidence}
                         </span>
@@ -235,30 +235,30 @@ export default function SOCDemoPage() {
         </div>
 
         {/* Attack chain */}
-        <div className="rounded-xl bg-white border shadow-sm p-6">
+        <div className="rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm p-6">
           <div className="flex items-center gap-2 mb-4">
             <Zap className="h-4 w-4 text-amber-500" />
-            <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider">攻击链分析 (ATT&CK)</h2>
+            <h2 className="text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-wider">攻击链分析 (ATT&CK)</h2>
           </div>
-          <div className="overflow-x-auto rounded-lg border">
+          <div className="overflow-x-auto rounded-lg border border-[var(--border)]">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50">
+              <thead className="bg-[var(--muted)]">
                 <tr>
-                  <th className="text-left px-3 py-2 font-medium text-gray-500 text-xs uppercase">时间</th>
-                  <th className="text-left px-3 py-2 font-medium text-gray-500 text-xs uppercase">阶段</th>
-                  <th className="text-left px-3 py-2 font-medium text-gray-500 text-xs uppercase">TTP</th>
-                  <th className="text-left px-3 py-2 font-medium text-gray-500 text-xs uppercase">IOC</th>
-                  <th className="text-left px-3 py-2 font-medium text-gray-500 text-xs uppercase">描述</th>
+                  <th className="text-left px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">时间</th>
+                  <th className="text-left px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">阶段</th>
+                  <th className="text-left px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">TTP</th>
+                  <th className="text-left px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">IOC</th>
+                  <th className="text-left px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">描述</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-[var(--border)]">
                 {attackChain.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50">
-                    <td className="px-3 py-2.5 text-gray-500 font-mono">{item.time}</td>
-                    <td className="px-3 py-2.5 text-gray-700">{item.stage}</td>
-                    <td className="px-3 py-2.5 font-mono text-xs text-blue-600">{item.ttp}</td>
-                    <td className="px-3 py-2.5 font-mono text-xs text-gray-600">{item.ioc}</td>
-                    <td className="px-3 py-2.5 text-gray-500 text-xs">{item.desc}</td>
+                  <tr key={idx} className="hover:bg-[var(--accent)] transition-colors">
+                    <td className="px-3 py-2.5 text-[var(--muted-foreground)] font-mono">{item.time}</td>
+                    <td className="px-3 py-2.5 text-[var(--foreground)]">{item.stage}</td>
+                    <td className="px-3 py-2.5 font-mono text-xs text-blue-600 dark:text-blue-400">{item.ttp}</td>
+                    <td className="px-3 py-2.5 font-mono text-xs text-[var(--muted-foreground)]">{item.ioc}</td>
+                    <td className="px-3 py-2.5 text-[var(--muted-foreground)] text-xs">{item.desc}</td>
                   </tr>
                 ))}
               </tbody>
@@ -267,29 +267,29 @@ export default function SOCDemoPage() {
         </div>
 
         {/* Response tracking */}
-        <div className="rounded-xl bg-white border shadow-sm p-6">
+        <div className="rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm p-6">
           <div className="flex items-center gap-2 mb-4">
             <Terminal className="h-4 w-4 text-green-500" />
-            <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider">处置追踪</h2>
+            <h2 className="text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-wider">处置追踪</h2>
           </div>
-          <div className="overflow-x-auto rounded-lg border">
+          <div className="overflow-x-auto rounded-lg border border-[var(--border)]">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50">
+              <thead className="bg-[var(--muted)]">
                 <tr>
-                  <th className="text-left px-3 py-2 font-medium text-gray-500 text-xs uppercase">阶段</th>
-                  <th className="text-left px-3 py-2 font-medium text-gray-500 text-xs uppercase">操作</th>
-                  <th className="text-left px-3 py-2 font-medium text-gray-500 text-xs uppercase">系统</th>
-                  <th className="text-right px-3 py-2 font-medium text-gray-500 text-xs uppercase">结果</th>
+                  <th className="text-left px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">阶段</th>
+                  <th className="text-left px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">操作</th>
+                  <th className="text-left px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">系统</th>
+                  <th className="text-right px-3 py-2 font-medium text-[var(--muted-foreground)] text-xs uppercase">结果</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-[var(--border)]">
                 {responseTracking.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50">
-                    <td className="px-3 py-2.5 text-gray-700">{item.phase}</td>
-                    <td className="px-3 py-2.5 text-gray-500 font-mono text-xs">{item.operation}</td>
-                    <td className="px-3 py-2.5 text-gray-500">{item.system}</td>
+                  <tr key={idx} className="hover:bg-[var(--accent)] transition-colors">
+                    <td className="px-3 py-2.5 text-[var(--foreground)]">{item.phase}</td>
+                    <td className="px-3 py-2.5 text-[var(--muted-foreground)] font-mono text-xs">{item.operation}</td>
+                    <td className="px-3 py-2.5 text-[var(--muted-foreground)]">{item.system}</td>
                     <td className="px-3 py-2.5 text-right">
-                      <span className="inline-flex items-center gap-1 text-green-600">
+                      <span className="inline-flex items-center gap-1 text-green-600 dark:text-green-400">
                         <CheckCircle className="h-3.5 w-3.5" />
                         {item.result}
                       </span>
@@ -302,40 +302,40 @@ export default function SOCDemoPage() {
         </div>
 
         {/* Summary Report */}
-        <div className="rounded-xl bg-white border shadow-sm p-6">
+        <div className="rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm p-6">
           <div className="flex items-center gap-2 mb-6">
             <FileWarning className="h-4 w-4 text-amber-500" />
-            <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wider">安全事件分析报告</h2>
+            <h2 className="text-sm font-medium text-[var(--muted-foreground)] uppercase tracking-wider">安全事件分析报告</h2>
           </div>
 
           <div className="space-y-6">
             <section>
-              <h3 className="text-sm font-medium text-blue-600 mb-3">一、事件概要</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-lg bg-gray-50">
+              <h3 className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-3">一、事件概要</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-lg bg-[var(--muted)]">
                 <div>
-                  <div className="text-xs text-gray-400 mb-1">首次发现时间</div>
-                  <div className="text-sm text-gray-700">2025-03-27 23:10:20</div>
+                  <div className="text-xs text-[var(--muted-foreground)] mb-1">首次发现时间</div>
+                  <div className="text-sm text-[var(--foreground)]">2025-03-27 23:10:20</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-400 mb-1">当前状态</div>
-                  <div className="text-sm text-green-600">已遏制</div>
+                  <div className="text-xs text-[var(--muted-foreground)] mb-1">当前状态</div>
+                  <div className="text-sm text-green-600 dark:text-green-400">已遏制</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-400 mb-1">事件类型</div>
-                  <div className="text-sm text-gray-700">HTTP头部注入</div>
+                  <div className="text-xs text-[var(--muted-foreground)] mb-1">事件类型</div>
+                  <div className="text-sm text-[var(--foreground)]">HTTP头部注入</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-400 mb-1">事件严重性</div>
-                  <div className="text-sm text-orange-600">中危 (CVSS 5.3)</div>
+                  <div className="text-xs text-[var(--muted-foreground)] mb-1">事件严重性</div>
+                  <div className="text-sm text-orange-600 dark:text-orange-400">中危 (CVSS 5.3)</div>
                 </div>
               </div>
             </section>
 
             <section>
-              <h3 className="text-sm font-medium text-blue-600 mb-3">二、事件详细描述</h3>
-              <p className="text-sm text-gray-600 leading-relaxed p-4 rounded-lg bg-gray-50">
-                本次安全事件捕获到一个来自英国IP地址(<span className="text-red-600">84.17.51.2</span>)对多云线上环境资产(
-                <span className="text-blue-600">45.78.218.192</span>)发起的可疑HTTP请求。
+              <h3 className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-3">二、事件详细描述</h3>
+              <p className="text-sm text-[var(--muted-foreground)] leading-relaxed p-4 rounded-lg bg-[var(--muted)]">
+                本次安全事件捕获到一个来自英国IP地址(<span className="text-red-600 dark:text-red-400">84.17.51.2</span>)对多云线上环境资产(
+                <span className="text-blue-600 dark:text-blue-400">45.78.218.192</span>)发起的可疑HTTP请求。
                 请求包含明显的CRLF注入尝试，通过在HTTP头部"zzzheadertest"中插入单个回车符试图拆分HTTP头，
                 这是典型的HTTP头部注入攻击特征。请求针对非常规路径，且服务器返回了HTTP 200状态码，
                 表明请求"成功"，可能导致敏感文件被未授权访问。
@@ -343,30 +343,30 @@ export default function SOCDemoPage() {
             </section>
 
             <section>
-              <h3 className="text-sm font-medium text-blue-600 mb-3">三、影响评估</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-lg bg-gray-50">
+              <h3 className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-3">三、影响评估</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-lg bg-[var(--muted)]">
                 <div>
-                  <div className="text-xs text-gray-400 mb-1">受影响资产</div>
-                  <div className="text-sm text-gray-700">多云线上环境</div>
+                  <div className="text-xs text-[var(--muted-foreground)] mb-1">受影响资产</div>
+                  <div className="text-sm text-[var(--foreground)]">多云线上环境</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-400 mb-1">资产重要性</div>
-                  <div className="text-sm text-orange-600">高（生产环境）</div>
+                  <div className="text-xs text-[var(--muted-foreground)] mb-1">资产重要性</div>
+                  <div className="text-sm text-orange-600 dark:text-orange-400">高（生产环境）</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-400 mb-1">数据泄露风险</div>
-                  <div className="text-sm text-orange-600">中等</div>
+                  <div className="text-xs text-[var(--muted-foreground)] mb-1">数据泄露风险</div>
+                  <div className="text-sm text-orange-600 dark:text-orange-400">中等</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-400 mb-1">扩散风险</div>
-                  <div className="text-sm text-orange-600">中等</div>
+                  <div className="text-xs text-[var(--muted-foreground)] mb-1">扩散风险</div>
+                  <div className="text-sm text-orange-600 dark:text-orange-400">中等</div>
                 </div>
               </div>
             </section>
 
             <section>
-              <h3 className="text-sm font-medium text-blue-600 mb-3">四、安全建议</h3>
-              <ol className="text-sm text-gray-600 space-y-2 p-4 rounded-lg bg-gray-50 list-decimal list-inside">
+              <h3 className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-3">四、安全建议</h3>
+              <ol className="text-sm text-[var(--muted-foreground)] space-y-2 p-4 rounded-lg bg-[var(--muted)] list-decimal list-inside">
                 <li>对Web服务器进行安全配置审查，特别是HTTP协议处理机制</li>
                 <li>实施严格的HTTP头部验证，拒绝处理包含CRLF注入的请求</li>
                 <li>对敏感路径实施访问控制，定期扫描识别未授权访问的资源</li>

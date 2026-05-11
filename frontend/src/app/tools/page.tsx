@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Code, Send, ChevronDown, ChevronRight, Copy, Check, Loader2, Play } from 'lucide-react';
+import { Code, Send, ChevronDown, ChevronRight, Copy, Check, Loader2, Play, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // API 端点定义
@@ -50,7 +50,7 @@ const apiEndpoints: ApiEndpoint[] = [
       { method: 'GET', path: '/api/bgp/query', description: '查询 BGP 更新记录', params: [{ name: 'prefix', type: 'string', required: false, description: 'IP 前缀' }, { name: 'asn', type: 'string', required: false, description: 'ASN' }, { name: 'page', type: 'number', required: false, description: '页码' }, { name: 'limit', type: 'number', required: false, description: '每页数量' }, { name: 'start_time', type: 'string', required: false, description: '开始时间' }] },
       { method: 'GET', path: '/api/bgp/stats', description: '获取 BGP 统计' },
       { method: 'GET', path: '/api/bgp/whois/:asn', description: '查询 ASN WHOIS', params: [{ name: 'asn', type: 'string', required: true, description: 'ASN 编号' }] },
-      { method: 'GET', path: '/api/bgp/lookup', description: 'IP/前缀查找', params: [{ name: 'resource', type: 'string', required: true, description: 'IP、��缀或 ASN' }] },
+      { method: 'GET', path: '/api/bgp/lookup', description: 'IP/前缀查找', params: [{ name: 'resource', type: 'string', required: true, description: 'IP、前缀或 ASN' }] },
     ],
   },
   {
@@ -123,11 +123,11 @@ export default function ToolsPage() {
 
   const getMethodColor = (method: string) => {
     switch (method) {
-      case 'GET': return 'bg-emerald-100 text-emerald-700';
-      case 'POST': return 'bg-blue-100 text-blue-700';
-      case 'PUT': return 'bg-yellow-100 text-yellow-700';
-      case 'DELETE': return 'bg-red-100 text-red-700';
-      default: return 'bg-gray-100 text-gray-700';
+      case 'GET': return 'bg-[var(--terminal-green)]/20 text-[var(--terminal-green)] border-[var(--terminal-green)]/30';
+      case 'POST': return 'bg-blue-500/20 text-blue-500 border-blue-500/30';
+      case 'PUT': return 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30';
+      case 'DELETE': return 'bg-red-500/20 text-red-500 border-red-500/30';
+      default: return 'bg-gray-500/20 text-gray-500 border-gray-500/30';
     }
   };
 
@@ -185,49 +185,63 @@ export default function ToolsPage() {
     : null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b px-6 py-4">
+    <div className="min-h-screen bg-[var(--background)]">
+      {/* Header with Terminal aesthetic */}
+      <div className="bg-[var(--card)] border-b border-[var(--border)] px-6 py-4">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-xl font-semibold text-gray-900">API 工具</h1>
-          <p className="text-sm text-gray-500 mt-1">查看并测试所有可用的 API 端点</p>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--terminal-green)]/10 border border-[var(--terminal-green)]/30">
+              <Terminal className="h-4 w-4 text-[var(--terminal-green)]" />
+              <span className="text-sm font-mono text-[var(--terminal-green)]">$</span>
+            </div>
+            <h1 className="text-xl font-semibold text-[var(--foreground)]">API 工具</h1>
+          </div>
+          <p className="text-sm text-[var(--muted-foreground)] mt-2 font-mono ml-[4.5rem]">./api-test --endpoint=list --action=test</p>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Panel - Endpoint List */}
-        <div className="lg:col-span-1 bg-white rounded-lg border divide-y">
-          <div className="p-4 border-b">
-            <h2 className="font-medium text-gray-700">API 端点</h2>
+        <div className="lg:col-span-1 bg-[var(--card)] rounded-xl border border-[var(--border)] divide-y divide-[var(--border)] overflow-hidden group animate-fade-in-up">
+          <div className="p-4 border-b border-[var(--border)]">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono text-[var(--terminal-green)]">[</span>
+              <h2 className="font-medium text-[var(--foreground)]">API 端点列表</h2>
+              <span className="text-xs font-mono text-[var(--terminal-green)]">]</span>
+            </div>
           </div>
           <div className="max-h-[calc(100vh-220px)] overflow-y-auto">
-            {apiEndpoints.map(category => (
-              <div key={category.category}>
+            {apiEndpoints.map((category, catIndex) => (
+              <div key={category.category} className="animate-fade-in-up" style={{ animationDelay: `${catIndex * 50}ms` }}>
                 <button
                   onClick={() => toggleCategory(category.category)}
-                  className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-50"
+                  className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[var(--terminal-green)]/5 transition-colors duration-300"
                 >
-                  <span className="font-medium text-gray-900">{category.category}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono text-[var(--muted-foreground)]">$</span>
+                    <span className="font-medium text-[var(--foreground)]">{category.category}</span>
+                  </div>
                   {expandedCategory === category.category ? (
-                    <ChevronDown className="h-4 w-4 text-gray-500" />
+                    <ChevronDown className="h-4 w-4 text-[var(--terminal-green)]" />
                   ) : (
-                    <ChevronRight className="h-4 w-4 text-gray-500" />
+                    <ChevronRight className="h-4 w-4 text-[var(--muted-foreground)]" />
                   )}
                 </button>
                 {expandedCategory === category.category && (
-                  <div className="bg-gray-50 py-2">
-                    {category.paths.map(endpoint => (
+                  <div className="bg-[var(--terminal-green)]/5 py-2">
+                    {category.paths.map((endpoint, epIndex) => (
                       <button
                         key={`${endpoint.method}-${endpoint.path}`}
                         onClick={() => selectEndpoint({ method: endpoint.method, path: endpoint.path, category: category.category })}
-                        className={`w-full px-4 py-2 flex items-center gap-2 text-left hover:bg-gray-100 ${
-                          selectedEndpoint?.path === endpoint.path ? 'bg-blue-50 border-l-2 border-blue-500' : ''
+                        className={`w-full px-4 py-2 flex items-center gap-3 text-left hover:bg-[var(--terminal-green)]/10 transition-all duration-300 animate-fade-in-up ${
+                          selectedEndpoint?.path === endpoint.path ? 'bg-[var(--terminal-green)]/10 border-l-2 border-[var(--terminal-green)]' : 'border-l-2 border-transparent'
                         }`}
+                        style={{ animationDelay: `${(catIndex * 50) + (epIndex * 30)}ms` }}
                       >
-                        <span className={`text-xs px-1.5 py-0.5 rounded ${getMethodColor(endpoint.method)}`}>
+                        <span className={`text-xs px-2 py-0.5 rounded font-mono border ${getMethodColor(endpoint.method)}`}>
                           {endpoint.method}
                         </span>
-                        <span className="text-sm text-gray-600 truncate flex-1" title={endpoint.path}>
+                        <span className="text-sm text-[var(--foreground)] truncate flex-1 font-mono" title={endpoint.path}>
                           {endpoint.path}
                         </span>
                       </button>
@@ -244,27 +258,31 @@ export default function ToolsPage() {
           {selectedEndpoint ? (
             <>
               {/* Endpoint Info */}
-              <div className="bg-white rounded-lg border p-4">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className={`text-sm px-2 py-1 rounded font-medium ${getMethodColor(selectedEndpoint.method)}`}>
+              <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4 hover:border-[var(--terminal-green)]/50 transition-all duration-300 animate-fade-in-up">
+                <div className="flex items-center gap-3 mb-4 flex-wrap">
+                  <span className={`text-sm px-2 py-1 rounded font-mono border ${getMethodColor(selectedEndpoint.method)}`}>
                     {selectedEndpoint.method}
                   </span>
-                  <span className="font-mono text-gray-700">{selectedEndpoint.path}</span>
-                  <span className="text-gray-500 text-sm">({ selectedEndpoint.category })</span>
+                  <span className="font-mono text-[var(--foreground)]">{selectedEndpoint.path}</span>
+                  <span className="text-[var(--muted-foreground)] text-sm">// {selectedEndpoint.category}</span>
                 </div>
                 {currentEndpoint?.description && (
-                  <p className="text-gray-600 text-sm">{currentEndpoint.description}</p>
+                  <p className="text-[var(--muted-foreground)] text-sm font-mono"># {currentEndpoint.description}</p>
                 )}
               </div>
 
               {/* Parameters */}
               {currentEndpoint?.params && currentEndpoint.params.length > 0 && (
-                <div className="bg-white rounded-lg border p-4">
-                  <h3 className="font-medium text-gray-700 mb-3">请求参数</h3>
+                <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4 hover:border-[var(--terminal-green)]/50 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '50ms' }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xs font-mono text-[var(--terminal-green)]">&gt;</span>
+                    <h3 className="font-medium text-[var(--foreground)]">请求参数</h3>
+                    <span className="text-xs font-mono text-[var(--muted-foreground)]">(params)</span>
+                  </div>
                   <div className="space-y-3">
                     {currentEndpoint.params.map(param => (
                       <div key={param.name} className="grid grid-cols-4 gap-3 items-center">
-                        <label className="text-sm text-gray-600">
+                        <label className="text-sm text-[var(--foreground)] font-mono">
                           {param.name}
                           {param.required && <span className="text-red-500">*</span>}
                         </label>
@@ -273,9 +291,9 @@ export default function ToolsPage() {
                           value={params[param.name] || ''}
                           onChange={e => handleParamChange(param.name, e.target.value)}
                           placeholder={`${param.type}${param.required ? ' (必填)' : ''}`}
-                          className="col-span-2 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="col-span-2 border border-[var(--border)] rounded-lg px-3 py-2 text-sm font-mono bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--terminal-green)]/50 focus:border-[var(--terminal-green)]/50 transition-all duration-300"
                         />
-                        <span className="text-xs text-gray-500">{param.description}</span>
+                        <span className="text-xs text-[var(--muted-foreground)] font-mono">// {param.description}</span>
                       </div>
                     ))}
                   </div>
@@ -284,50 +302,54 @@ export default function ToolsPage() {
 
               {/* Request Body */}
               {currentEndpoint?.body && (
-                <div className="bg-white rounded-lg border p-4">
-                  <h3 className="font-medium text-gray-700 mb-3">请求体 (JSON)</h3>
+                <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4 hover:border-[var(--terminal-green)]/50 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xs font-mono text-[var(--terminal-green)]">&gt;</span>
+                    <h3 className="font-medium text-[var(--foreground)]">请求体</h3>
+                    <span className="text-xs font-mono text-[var(--muted-foreground)]">(JSON body)</span>
+                  </div>
                   <textarea
                     value={requestBody}
                     onChange={e => setRequestBody(e.target.value)}
                     placeholder={JSON.stringify(currentEndpoint.body, null, 2)}
-                    className="w-full h-32 border rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full h-32 border border-[var(--border)] rounded-lg px-3 py-2 text-sm font-mono bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--terminal-green)]/50 focus:border-[var(--terminal-green)]/50 transition-all duration-300"
                   />
                 </div>
               )}
 
               {/* Action Buttons */}
-              <div className="flex gap-3">
+              <div className="flex gap-3 animate-fade-in-up" style={{ animationDelay: '150ms' }}>
                 <Button
                   onClick={handleTest}
                   disabled={loading}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 bg-[var(--terminal-green)]/10 border border-[var(--terminal-green)]/30 text-[var(--terminal-green)] hover:bg-[var(--terminal-green)]/20 hover:border-[var(--terminal-green)]/50 transition-all duration-300 font-mono"
                 >
                   {loading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      请求中...
+                      <span>请求中...</span>
                     </>
                   ) : (
                     <>
                       <Play className="h-4 w-4" />
-                      发送请求
+                      <span>$ 执行</span>
                     </>
                   )}
                 </Button>
                 <Button
                   variant="outline"
                   onClick={copycurl}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 border-[var(--border)] text-[var(--foreground)] hover:border-[var(--terminal-green)]/50 hover:text-[var(--terminal-green)] transition-all duration-300 font-mono"
                 >
                   {copied ? (
                     <>
                       <Check className="h-4 w-4" />
-                      已复制
+                      <span>已复制</span>
                     </>
                   ) : (
                     <>
                       <Code className="h-4 w-4" />
-                      复制 curl
+                      <span>curl</span>
                     </>
                   )}
                 </Button>
@@ -335,34 +357,40 @@ export default function ToolsPage() {
 
               {/* Response */}
               {(response || error) && (
-                <div className="bg-white rounded-lg border">
-                  <div className="p-4 border-b flex items-center justify-between">
-                    <h3 className="font-medium text-gray-700">
-                      {error ? (
-                        <span className="text-red-600">错误</span>
-                      ) : (
-                        <span className="text-emerald-600">响应</span>
-                      )}
-                    </h3>
-                    <span className="text-xs text-gray-500">
-                      {response ? 'HTTP 200' : ''}
+                <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+                  <div className="p-4 border-b border-[var(--border)] flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono text-[var(--terminal-green)]">{error ? '!' : '$'}</span>
+                      <h3 className="font-medium text-[var(--foreground)]">
+                        {error ? (
+                          <span className="text-red-500">错误</span>
+                        ) : (
+                          <span className="text-[var(--terminal-green)]">响应</span>
+                        )}
+                      </h3>
+                    </div>
+                    <span className="text-xs text-[var(--muted-foreground)] font-mono">
+                      {response ? 'HTTP 200 OK' : ''}
                     </span>
                   </div>
-                  <pre className="p-4 text-sm overflow-auto max-h-96 bg-gray-50">
+                  <pre className="p-4 text-sm overflow-auto max-h-96 bg-[var(--terminal-green)]/5 font-mono">
                     {error ? (
-                      <span className="text-red-600">{error}</span>
+                      <span className="text-red-500">{error}</span>
                     ) : response ? (
-                      JSON.stringify(response, null, 2)
+                      <span className="text-[var(--foreground)]">{JSON.stringify(response, null, 2)}</span>
                     ) : null}
                   </pre>
                 </div>
               )}
             </>
           ) : (
-            <div className="bg-white rounded-lg border p-12 text-center">
-              <Code className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-              <p className="text-gray-500">选择一个 API 端点开始测试</p>
-              <p className="text-sm text-gray-400 mt-2">从左侧列表选择端点，填写参数后点击&quot;发送请求&quot;</p>
+            <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-12 text-center hover:border-[var(--terminal-green)]/30 transition-all duration-300 animate-fade-in-up">
+              <div className="inline-flex p-4 rounded-xl bg-[var(--terminal-green)]/10 mb-4">
+                <Terminal className="h-12 w-12 text-[var(--terminal-green)]" />
+              </div>
+              <p className="text-[var(--foreground)]">选择一个 API 端点开始测试</p>
+              <p className="text-sm text-[var(--muted-foreground)] mt-2 font-mono">./select-endpoint --from=左侧列表</p>
+              <p className="text-xs text-[var(--muted-foreground)] mt-1 font-mono"># 填写参数后点击"$ 执行"</p>
             </div>
           )}
         </div>
