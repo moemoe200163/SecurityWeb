@@ -411,7 +411,9 @@ export class MiniMaxAdapter implements AIService {
     ];
 
     // 呼叫 MiniMax API
+    console.log('[DEBUG] sendMessage - messages:', JSON.stringify(miniMaxMessages));
     const aiResponse = await this.callMiniMax(miniMaxMessages);
+    console.log('[DEBUG] sendMessage - response:', aiResponse);
 
     // 批量更新 AI 响应+步骤
     await prisma.$transaction(async (tx) => {
@@ -425,7 +427,7 @@ export class MiniMaxAdapter implements AIService {
     return {
       id: aiMessage.id,
       role: 'assistant',
-      content: aiMessage.content,
+      content: aiResponse,
       createdAt: aiMessage.createdAt.toISOString(),
     };
   }
@@ -437,13 +439,19 @@ export class MiniMaxAdapter implements AIService {
   private async updateStepsFromAIResponse(session: any, aiResponse: string): Promise<void> {
     const steps = session.steps.sort((a: any, b: any) => a.order - b.order);
 
-    // SOC 和 Threat 模組使用不同的步驟模式
+    // SOC、Threat 和 Pentest 模組使用不同的步驟模式
     const stepPatterns = session.module === 'soc' ? [
       { order: 1, title: '接收告警', patterns: ['第1步', '安全運營專家', '威脅情報溯源'] },
       { order: 2, title: '威脅情報', patterns: ['第2步', '威脅情報專家', '搜索結果'] },
       { order: 3, title: '攻擊還原', patterns: ['第3步', '威脅分析專家', '日誌特徵'] },
       { order: 4, title: '影響評估', patterns: ['第4步', '編碼專家', 'Python'] },
       { order: 5, title: '處置建議', patterns: ['第5步', '安全事件分析報告', '攻擊鏈'] },
+    ] : session.module === 'pentest' ? [
+      { order: 1, title: '目標枚舉', patterns: ['步驟1:', '步驟1', '第1步', '目標枚舉', '目標識別', '資訊收集'] },
+      { order: 2, title: '漏洞掃描', patterns: ['步驟2:', '步驟2', '第2步', '漏洞掃描', '端口掃描', '服務識別'] },
+      { order: 3, title: '漏洞驗證', patterns: ['步驟3:', '步驟3', '第3步', '漏洞驗證', '滲透測試', '攻擊測試'] },
+      { order: 4, title: '漏洞利用', patterns: ['步驟4:', '步驟4', '第4步', '漏洞利用', '武器化', '利用工具'] },
+      { order: 5, title: '報告生成', patterns: ['步驟5:', '步驟5', '第5步', '報告生成', '橫向移動', '數據竊取'] },
     ] : [
       { order: 1, title: '收集資料', patterns: ['第1步', '收集資料', '威脅判定'] },
       { order: 2, title: '擴展線索', patterns: ['第2步', '擴展線索', '關鍵發現'] },
@@ -486,6 +494,12 @@ export class MiniMaxAdapter implements AIService {
       { order: 3, title: '攻擊還原', patterns: ['第3步', '威脅分析專家', '日誌特徵'] },
       { order: 4, title: '影響評估', patterns: ['第4步', '編碼專家', 'Python'] },
       { order: 5, title: '處置建議', patterns: ['第5步', '安全事件分析報告', '攻擊鏈'] },
+    ] : session.module === 'pentest' ? [
+      { order: 1, title: '目標枚舉', patterns: ['步驟1:', '步驟1', '第1步', '目標枚舉', '目標識別', '資訊收集'] },
+      { order: 2, title: '漏洞掃描', patterns: ['步驟2:', '步驟2', '第2步', '漏洞掃描', '端口掃描', '服務識別'] },
+      { order: 3, title: '漏洞驗證', patterns: ['步驟3:', '步驟3', '第3步', '漏洞驗證', '滲透測試', '攻擊測試'] },
+      { order: 4, title: '漏洞利用', patterns: ['步驟4:', '步驟4', '第4步', '漏洞利用', '武器化', '利用工具'] },
+      { order: 5, title: '報告生成', patterns: ['步驟5:', '步驟5', '第5步', '報告生成', '橫向移動', '數據竊取'] },
     ] : [
       { order: 1, title: '收集資料', patterns: ['第1步', '收集資料', '威脅判定'] },
       { order: 2, title: '擴展線索', patterns: ['第2步', '擴展線索', '關鍵發現'] },
