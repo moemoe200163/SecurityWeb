@@ -1,8 +1,14 @@
 import { MCPTool } from '../types.js';
+import { nmapTool } from './nmap.js';
+import { sqlmapTool } from './sqlmap.js';
+import { niktoTool } from './nikto.js';
+import { hydraTool } from './hydra.js';
 
-// Tool definitions will be imported from individual tool files
 export const toolRegistry: Record<string, MCPTool> = {
-  // Will be populated after tools are created
+  nmap_scan: nmapTool,
+  sqlmap_scan: sqlmapTool,
+  nikto_scan: niktoTool,
+  hydra_brute: hydraTool,
 };
 
 export function getTool(name: string): MCPTool | undefined {
@@ -11,8 +17,4 @@ export function getTool(name: string): MCPTool | undefined {
 
 export function getAllTools(): MCPTool[] {
   return Object.values(toolRegistry);
-}
-
-export function registerTool(tool: MCPTool): void {
-  toolRegistry[tool.name] = tool;
 }
