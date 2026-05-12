@@ -92,9 +92,36 @@ services:
           cpus: '0.25'
           memory: 256M
 
+  sandbox:
+    image: kalilinux/kali-rolling:latest
+    container_name: securityweb-sandbox
+    restart: unless-stopped
+    command: tail -f /dev/null
+    networks:
+      - securityweb_sandbox
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+    security_opt:
+      - seccomp=unconfined
+    cap_add:
+      - NET_ADMIN
+    tmpfs:
+      - /run:exec
+
 networks:
   securityweb:
     driver: bridge
+  securityweb_sandbox:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
 
 volumes:
   pgdata:
