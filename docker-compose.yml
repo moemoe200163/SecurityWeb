@@ -3,8 +3,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
     environment:
       - NEXT_PUBLIC_API_URL=http://backend:4000
     depends_on:
@@ -26,8 +24,6 @@ services:
       dockerfile: Dockerfile
       target: runner
     user: root
-    ports:
-      - "4000:4000"
     env_file:
       - ./backend/.env
     environment:
@@ -52,6 +48,31 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
+
+  nginx:
+    image: openresty/openresty:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/waf:/etc/nginx/waf:ro
+    depends_on:
+      frontend:
+        condition: service_started
+      backend:
+        condition: service_started
+    networks:
+      - securityweb
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
 
   db:
     image: postgres:15-alpine
