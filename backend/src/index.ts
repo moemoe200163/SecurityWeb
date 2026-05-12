@@ -10,6 +10,8 @@ import { urlhausRoutes } from './routes/urlhaus.js';
 import { otxRoutes } from './routes/otx.js';
 import { reportRoutes } from './routes/report.js';
 import { settingsRoutes } from './routes/settings.js';
+import { toolRoutes } from './routes/tools.js';
+import { adminRoutes } from './routes/admin.js';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 
@@ -39,6 +41,12 @@ async function startServer() {
   fastify.register(otxRoutes, { prefix: '/api/otx' });
   fastify.register(reportRoutes, { prefix: '/api/report' });
   fastify.register(settingsRoutes, { prefix: '/api/settings' });
+
+  // Tool execution routes (protected by API key + RBAC)
+  fastify.register(toolRoutes, { prefix: '/api/tools' });
+
+  // Admin routes (protected by API key + admin role)
+  fastify.register(adminRoutes, { prefix: '/api/admin' });
 
   // Health check endpoint
   fastify.get('/health', async () => {
