@@ -86,3 +86,18 @@ export interface AIService {
   completeStep(stepId: string): Promise<void>;
   completeSession(sessionId: string): Promise<void>;
 }
+
+// Tool Execution types
+export interface ToolResult {
+  success: boolean;
+  output: string;
+  error?: string;
+  exitCode: number;
+  duration: number;
+}
+
+export interface ToolExecutionRequest {
+  tool: string;
+  args: Record<string, string | number | boolean>;
+  timeout?: number;
+}
