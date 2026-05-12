@@ -46,8 +46,10 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     playwright install chromium && \
     playwright install-deps
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 backend
+# Install Docker CLI for sandbox access
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    docker.io && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
@@ -57,8 +59,6 @@ COPY --from=builder /app/scripts ./scripts
 # Copy Chinese font for PDF generation
 COPY --from=builder /app/fonts ./fonts
 COPY package.json ./
-
-USER backend
 
 EXPOSE 4000
 

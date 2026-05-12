@@ -25,6 +25,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
       target: runner
+    user: root
     ports:
       - "4000:4000"
     env_file:
@@ -96,7 +97,9 @@ services:
           memory: 256M
 
   sandbox:
-    image: kalilinux/kali-rolling:latest
+    build:
+      context: ./sandbox
+      dockerfile: Dockerfile
     container_name: securityweb-sandbox
     restart: unless-stopped
     command: tail -f /dev/null

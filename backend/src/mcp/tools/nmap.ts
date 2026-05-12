@@ -25,7 +25,12 @@ export const nmapTool: MCPTool = {
 };
 
 export function buildNmapCommand(args: Record<string, string | number | boolean>): string[] {
-  const { target, ports = '-', scan_type = '-sV -sC' } = args;
-  // Return as array: ['nmap', '-sV', '-sC', '-p', '-', '-oA', 'nmap_results', 'target']
-  return ['nmap', ...String(scan_type).split(' '), '-p', String(ports), '-oA', 'nmap_results', String(target)];
+  const { target, ports = '-', scan_type = '-sT' } = args;
+  // Use full path to nmap binary and parse scan_type into individual flags
+  const scanFlags = String(scan_type).split(' ');
+  // Build command: [tool, -sT, -p, -, -oA, nmap_results, target]
+  const cmd = ['/usr/lib/nmap/nmap'];
+  scanFlags.forEach(flag => cmd.push(flag));
+  cmd.push('-p', String(ports), '-oA', 'nmap_results', String(target));
+  return cmd;
 }

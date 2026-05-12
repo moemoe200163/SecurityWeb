@@ -48,11 +48,8 @@ export class MCPServer {
       const cmdArray = buildCmd(call.arguments);
       const executor = this.sandboxManager.getExecutor();
 
-      const result = await executor.execute({
-        tool: cmdArray[0],
-        args: this.parseArgsToToolArgs(cmdArray),
-        timeout: 300000,
-      });
+      // Pass the full command array directly to avoid re-parsing issues
+      const result = await executor.executeDirect(cmdArray, 300000);
 
       return {
         success: result.success,
@@ -71,28 +68,38 @@ export class MCPServer {
   private parseArgsToToolArgs(cmdArray: string[]): Record<string, string | number | boolean> {
     const args: Record<string, string | number | boolean> = {};
     // Skip first element (tool name), parse remaining
-    // Format: [tool, -flag, value, -flag, value, ...]
+    // Format: [tool, -flag, value, -flag, value, ..., target]
+    // Values are identified by: not starting with -, not empty, and next position
     let i = 1;
     while (i < cmdArray.length) {
       const part = cmdArray[i];
-      if (part.startsWith('-')) {
+      if (part.startsWith('-') && part !== '-') {
         const key = part.replace(/^-+/, '');
-        if (i + 1 < cmdArray.length && !cmdArray[i + 1].startsWith('-')) {
+        // Check if next is a non-flag value
+        if (i + 1 < cmdArray.length &&
+            !cmdArray[i + 1].startsWith('-') &&
+            cmdArray[i + 1] !== '') {
+          // This flag has a value
           const value = cmdArray[i + 1];
-          // Convert numeric strings to numbers
           if (/^\d+$/.test(value)) {
             args[key] = parseInt(value, 10);
-          } else if (value === 'true') {
-            args[key] = true;
           } else {
             args[key] = value;
           }
           i += 2;
         } else {
+          // Boolean flag (no value following)
           args[key] = true;
           i++;
         }
       } else {
+        // Non-flag element - either positional argument or standalone "-"
+        if (part === '-') {
+          // Standalone "-" might be a valid value, treat as string
+          args['value'] = part;
+        } else if (!args['target']) {
+          args['target'] = part;
+        }
         i++;
       }
     }

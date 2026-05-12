@@ -39,6 +39,30 @@ export class ToolExecutor {
     }
   }
 
+  async executeDirect(cmdArray: string[], timeout: number = 300000): Promise<ToolResult> {
+    const startTime = Date.now();
+
+    try {
+      const result = await this.execInContainer(cmdArray, timeout);
+
+      return {
+        success: result.exitCode === 0,
+        output: result.stdout,
+        error: result.stderr,
+        exitCode: result.exitCode,
+        duration: Date.now() - startTime,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        output: '',
+        error: error instanceof Error ? error.message : String(error),
+        exitCode: -1,
+        duration: Date.now() - startTime,
+      };
+    }
+  }
+
   private buildCommand(tool: string, args: Record<string, string | number | boolean>): string[] {
     const parts: string[] = [tool];
 
@@ -48,14 +72,11 @@ export class ToolExecutor {
       }
 
       const prefix = key.length === 1 ? `-${key}` : `--${key}`;
-      parts.push(prefix);
 
-      // Only add value as separate argument for short flags
-      // Long flags use --key=value format
-      if (typeof value === 'string' && !key.startsWith('--')) {
-        parts.push(value);
-      } else if (typeof value === 'number' && !key.startsWith('--')) {
-        parts.push(String(value));
+      if (typeof value === 'boolean') {
+        parts.push(prefix);
+      } else if (typeof value === 'string' || typeof value === 'number') {
+        parts.push(prefix, String(value));
       }
     }
 
@@ -82,6 +103,7 @@ export class ToolExecutor {
       }, timeout);
 
       // Use docker exec with direct command execution (no shell) to prevent injection
+      // cmd is [tool, arg1, arg2, ...] - pass directly as args after container
       proc = spawn(
         'docker',
         ['exec', '--interactive', this.containerId, ...cmd],
