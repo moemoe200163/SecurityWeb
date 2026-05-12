@@ -39,7 +39,7 @@ export class ToolExecutor {
     }
   }
 
-  private buildCommand(tool: string, args: Record<string, string | number | boolean>): string {
+  private buildCommand(tool: string, args: Record<string, string | number | boolean>): string[] {
     const parts: string[] = [tool];
 
     for (const [key, value] of Object.entries(args)) {
@@ -59,11 +59,11 @@ export class ToolExecutor {
       }
     }
 
-    return parts.join(' ');
+    return parts;
   }
 
   private async execInContainer(
-    cmd: string,
+    cmd: string[],
     timeout: number
   ): Promise<{ stdout: string; stderr: string; exitCode: number }> {
     return new Promise((resolve, reject) => {
@@ -71,19 +71,23 @@ export class ToolExecutor {
       let stderr = '';
       let timedOut = false;
 
-      // Create abort controller for timeout
+      // Create abort controller for timeout - initialize proc to null to avoid race condition
+      let proc: ReturnType<typeof spawn> | null = null;
       const timeoutId = setTimeout(() => {
         timedOut = true;
-        proc.kill('SIGKILL');
+        if (proc) {
+          proc.kill('SIGKILL');
+        }
         reject(new Error(`Command execution timed out after ${timeout}ms`));
       }, timeout);
 
-      // Use docker exec with /bin/sh -c to run the command
-      const proc = spawn(
+      // Use docker exec with direct command execution (no shell) to prevent injection
+      proc = spawn(
         'docker',
-        ['exec', '--interactive', this.containerId, '/bin/sh', '-c', cmd],
+        ['exec', '--interactive', this.containerId, ...cmd],
         {
           stdio: ['pipe', 'pipe', 'pipe'],
+          shell: false,
         }
       );
 
