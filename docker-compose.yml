@@ -40,6 +40,9 @@ services:
         condition: service_healthy
     networks:
       - securityweb
+      - securityweb_sandbox
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     deploy:
       resources:
         limits:
