@@ -1,0 +1,111 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "歷史記錄" [ref=e17] [cursor=pointer]:
+          - /url: /history
+          - img [ref=e18]
+          - text: 歷史記錄
+        - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e23]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e26] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e27]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e31] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e32]
+          - text: 滲透測試輔助
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]: 主題
+          - generic [ref=e40]:
+            - button "淺色" [ref=e41]:
+              - img [ref=e42]
+            - button "深色" [ref=e48]:
+              - img [ref=e49]
+        - link "設定" [ref=e51] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e52]
+          - generic [ref=e55]: 設定
+        - generic [ref=e56]: 安全智能體 v1.0
+    - main [ref=e57]:
+      - generic [ref=e58]:
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - img [ref=e63]
+              - generic [ref=e65]: $
+            - heading "API 工具" [level=1] [ref=e66]
+          - paragraph [ref=e67]: ./api-test --endpoint=list --action=test
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - generic [ref=e71]:
+              - generic [ref=e72]: "["
+              - heading "API 端点列表" [level=2] [ref=e73]
+              - generic [ref=e74]: "]"
+            - generic [ref=e75]:
+              - generic [ref=e76]:
+                - button "$ SOC 分析" [ref=e77]:
+                  - generic [ref=e78]:
+                    - generic [ref=e79]: $
+                    - generic [ref=e80]: SOC 分析
+                  - img [ref=e81]
+                - generic [ref=e83]:
+                  - button "POST /api/soc/analyze" [ref=e84]:
+                    - generic [ref=e85]: POST
+                    - generic "/api/soc/analyze" [ref=e86]
+                  - button "GET /api/soc/sessions" [ref=e87]:
+                    - generic [ref=e88]: GET
+                    - generic "/api/soc/sessions" [ref=e89]
+                  - button "GET /api/soc/sessions/:id" [ref=e90]:
+                    - generic [ref=e91]: GET
+                    - generic "/api/soc/sessions/:id" [ref=e92]
+                  - button "POST /api/soc/sessions/:id/messages" [ref=e93]:
+                    - generic [ref=e94]: POST
+                    - generic "/api/soc/sessions/:id/messages" [ref=e95]
+              - button "$ 威胁情报" [ref=e97]:
+                - generic [ref=e98]:
+                  - generic [ref=e99]: $
+                  - generic [ref=e100]: 威胁情报
+                - img [ref=e101]
+              - button "$ 渗透测试" [ref=e104]:
+                - generic [ref=e105]:
+                  - generic [ref=e106]: $
+                  - generic [ref=e107]: 渗透测试
+                - img [ref=e108]
+              - button "$ BGP 路由" [ref=e111]:
+                - generic [ref=e112]:
+                  - generic [ref=e113]: $
+                  - generic [ref=e114]: BGP 路由
+                - img [ref=e115]
+              - button "$ IP 信誉" [ref=e118]:
+                - generic [ref=e119]:
+                  - generic [ref=e120]: $
+                  - generic [ref=e121]: IP 信誉
+                - img [ref=e122]
+              - button "$ 报告" [ref=e125]:
+                - generic [ref=e126]:
+                  - generic [ref=e127]: $
+                  - generic [ref=e128]: 报告
+                - img [ref=e129]
+          - generic [ref=e132]:
+            - img [ref=e134]
+            - paragraph [ref=e136]: 选择一个 API 端点开始测试
+            - paragraph [ref=e137]: ./select-endpoint --from=左侧列表
+            - paragraph [ref=e138]: "# 填写参数后点击\"$ 执行\""
+  - alert [ref=e139]

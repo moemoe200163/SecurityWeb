@@ -141,6 +141,52 @@ export interface BgpStats {
   since: string;
 }
 
+export interface UrlHausResult {
+  domain: string;
+  malicious: boolean;
+  status: 'online' | 'offline' | 'unknown' | 'clean';
+  threatType: string | null;
+  blacklists: Array<{ name: string; count: number; lastseen: string | null }>;
+  urlCount: number;
+  lastSeen: string | null;
+  firstSeen: string | null;
+  cannedResponse: any;
+  cached: boolean;
+  updatedAt: string;
+}
+
+export interface OtxPulse {
+  id: string;
+  name: string;
+  description: string;
+  tags: string[];
+  created: string;
+  modified: string;
+  indicatorCount: number;
+}
+
+export interface OtxCheckResult {
+  indicator: string;
+  type: string;
+  pulseCount: number;
+  pulses: OtxPulse[];
+  country: string | null;
+  city: string | null;
+  asn: string | null;
+  hostname: string | null;
+  url: string | null;
+  mimeType: string | null;
+  dhash: string | null;
+  ssdeep: string | null;
+  fileType: string | null;
+  fileSize: number | null;
+  malware: any;
+  analysis: any;
+  ufdst: any;
+  cached: boolean;
+  updatedAt: string;
+}
+
 export interface PaginationInfo {
   page: number;
   limit: number;
@@ -304,6 +350,33 @@ export const api = {
     },
     async stats(): Promise<BgpStats> {
       return request('/api/bgp/stats');
+    },
+  },
+
+  // URLhaus
+  urlhaus: {
+    async check(domain: string, forceRefresh = false): Promise<UrlHausResult> {
+      const params = new URLSearchParams({ domain });
+      if (forceRefresh) params.set('forceRefresh', 'true');
+      return request<UrlHausResult>(`/api/urlhaus/check?${params}`);
+    },
+    async recent(limit = 10): Promise<{ urls: any[]; generated_at: string }> {
+      return request(`/api/urlhaus/recent?limit=${limit}`);
+    },
+  },
+
+  // OTX (AlienVault)
+  otx: {
+    async check(indicator: string, type: 'IPv4' | 'IPv6' | 'domain' | 'hostname' | 'file' | 'url' = 'domain', forceRefresh = false): Promise<OtxCheckResult> {
+      const params = new URLSearchParams({ indicator, type });
+      if (forceRefresh) params.set('forceRefresh', 'true');
+      return request<OtxCheckResult>(`/api/otx/check?${params}`);
+    },
+    async pulse(pulseId: string): Promise<any> {
+      return request(`/api/otx/pulse/${pulseId}`);
+    },
+    async search(keyword: string): Promise<{ results: any[]; count: number }> {
+      return request(`/api/otx/search?keyword=${encodeURIComponent(keyword)}`);
     },
   },
 

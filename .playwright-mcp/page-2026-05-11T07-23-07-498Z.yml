@@ -1,0 +1,74 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "設定" [ref=e17] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e18]
+          - text: 設定
+        - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e23]
+          - text: SOC 告警分析
+        - generic [ref=e35]:
+          - link "威脅情報調查" [ref=e36] [cursor=pointer]:
+            - /url: /threat/investigate
+            - img [ref=e37]
+            - text: 威脅情報調查
+          - generic [ref=e1442]:
+            - link "IP/域名查詢" [ref=e1443] [cursor=pointer]:
+              - /url: /threat/investigate
+              - img [ref=e1444]
+              - text: IP/域名查詢
+            - link "IP 黑名單" [ref=e1446] [cursor=pointer]:
+              - /url: /threat/blacklist
+              - img [ref=e1447]
+              - text: IP 黑名單
+            - link "BGP 路由查詢" [active] [ref=e1449] [cursor=pointer]:
+              - /url: /threat/bgp
+              - img [ref=e1450]
+              - text: BGP 路由查詢
+            - link "歷史記錄" [ref=e1452] [cursor=pointer]:
+              - /url: /soc/history
+              - img [ref=e1453]
+              - text: 歷史記錄
+        - link "滲透測試輔助" [ref=e41] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e42]
+          - text: 滲透測試輔助
+      - generic [ref=e47]: 安全智能體 v1.0
+    - main [ref=e48]:
+      - generic [ref=e1545]:
+        - generic [ref=e1548]:
+          - img [ref=e1550]
+          - generic [ref=e1552]:
+            - heading "BGP ASN 情報查詢" [level=1] [ref=e1553]
+            - paragraph [ref=e1554]: 查詢 IP 或 ASN 所屬的 BGP 路由與威脅情報
+        - generic [ref=e1555]:
+          - generic [ref=e1557]:
+            - generic [ref=e1558]:
+              - button "IP / 前綴" [ref=e1559]
+              - button "ASN" [ref=e1560]
+            - generic [ref=e1561]:
+              - img [ref=e1562]
+              - textbox "輸入 IP 地址或前綴 (例如：1.1.1.0/24)" [ref=e1565]
+            - button "查詢" [disabled] [ref=e1566]:
+              - img [ref=e1567]
+              - text: 查詢
+          - generic [ref=e1570]:
+            - img [ref=e1571]
+            - heading "輸入 IP 或 ASN 開始查詢" [level=2] [ref=e1574]
+            - paragraph [ref=e1575]: 快速取得 BGP 路由資訊與威脅情報
+  - alert [ref=e133]

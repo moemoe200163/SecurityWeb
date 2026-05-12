@@ -56,7 +56,6 @@ const navigation: Record<ModuleType, NavItem> = {
     icon: <Network className="h-5 w-5" />,
     children: [
       { label: '新建任務', href: '/pentest/assist' },
-      { label: '任務歷史', href: '/pentest/history' },
       { label: '分析Demo', href: '/pentest/demo' },
     ],
   },

@@ -1,13 +1,15 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { FileText, Search, Network, Shield, Clock, ChevronRight } from 'lucide-react';
+import { FileText, Search, Network, Shield, Clock, ChevronRight, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { api, type SessionDetail } from '@/lib/api';
+
+const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
 function InputDisplay({ input }: { input: unknown }) {
   if (!input || typeof input !== 'object') return null;
@@ -62,23 +64,42 @@ export default function HistoryPage() {
   const [sessions, setSessions] = useState<SessionDetail[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const loadSessions = useCallback(async () => {
     try {
-      setLoading(true);
+      setIsRefreshing(true);
       setError(null);
       const data = await api.getAllSessions();
       setSessions(data);
+      setLastRefresh(new Date());
     } catch (err) {
       setError('載入歷史記錄失敗');
       console.error(err);
     } finally {
       setLoading(false);
+      setIsRefreshing(false);
     }
   }, []);
 
+  // Initial load
   useEffect(() => {
     loadSessions();
+  }, [loadSessions]);
+
+  // Auto-refresh every 5 minutes
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      loadSessions();
+    }, REFRESH_INTERVAL);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, [loadSessions]);
 
   return (
@@ -88,12 +109,23 @@ export default function HistoryPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-lg font-semibold text-[var(--card-foreground)]">歷史分析記錄</h1>
-            <p className="text-sm text-[var(--muted-foreground)] mt-1">
+            <p className="text-sm text-[var(--muted-foreground)] mt-1 flex items-center gap-2">
               共 {sessions.length} 筆記錄
+              {lastRefresh && (
+                <span className="text-xs text-[var(--muted-foreground)]">
+                  · 上次更新: {lastRefresh.toLocaleTimeString('zh-TW')}
+                </span>
+              )}
             </p>
           </div>
-          <Button variant="outline" size="sm" onClick={loadSessions}>
-            重新整理
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadSessions}
+            disabled={isRefreshing}
+          >
+            <RefreshCw className={`h-4 w-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`} />
+            {isRefreshing ? '更新中...' : '重新整理'}
           </Button>
         </div>
       </div>

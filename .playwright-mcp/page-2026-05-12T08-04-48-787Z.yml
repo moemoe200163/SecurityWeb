@@ -1,0 +1,257 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "歷史記錄" [ref=e17] [cursor=pointer]:
+          - /url: /history
+          - img [ref=e18]
+          - text: 歷史記錄
+        - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e23]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e26] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e27]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e31] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e32]
+          - text: 滲透測試輔助
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]: 主題
+          - generic [ref=e40]:
+            - button "淺色" [ref=e41]:
+              - img [ref=e42]
+            - button "深色" [ref=e48]:
+              - img [ref=e49]
+        - link "設定" [ref=e51] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e52]
+          - generic [ref=e55]: 設定
+        - generic [ref=e56]: 安全智能體 v1.0
+    - main [ref=e57]:
+      - generic [ref=e59]:
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - img [ref=e64]
+            - generic [ref=e67]:
+              - heading "分析歷史記錄" [level=1] [ref=e68]
+              - paragraph [ref=e69]: HISTORY RECORDS · 共 10 筆記錄
+          - button "重新整理" [ref=e70]:
+            - img [ref=e71]
+            - generic [ref=e76]: 重新整理
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - img [ref=e79]
+            - generic [ref=e81]: "模組:"
+            - generic [ref=e82]:
+              - button "全部 (10)" [ref=e83]
+              - button "SOC 分析 (2)" [ref=e84]
+              - button "威脅情報 (3)" [ref=e85]
+              - button "滲透測試 (5)" [ref=e86]
+          - generic [ref=e87]:
+            - generic [ref=e88]: "狀態:"
+            - generic [ref=e89]:
+              - button "全部狀態" [ref=e90]
+              - button "已完成" [ref=e91]
+              - button "執行中" [ref=e92]
+              - button "失敗" [ref=e93]
+        - generic [ref=e94]:
+          - 'link "滲透測試輔助 已完成 192.168.1.1 · ID: b07c92ab 5 / 5 步驟 5 小時前" [ref=e96] [cursor=pointer]':
+            - /url: /pentest/assist?session=b07c92ab-69fe-423c-b52f-e1bed6580223
+            - generic [ref=e97]:
+              - img [ref=e99]
+              - generic [ref=e104]:
+                - generic [ref=e105]:
+                  - heading "滲透測試輔助" [level=3] [ref=e106]
+                  - generic [ref=e109]: 已完成
+                - generic [ref=e110]:
+                  - generic [ref=e111]: 192.168.1.1
+                  - generic [ref=e112]: ·
+                  - generic [ref=e113]: "ID: b07c92ab"
+                - generic [ref=e117]: 5 / 5 步驟
+              - generic [ref=e118]:
+                - generic [ref=e119]:
+                  - img [ref=e120]
+                  - generic [ref=e123]: 5 小時前
+                - img [ref=e124]
+          - 'link "威脅情報調查 已完成 8.8.8.8 · ID: 621985e8 5 / 5 步驟 5 小時前" [ref=e127] [cursor=pointer]':
+            - /url: /threat/investigate?session=621985e8-675d-412d-b80f-30a97adfff65
+            - generic [ref=e128]:
+              - img [ref=e130]
+              - generic [ref=e133]:
+                - generic [ref=e134]:
+                  - heading "威脅情報調查" [level=3] [ref=e135]
+                  - generic [ref=e138]: 已完成
+                - generic [ref=e139]:
+                  - generic [ref=e140]: 8.8.8.8
+                  - generic [ref=e141]: ·
+                  - generic [ref=e142]: "ID: 621985e8"
+                - generic [ref=e146]: 5 / 5 步驟
+              - generic [ref=e147]:
+                - generic [ref=e148]:
+                  - img [ref=e149]
+                  - generic [ref=e152]: 5 小時前
+                - img [ref=e153]
+          - 'link "SOC 告警分析 已完成 攻擊鏈分析 · ID: 322ef100 5 / 5 步驟 5 小時前" [ref=e156] [cursor=pointer]':
+            - /url: /soc/analyze?session=322ef100-f745-4d0b-a8a3-4e9d0c2712df
+            - generic [ref=e157]:
+              - img [ref=e159]
+              - generic [ref=e161]:
+                - generic [ref=e162]:
+                  - heading "SOC 告警分析" [level=3] [ref=e163]
+                  - generic [ref=e166]: 已完成
+                - generic [ref=e167]:
+                  - generic [ref=e168]: 攻擊鏈分析
+                  - generic [ref=e169]: ·
+                  - generic [ref=e170]: "ID: 322ef100"
+                - generic [ref=e174]: 5 / 5 步驟
+              - generic [ref=e175]:
+                - generic [ref=e176]:
+                  - img [ref=e177]
+                  - generic [ref=e180]: 5 小時前
+                - img [ref=e181]
+          - 'link "滲透測試輔助 已完成 192.168.20.199 · ID: 57911fb4 5 / 5 步驟 7 小時前" [ref=e184] [cursor=pointer]':
+            - /url: /pentest/assist?session=57911fb4-aa4b-4020-bb23-bbc6b9840a03
+            - generic [ref=e185]:
+              - img [ref=e187]
+              - generic [ref=e192]:
+                - generic [ref=e193]:
+                  - heading "滲透測試輔助" [level=3] [ref=e194]
+                  - generic [ref=e197]: 已完成
+                - generic [ref=e198]:
+                  - generic [ref=e199]: 192.168.20.199
+                  - generic [ref=e200]: ·
+                  - generic [ref=e201]: "ID: 57911fb4"
+                - generic [ref=e205]: 5 / 5 步驟
+              - generic [ref=e206]:
+                - generic [ref=e207]:
+                  - img [ref=e208]
+                  - generic [ref=e211]: 7 小時前
+                - img [ref=e212]
+          - 'link "滲透測試輔助 已完成 192.168.20.199 · ID: c92174fb 5 / 5 步驟 8 小時前" [ref=e215] [cursor=pointer]':
+            - /url: /pentest/assist?session=c92174fb-a3df-4346-aab9-729765035c2c
+            - generic [ref=e216]:
+              - img [ref=e218]
+              - generic [ref=e223]:
+                - generic [ref=e224]:
+                  - heading "滲透測試輔助" [level=3] [ref=e225]
+                  - generic [ref=e228]: 已完成
+                - generic [ref=e229]:
+                  - generic [ref=e230]: 192.168.20.199
+                  - generic [ref=e231]: ·
+                  - generic [ref=e232]: "ID: c92174fb"
+                - generic [ref=e236]: 5 / 5 步驟
+              - generic [ref=e237]:
+                - generic [ref=e238]:
+                  - img [ref=e239]
+                  - generic [ref=e242]: 8 小時前
+                - img [ref=e243]
+          - 'link "滲透測試輔助 已完成 https://demo.testfire.net · ID: ab3e1e66 5 / 5 步驟 14 小時前" [ref=e246] [cursor=pointer]':
+            - /url: /pentest/assist?session=ab3e1e66-4b0b-4190-94e6-4bcc6ba02e3b
+            - generic [ref=e247]:
+              - img [ref=e249]
+              - generic [ref=e254]:
+                - generic [ref=e255]:
+                  - heading "滲透測試輔助" [level=3] [ref=e256]
+                  - generic [ref=e259]: 已完成
+                - generic [ref=e260]:
+                  - generic [ref=e261]: https://demo.testfire.net
+                  - generic [ref=e262]: ·
+                  - generic [ref=e263]: "ID: ab3e1e66"
+                - generic [ref=e267]: 5 / 5 步驟
+              - generic [ref=e268]:
+                - generic [ref=e269]:
+                  - img [ref=e270]
+                  - generic [ref=e273]: 14 小時前
+                - img [ref=e274]
+          - 'link "滲透測試輔助 已完成 192.168.20.199 · ID: 21f7440e 5 / 5 步驟 16 小時前" [ref=e277] [cursor=pointer]':
+            - /url: /pentest/assist?session=21f7440e-5030-47f6-af21-4fd2ec3c27b5
+            - generic [ref=e278]:
+              - img [ref=e280]
+              - generic [ref=e285]:
+                - generic [ref=e286]:
+                  - heading "滲透測試輔助" [level=3] [ref=e287]
+                  - generic [ref=e290]: 已完成
+                - generic [ref=e291]:
+                  - generic [ref=e292]: 192.168.20.199
+                  - generic [ref=e293]: ·
+                  - generic [ref=e294]: "ID: 21f7440e"
+                - generic [ref=e298]: 5 / 5 步驟
+              - generic [ref=e299]:
+                - generic [ref=e300]:
+                  - img [ref=e301]
+                  - generic [ref=e304]: 16 小時前
+                - img [ref=e305]
+          - 'link "SOC 告警分析 已完成 CRLF注入攻擊 · ID: 661f9b71 5 / 5 步驟 18 小時前" [ref=e308] [cursor=pointer]':
+            - /url: /soc/analyze?session=661f9b71-57aa-4c8a-a673-5ef232107d94
+            - generic [ref=e309]:
+              - img [ref=e311]
+              - generic [ref=e313]:
+                - generic [ref=e314]:
+                  - heading "SOC 告警分析" [level=3] [ref=e315]
+                  - generic [ref=e318]: 已完成
+                - generic [ref=e319]:
+                  - generic [ref=e320]: CRLF注入攻擊
+                  - generic [ref=e321]: ·
+                  - generic [ref=e322]: "ID: 661f9b71"
+                - generic [ref=e326]: 5 / 5 步驟
+              - generic [ref=e327]:
+                - generic [ref=e328]:
+                  - img [ref=e329]
+                  - generic [ref=e332]: 18 小時前
+                - img [ref=e333]
+          - 'link "威脅情報調查 已完成 8.8.8.8 · ID: 2d1c4edf 5 / 5 步驟 1 天前" [ref=e336] [cursor=pointer]':
+            - /url: /threat/investigate?session=2d1c4edf-7dfa-4764-a369-0c25dd277dc1
+            - generic [ref=e337]:
+              - img [ref=e339]
+              - generic [ref=e342]:
+                - generic [ref=e343]:
+                  - heading "威脅情報調查" [level=3] [ref=e344]
+                  - generic [ref=e347]: 已完成
+                - generic [ref=e348]:
+                  - generic [ref=e349]: 8.8.8.8
+                  - generic [ref=e350]: ·
+                  - generic [ref=e351]: "ID: 2d1c4edf"
+                - generic [ref=e355]: 5 / 5 步驟
+              - generic [ref=e356]:
+                - generic [ref=e357]:
+                  - img [ref=e358]
+                  - generic [ref=e361]: 1 天前
+                - img [ref=e362]
+          - 'link "威脅情報調查 已完成 1.1.1.1 · ID: a498e339 5 / 5 步驟 2 天前" [ref=e365] [cursor=pointer]':
+            - /url: /threat/investigate?session=a498e339-1f4d-4d08-8549-5670ed4abec4
+            - generic [ref=e366]:
+              - img [ref=e368]
+              - generic [ref=e371]:
+                - generic [ref=e372]:
+                  - heading "威脅情報調查" [level=3] [ref=e373]
+                  - generic [ref=e376]: 已完成
+                - generic [ref=e377]:
+                  - generic [ref=e378]: 1.1.1.1
+                  - generic [ref=e379]: ·
+                  - generic [ref=e380]: "ID: a498e339"
+                - generic [ref=e384]: 5 / 5 步驟
+              - generic [ref=e385]:
+                - generic [ref=e386]:
+                  - img [ref=e387]
+                  - generic [ref=e390]: 2 天前
+                - img [ref=e391]
+        - generic [ref=e394]:
+          - generic [ref=e395]: "最後更新:"
+          - generic [ref=e396]: 下午4:04:48
+  - alert [ref=e397]

@@ -1,0 +1,65 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "設定" [ref=e17] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e18]
+          - text: 設定
+        - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e23]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e36] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e37]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e41] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e42]
+          - text: 滲透測試輔助
+      - generic [ref=e47]: 安全智能體 v1.0
+    - main [ref=e48]:
+      - generic [ref=e135]:
+        - generic [ref=e137]:
+          - heading "API 工具" [level=1] [ref=e138]
+          - paragraph [ref=e139]: 查看并测试所有可用的 API 端点
+        - generic [ref=e140]:
+          - generic [ref=e141]:
+            - heading "API 端点" [level=2] [ref=e143]
+            - generic [ref=e144]:
+              - button "SOC 分析" [active] [ref=e146]:
+                - generic [ref=e147]: SOC 分析
+                - img [ref=e195]
+              - button "威胁情报" [ref=e164]:
+                - generic [ref=e165]: 威胁情报
+                - img [ref=e166]
+              - button "渗透测试" [ref=e169]:
+                - generic [ref=e170]: 渗透测试
+                - img [ref=e171]
+              - button "BGP 路由" [ref=e174]:
+                - generic [ref=e175]: BGP 路由
+                - img [ref=e176]
+              - button "IP 信誉" [ref=e179]:
+                - generic [ref=e180]: IP 信誉
+                - img [ref=e181]
+              - button "报告" [ref=e184]:
+                - generic [ref=e185]: 报告
+                - img [ref=e186]
+          - generic [ref=e189]:
+            - img [ref=e190]
+            - paragraph [ref=e193]: 选择一个 API 端点开始测试
+            - paragraph [ref=e194]: 从左侧列表选择端点，填写参数后点击"发送请求"
+  - alert [ref=e133]

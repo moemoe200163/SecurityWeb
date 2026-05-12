@@ -1,0 +1,216 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "歷史記錄" [ref=e17] [cursor=pointer]:
+          - /url: /history
+          - img [ref=e18]
+          - text: 歷史記錄
+        - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e23]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e26] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e27]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e31] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e32]
+          - text: 滲透測試輔助
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]: 主題
+          - generic [ref=e40]:
+            - button "淺色" [ref=e41]:
+              - img [ref=e42]
+            - button "深色" [ref=e48]:
+              - img [ref=e49]
+        - link "設定" [ref=e51] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e52]
+          - generic [ref=e55]: 設定
+        - generic [ref=e56]: 安全智能體 v1.0
+    - main [ref=e57]:
+      - generic [ref=e60]:
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - img [ref=e65]
+            - generic [ref=e67]:
+              - heading "安全智能體" [level=1] [ref=e68]
+              - paragraph [ref=e69]: TACTICAL OPERATIONS CENTER
+          - generic [ref=e70]: $ current_time --zone=Asia/Taipei2026/5/11 下午9:37:21
+        - generic [ref=e72]:
+          - img [ref=e74]
+          - generic [ref=e76]:
+            - heading "注意：系統監控中" [level=4] [ref=e77]
+            - paragraph [ref=e78]: BGP 路由監控已啟動，等待新威脅情報...
+          - link "查看詳情" [ref=e79] [cursor=pointer]:
+            - /url: /threat/bgp
+        - generic [ref=e80]:
+          - generic [ref=e83]:
+            - generic [ref=e84]:
+              - generic [ref=e85]: 總分析會話
+              - img [ref=e87]
+            - generic [ref=e89]:
+              - generic [ref=e90]: "30"
+              - generic [ref=e91]:
+                - img [ref=e92]
+                - text: +12%
+          - generic [ref=e97]:
+            - generic [ref=e98]:
+              - generic [ref=e99]: 威脅情報
+              - img [ref=e101]
+            - generic [ref=e103]:
+              - generic [ref=e104]: "156"
+              - generic [ref=e105]:
+                - img [ref=e106]
+                - text: "+5"
+          - generic [ref=e111]:
+            - generic [ref=e112]:
+              - generic [ref=e113]: 滲透測試
+              - img [ref=e115]
+            - generic [ref=e120]:
+              - generic [ref=e121]: "11"
+              - generic [ref=e122]:
+                - img [ref=e123]
+                - text: "+3"
+          - generic [ref=e128]:
+            - generic [ref=e129]:
+              - generic [ref=e130]: 系統狀態
+              - img [ref=e132]
+            - generic [ref=e135]: 正常
+        - generic [ref=e136]:
+          - generic [ref=e137]:
+            - generic [ref=e140]: 模組入口
+            - generic [ref=e141]:
+              - link "SOC 告警分析 安全事件智能分析與響應系統 30 會話 進入" [ref=e142] [cursor=pointer]:
+                - /url: /soc/analyze
+                - generic [ref=e149]:
+                  - img [ref=e151]
+                  - heading "SOC 告警分析" [level=3] [ref=e153]
+                  - paragraph [ref=e154]: 安全事件智能分析與響應系統
+                  - generic [ref=e155]:
+                    - generic [ref=e156]: 30 會話
+                    - generic [ref=e157]:
+                      - text: 進入
+                      - img [ref=e158]
+              - link "威脅情報調查 IP、域名、雜湊值情報分析 156 記錄 進入" [ref=e160] [cursor=pointer]:
+                - /url: /threat/investigate
+                - generic [ref=e167]:
+                  - img [ref=e169]
+                  - heading "威脅情報調查" [level=3] [ref=e172]
+                  - paragraph [ref=e173]: IP、域名、雜湊值情報分析
+                  - generic [ref=e174]:
+                    - generic [ref=e175]: 156 記錄
+                    - generic [ref=e176]:
+                      - text: 進入
+                      - img [ref=e177]
+              - link "滲透測試輔助 自動化滲透測試工作流 11 任務 進入" [ref=e179] [cursor=pointer]:
+                - /url: /pentest/assist
+                - generic [ref=e186]:
+                  - img [ref=e188]
+                  - heading "滲透測試輔助" [level=3] [ref=e193]
+                  - paragraph [ref=e194]: 自動化滲透測試工作流
+                  - generic [ref=e195]:
+                    - generic [ref=e196]: 11 任務
+                    - generic [ref=e197]:
+                      - text: 進入
+                      - img [ref=e198]
+            - generic [ref=e200]:
+              - generic [ref=e201]:
+                - generic [ref=e202]:
+                  - img [ref=e203]
+                  - heading "最近活動" [level=3] [ref=e205]
+                - link "查看全部 →" [ref=e206] [cursor=pointer]:
+                  - /url: /soc/history
+              - generic [ref=e207]:
+                - generic [ref=e209] [cursor=pointer]:
+                  - img [ref=e211]
+                  - generic [ref=e216]:
+                    - generic [ref=e218]: 滲透測試完成
+                    - paragraph [ref=e220]: "目標: 192.168.1.1"
+                  - generic [ref=e221]: 5 分鐘前
+                - generic [ref=e223] [cursor=pointer]:
+                  - img [ref=e225]
+                  - generic [ref=e228]:
+                    - generic [ref=e230]: 威脅情報更新
+                    - paragraph [ref=e232]: IP 8.8.8.8 標記為良性
+                  - generic [ref=e233]: 15 分鐘前
+                - generic [ref=e235] [cursor=pointer]:
+                  - img [ref=e237]
+                  - generic [ref=e239]:
+                    - generic [ref=e241]: SOC 分析完成
+                    - paragraph [ref=e243]: 新攻擊鏈分析
+                  - generic [ref=e244]: 30 分鐘前
+                - generic [ref=e246] [cursor=pointer]:
+                  - img [ref=e248]
+                  - generic [ref=e253]:
+                    - generic [ref=e255]: 漏洞掃描中
+                    - paragraph [ref=e257]: "目標: demo.testfire.net"
+                  - generic [ref=e258]: 1 小時前
+                - generic [ref=e260] [cursor=pointer]:
+                  - img [ref=e262]
+                  - generic [ref=e265]:
+                    - generic [ref=e267]: BGP 路由異常
+                    - paragraph [ref=e269]: AS15169 路由變更
+                  - generic [ref=e270]: 2 小時前
+          - generic [ref=e271]:
+            - generic [ref=e272]:
+              - generic [ref=e273]:
+                - img [ref=e274]
+                - heading "系統狀態" [level=3] [ref=e276]
+              - generic [ref=e277]:
+                - generic [ref=e278]:
+                  - generic [ref=e279]: Frontend
+                  - generic [ref=e282]: online
+                - generic [ref=e283]:
+                  - generic [ref=e284]: Backend API
+                  - generic [ref=e287]: online
+                - generic [ref=e288]:
+                  - generic [ref=e289]: Database
+                  - generic [ref=e292]: online
+                - generic [ref=e293]:
+                  - generic [ref=e294]: BGP Consumer
+                  - generic [ref=e297]: idle
+              - generic [ref=e299]:
+                - generic [ref=e300]: $ system status --all
+                - generic [ref=e301]: $ all services operational
+            - generic [ref=e302]:
+              - generic [ref=e303]:
+                - img [ref=e304]
+                - heading "快速開始" [level=3] [ref=e307]
+              - generic [ref=e308]:
+                - link "上傳告警" [ref=e309] [cursor=pointer]:
+                  - /url: /soc/analyze
+                  - img [ref=e311]
+                  - generic [ref=e313]: 上傳告警
+                  - img [ref=e314]
+                - link "查詢 IP" [ref=e316] [cursor=pointer]:
+                  - /url: /threat/investigate
+                  - img [ref=e318]
+                  - generic [ref=e321]: 查詢 IP
+                  - img [ref=e322]
+                - link "新建滲透測試" [ref=e324] [cursor=pointer]:
+                  - /url: /pentest/assist
+                  - img [ref=e326]
+                  - generic [ref=e331]: 新建滲透測試
+                  - img [ref=e332]
+        - generic [ref=e335]:
+          - generic [ref=e336]: SecurityWeb v1.0
+          - generic [ref=e337]: "|"
+          - generic [ref=e338]: ●
+          - generic [ref=e339]: 所有系統運行正常
+  - alert [ref=e340]

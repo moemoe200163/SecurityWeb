@@ -1,0 +1,124 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "歷史記錄" [ref=e17] [cursor=pointer]:
+          - /url: /history
+          - img [ref=e18]
+          - text: 歷史記錄
+        - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e23]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e26] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e27]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e31] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e32]
+          - text: 滲透測試輔助
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]: 主題
+          - generic [ref=e40]:
+            - button "淺色" [ref=e41]:
+              - img [ref=e42]
+            - button "深色" [active] [ref=e48]:
+              - img [ref=e49]
+        - link "設定" [ref=e51] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e52]
+          - generic [ref=e55]: 設定
+        - generic [ref=e56]: 安全智能體 v1.0
+    - main [ref=e57]:
+      - generic [ref=e59]:
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - img [ref=e64]
+            - generic [ref=e66]: $
+          - generic [ref=e67]:
+            - heading "Agent Plan" [level=1] [ref=e68]
+            - paragraph [ref=e69]: ./agent-task --mode=interactive
+        - generic [ref=e70]:
+          - generic [ref=e71]:
+            - generic [ref=e72]:
+              - img [ref=e73]
+              - generic [ref=e76]: $
+              - generic [ref=e77]: AI Task Orchestration Interface
+            - paragraph [ref=e78]: 點擊任務方塊切換狀態 · 展開查看子任務 · MCP 伺服器工具追蹤
+          - list [ref=e83]:
+            - listitem [ref=e84]:
+              - generic [ref=e85]:
+                - img [ref=e88] [cursor=pointer]
+                - generic [ref=e98] [cursor=pointer]:
+                  - generic [ref=e99]: Research Project Requirements
+                  - generic [ref=e101]: in-progress
+              - list [ref=e102]:
+                - listitem [ref=e103]:
+                  - generic [ref=e104]:
+                    - img [ref=e107] [cursor=pointer]
+                    - generic [ref=e110] [cursor=pointer]: Interview stakeholders
+                - listitem [ref=e111]:
+                  - generic [ref=e112]:
+                    - img [ref=e115] [cursor=pointer]
+                    - generic [ref=e125] [cursor=pointer]: Review existing documentation
+                - listitem [ref=e126]:
+                  - generic [ref=e127]:
+                    - img [ref=e130] [cursor=pointer]
+                    - generic [ref=e134] [cursor=pointer]: Compile findings report
+            - listitem [ref=e135]:
+              - generic [ref=e136]:
+                - img [ref=e139] [cursor=pointer]
+                - generic [ref=e149] [cursor=pointer]:
+                  - generic [ref=e150]: Design System Architecture
+                  - generic [ref=e152]: in-progress
+            - listitem [ref=e153]:
+              - generic [ref=e154]:
+                - img [ref=e157] [cursor=pointer]
+                - generic [ref=e159] [cursor=pointer]:
+                  - generic [ref=e160]: Implementation Planning
+                  - generic [ref=e161]:
+                    - generic [ref=e163]:
+                      - generic [ref=e164]: "1"
+                      - generic [ref=e165]: "2"
+                    - generic [ref=e166]: pending
+            - listitem [ref=e167]:
+              - generic [ref=e168]:
+                - img [ref=e171] [cursor=pointer]
+                - generic [ref=e181] [cursor=pointer]:
+                  - generic [ref=e182]: Development Environment Setup
+                  - generic [ref=e184]: in-progress
+            - listitem [ref=e185]:
+              - generic [ref=e186]:
+                - img [ref=e189] [cursor=pointer]
+                - generic [ref=e191] [cursor=pointer]:
+                  - generic [ref=e192]: Initial Development Sprint
+                  - generic [ref=e193]:
+                    - generic [ref=e196]: "4"
+                    - generic [ref=e197]: pending
+          - generic [ref=e198]:
+            - generic [ref=e199]:
+              - generic [ref=e200]: $
+              - generic [ref=e201]: 操作說明
+            - generic [ref=e202]:
+              - paragraph [ref=e203]: · 點擊任務圖標可以循環切換狀態 (pending → in-progress → completed → need-help → failed)
+              - paragraph [ref=e204]: · 點擊任務名稱可以展開/摺疊子任務列表
+              - paragraph [ref=e205]: · 點擊子任務圖標可以標記完成/未完成
+              - paragraph [ref=e206]: · 展開子任務可查看描述和 MCP 工具標籤
+              - paragraph [ref=e207]: · 支援動畫和 reduced-motion 無障礙模式
+  - button "Open Next.js Dev Tools" [ref=e213] [cursor=pointer]:
+    - img [ref=e214]
+  - alert [ref=e219]

@@ -1,0 +1,60 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "歷史記錄" [ref=e17] [cursor=pointer]:
+          - /url: /history
+          - img [ref=e18]
+          - text: 歷史記錄
+        - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e23]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e26] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e27]
+          - text: 威脅情報調查
+        - generic [ref=e30]:
+          - link "滲透測試輔助" [ref=e31] [cursor=pointer]:
+            - /url: /pentest/assist
+            - img [ref=e32]
+            - text: 滲透測試輔助
+          - generic [ref=e37]:
+            - link "新建任務" [ref=e38] [cursor=pointer]:
+              - /url: /pentest/assist
+              - img [ref=e39]
+              - text: 新建任務
+            - link "分析Demo" [ref=e41] [cursor=pointer]:
+              - /url: /pentest/demo
+              - img [ref=e42]
+              - text: 分析Demo
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - generic [ref=e46]: 主題
+          - generic [ref=e47]:
+            - button "淺色" [ref=e48]:
+              - img [ref=e49]
+            - button "深色" [ref=e55]:
+              - img [ref=e56]
+        - link "設定" [ref=e58] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e59]
+          - generic [ref=e62]: 設定
+        - generic [ref=e63]: 安全智能體 v1.0
+    - main [ref=e64]:
+      - img [ref=e67]
+  - button "Open Next.js Dev Tools" [ref=e74] [cursor=pointer]:
+    - img [ref=e75]
+  - alert [ref=e78]

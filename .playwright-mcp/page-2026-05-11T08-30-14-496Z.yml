@@ -1,0 +1,91 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "歷史記錄" [ref=e17] [cursor=pointer]:
+          - /url: /history
+          - img [ref=e18]
+          - text: 歷史記錄
+        - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e23]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e26] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e27]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e31] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e32]
+          - text: 滲透測試輔助
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]: 主題
+          - generic [ref=e40]:
+            - button "淺色" [ref=e41]:
+              - img [ref=e42]
+            - button "深色" [ref=e48]:
+              - img [ref=e49]
+        - link "設定" [ref=e51] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e52]
+          - generic [ref=e55]: 設定
+        - generic [ref=e56]: 安全智能體 v1.0
+    - main [ref=e57]:
+      - generic [ref=e59]:
+        - generic [ref=e61]:
+          - heading "API 工具" [level=1] [ref=e62]
+          - paragraph [ref=e63]: 查看并测试所有可用的 API 端点
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - heading "API 端点" [level=2] [ref=e67]
+            - generic [ref=e68]:
+              - generic [ref=e69]:
+                - button "SOC 分析" [ref=e70]:
+                  - generic [ref=e71]: SOC 分析
+                  - img [ref=e72]
+                - generic [ref=e74]:
+                  - button "POST /api/soc/analyze" [ref=e75]:
+                    - generic [ref=e76]: POST
+                    - generic "/api/soc/analyze" [ref=e77]
+                  - button "GET /api/soc/sessions" [ref=e78]:
+                    - generic [ref=e79]: GET
+                    - generic "/api/soc/sessions" [ref=e80]
+                  - button "GET /api/soc/sessions/:id" [ref=e81]:
+                    - generic [ref=e82]: GET
+                    - generic "/api/soc/sessions/:id" [ref=e83]
+                  - button "POST /api/soc/sessions/:id/messages" [ref=e84]:
+                    - generic [ref=e85]: POST
+                    - generic "/api/soc/sessions/:id/messages" [ref=e86]
+              - button "威胁情报" [ref=e88]:
+                - generic [ref=e89]: 威胁情报
+                - img [ref=e90]
+              - button "渗透测试" [ref=e93]:
+                - generic [ref=e94]: 渗透测试
+                - img [ref=e95]
+              - button "BGP 路由" [ref=e98]:
+                - generic [ref=e99]: BGP 路由
+                - img [ref=e100]
+              - button "IP 信誉" [ref=e103]:
+                - generic [ref=e104]: IP 信誉
+                - img [ref=e105]
+              - button "报告" [ref=e108]:
+                - generic [ref=e109]: 报告
+                - img [ref=e110]
+          - generic [ref=e113]:
+            - img [ref=e114]
+            - paragraph [ref=e117]: 选择一个 API 端点开始测试
+            - paragraph [ref=e118]: 从左侧列表选择端点，填写参数后点击"发送请求"
+  - alert [ref=e119]

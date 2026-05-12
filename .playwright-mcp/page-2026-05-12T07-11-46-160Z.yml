@@ -1,0 +1,161 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "歷史記錄" [ref=e17] [cursor=pointer]:
+          - /url: /history
+          - img [ref=e18]
+          - text: 歷史記錄
+        - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e23]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e26] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e27]
+          - text: 威脅情報調查
+        - generic [ref=e30]:
+          - link "滲透測試輔助" [ref=e31] [cursor=pointer]:
+            - /url: /pentest/assist
+            - img [ref=e32]
+            - text: 滲透測試輔助
+          - generic [ref=e37]:
+            - link "新建任務" [ref=e38] [cursor=pointer]:
+              - /url: /pentest/assist
+              - img [ref=e39]
+              - text: 新建任務
+            - link "任務歷史" [ref=e41] [cursor=pointer]:
+              - /url: /pentest/history
+              - img [ref=e42]
+              - text: 任務歷史
+            - link "分析Demo" [ref=e44] [cursor=pointer]:
+              - /url: /pentest/demo
+              - img [ref=e45]
+              - text: 分析Demo
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e49]: 主題
+          - generic [ref=e50]:
+            - button "淺色" [ref=e51]:
+              - img [ref=e52]
+            - button "深色" [ref=e58]:
+              - img [ref=e59]
+        - link "設定" [ref=e61] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e62]
+          - generic [ref=e65]: 設定
+        - generic [ref=e66]: 安全智能體 v1.0
+    - main [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - img [ref=e74]
+            - generic [ref=e76]:
+              - heading "滲透測試報告" [level=1] [ref=e77]
+              - paragraph [ref=e78]: 安全滲透測試智能分析系統
+          - generic [ref=e79]:
+            - link "歷史記錄" [ref=e80] [cursor=pointer]:
+              - /url: /pentest/history
+              - img [ref=e81]
+              - text: 歷史記錄
+            - generic [ref=e84]:
+              - img [ref=e85]
+              - text: 等待開始
+        - main [ref=e89]:
+          - generic [ref=e92]:
+            - generic [ref=e93]:
+              - img [ref=e94]
+              - generic [ref=e98]: 測試目標
+            - generic [ref=e99]:
+              - generic [ref=e100]:
+                - img [ref=e101]
+                - generic [ref=e104]: https://demo.testfire.net
+              - generic [ref=e106]:
+                - img [ref=e107]
+                - generic [ref=e110]: 全站滲透測試
+              - generic [ref=e112]:
+                - img [ref=e113]
+                - generic [ref=e115]: Web 滲透測試
+              - generic [ref=e117]: 自訂
+          - generic [ref=e118]:
+            - generic [ref=e119]:
+              - img [ref=e120]
+              - heading "測試模板" [level=2] [ref=e122]
+            - generic [ref=e123]:
+              - generic [ref=e124] [cursor=pointer]:
+                - img [ref=e125]
+                - generic [ref=e129]: 網路掃描
+              - generic [ref=e130] [cursor=pointer]:
+                - img [ref=e131]
+                - generic [ref=e136]: Web 滲透
+              - generic [ref=e137] [cursor=pointer]:
+                - img [ref=e138]
+                - generic [ref=e140]: API 測試
+              - generic [ref=e141] [cursor=pointer]:
+                - img [ref=e142]
+                - generic [ref=e147]: 紅隊演練
+              - generic [ref=e148] [cursor=pointer]:
+                - img [ref=e149]
+                - generic [ref=e153]: 暴力破解
+              - generic [ref=e154] [cursor=pointer]:
+                - img [ref=e155]
+                - generic [ref=e158]: 自訂
+          - generic [ref=e159]:
+            - generic [ref=e160]:
+              - img [ref=e161]
+              - heading "測試步驟" [level=2] [ref=e163]
+              - generic [ref=e164]: 等待執行
+            - generic [ref=e165]:
+              - generic [ref=e167]:
+                - generic [ref=e168]:
+                  - img [ref=e170]
+                  - img [ref=e172]
+                  - generic [ref=e175]:
+                    - generic [ref=e176]: 目標枚舉
+                    - generic [ref=e177]: 10:30-10:35
+                - generic [ref=e178]: 正在枚舉目標範圍...
+              - generic [ref=e181]:
+                - generic [ref=e182]:
+                  - img [ref=e184]
+                  - img [ref=e186]
+                  - generic [ref=e191]:
+                    - generic [ref=e192]: 漏洞掃描
+                    - generic [ref=e193]: 10:35-10:50
+                - generic [ref=e194]: 正在掃描潛在漏洞...
+              - generic [ref=e197]:
+                - generic [ref=e198]:
+                  - img [ref=e200]
+                  - img [ref=e202]
+                  - generic [ref=e205]:
+                    - generic [ref=e206]: 漏洞驗證
+                    - generic [ref=e207]: 10:50-11:10
+                - generic [ref=e208]: 正在驗證發現的漏洞...
+              - generic [ref=e211]:
+                - generic [ref=e212]:
+                  - img [ref=e214]
+                  - img [ref=e216]
+                  - generic [ref=e221]:
+                    - generic [ref=e222]: 漏洞利用
+                    - generic [ref=e223]: 11:10-11:25
+                - generic [ref=e224]: 正在評估漏洞利用可行性...
+              - generic [ref=e227]:
+                - generic [ref=e228]:
+                  - img [ref=e230]
+                  - img [ref=e232]
+                  - generic [ref=e237]:
+                    - generic [ref=e238]: 報告生成
+                    - generic [ref=e239]: 11:25-11:35
+                - generic [ref=e240]: 正在生成滲透測試報告...
+  - alert [ref=e242]

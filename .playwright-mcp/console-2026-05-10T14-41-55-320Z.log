@@ -1,0 +1,65 @@
+[     282ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:2431
+[     319ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:2431
+[     454ms] [ERROR] In HTML, %s cannot be a descendant of <%s>.
+This will cause a hydration error.%s <button> button 
+
+  ...
+    <PentestAssistContent>
+      <div className="h-full fle...">
+        <StepProgress>
+        <div className="flex-1 ove...">
+          <div className="max-w-5xl ...">
+            <div>
+            <div>
+            <div>
+            <div className="space-y-4">
+              <div>
+              <PentestReport report={{target:"19...", ...}}>
+                <div className="space-y-6">
+                  <div>
+                  <Card>
+                  <Collapsible open={false} onOpenChange={function bound dispatchSetState}>
+                    <CollapsibleRoot data-slot="collapsible" open={false} onOpenChange={function bound dispatchSetState}>
+                      <div data-closed="" data-slot="collapsible" ref={null}>
+                        <div className="flex justi...">
+                          <CollapsibleTrigger>
+                            <CollapsibleTrigger data-slot="collapsibl...">
+>                             <button
+>                               type="button"
+>                               onClick={function}
+>                               onMouseDown={function}
+>                               onKeyDown={function}
+>                               onKeyUp={function}
+>                               onPointerDown={function}
+>                               tabIndex={0}
+>                               aria-disabled={false}
+>                               aria-controls={undefined}
+>                               aria-expanded={false}
+>                               data-slot="collapsible-trigger"
+>                               ref={function}
+>                             >
+                                <Button variant="ghost" size="sm" className="gap-2">
+                                  <Button data-slot="button" className={"group/bu..."}>
+>                                   <button
+>                                     type="button"
+>                                     onClick={function}
+>                                     onMouseDown={function}
+>                                     onKeyDown={function}
+>                                     onKeyUp={function}
+>                                     onPointerDown={function}
+>                                     tabIndex={0}
+>                                     disabled={false}
+>                                     data-slot="button"
+>                                     ref={function}
+>                                     className={"group/button inline-flex shrink-0 items-center justify-center borde..."}
+>                                   >
+                        ...
+ @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[     455ms] [ERROR] <%s> cannot contain a nested %s.
+See this log for the ancestor stack trace. button <button> @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:3272
+[   46970ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:2431
+[   47088ms] [LOG] [Fast Refresh] done in 172ms @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_0gdr-x8._.js:2431
+[   66168ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=dsuBu6g0UOEuL0BSyHeM6' failed:  @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[   67172ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=dsuBu6g0UOEuL0BSyHeM6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[   68174ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=dsuBu6g0UOEuL0BSyHeM6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299
+[   69179ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=dsuBu6g0UOEuL0BSyHeM6' failed: Connection closed before receiving a handshake response @ http://localhost:3000/_next/static/chunks/0r9g_next_dist_client_12gpkjl._.js:13299

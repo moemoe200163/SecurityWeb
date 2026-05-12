@@ -95,14 +95,13 @@ export function StepCard({ step, isLast = false, toolPanel }: StepCardProps) {
               </div>
               <CollapsibleTrigger
                 className="p-1 hover:bg-gray-100 rounded-md transition-colors"
+                aria-label={isOpen ? '收起詳細內容' : '展開詳細內容'}
               >
-                <button aria-label={isOpen ? '收起詳細內容' : '展開詳細內容'}>
-                  {isOpen ? (
-                    <ChevronUp className="h-4 w-4 text-gray-500" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4 text-gray-500" />
-                  )}
-                </button>
+                {isOpen ? (
+                  <ChevronUp className="h-4 w-4 text-gray-500" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 text-gray-500" />
+                )}
               </CollapsibleTrigger>
             </div>
 

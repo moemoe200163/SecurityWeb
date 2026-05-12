@@ -1,0 +1,101 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "歷史記錄" [ref=e17] [cursor=pointer]:
+          - /url: /history
+          - img [ref=e18]
+          - text: 歷史記錄
+        - generic [ref=e21]:
+          - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+            - /url: /soc/analyze
+            - img [ref=e23]
+            - text: SOC 告警分析
+          - generic [ref=e25]:
+            - link "深度調查" [ref=e26] [cursor=pointer]:
+              - /url: /soc/analyze
+              - img [ref=e27]
+              - text: 深度調查
+            - link "分析Demo" [ref=e29] [cursor=pointer]:
+              - /url: /soc/demo
+              - img [ref=e30]
+              - text: 分析Demo
+        - link "威脅情報調查" [ref=e33] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e34]
+          - text: 威脅情報調查
+        - link "滲透測試輔助" [ref=e38] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e39]
+          - text: 滲透測試輔助
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - generic [ref=e46]: 主題
+          - generic [ref=e47]:
+            - button "淺色" [ref=e48]:
+              - img [ref=e49]
+            - button "深色" [ref=e55]:
+              - img [ref=e56]
+        - link "設定" [ref=e58] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e59]
+          - generic [ref=e62]: 設定
+        - generic [ref=e63]: 安全智能體 v1.0
+    - main [ref=e64]:
+      - generic [ref=e67]:
+        - generic [ref=e69]:
+          - heading "威脅分析工作流" [level=2] [ref=e71]
+          - generic [ref=e73]: 0 / 5 步驟
+        - generic [ref=e78]:
+          - generic [ref=e79]:
+            - heading "告警上傳" [level=3] [ref=e81]:
+              - img [ref=e82]
+              - text: 告警上傳
+            - generic [ref=e85]:
+              - generic [ref=e87] [cursor=pointer]:
+                - img [ref=e88]
+                - paragraph [ref=e91]: 拖拽檔案到此處，或 點擊上傳
+                - paragraph [ref=e92]: 支援 JSON、CSV、TXT 格式
+              - generic [ref=e97]: 或
+              - generic [ref=e98]:
+                - generic [ref=e99]: 貼上原始告警內容
+                - textbox "貼上 JSON、CSV 或文字格式的告警內容..." [ref=e100]
+              - generic [ref=e101]:
+                - button "開始 AI 分析" [disabled]:
+                  - img
+                  - text: 開始 AI 分析
+          - generic [ref=e102]:
+            - generic [ref=e105]:
+              - img [ref=e107]
+              - paragraph [ref=e110]: 接收告警
+              - generic [ref=e111]: "1"
+            - generic [ref=e114]:
+              - img [ref=e116]
+              - paragraph [ref=e119]: 威脅情報
+              - generic [ref=e120]: "2"
+            - generic [ref=e123]:
+              - img [ref=e125]
+              - paragraph [ref=e128]: 攻擊還原
+              - generic [ref=e129]: "3"
+            - generic [ref=e132]:
+              - img [ref=e134]
+              - paragraph [ref=e137]: 影響評估
+              - generic [ref=e138]: "4"
+            - generic [ref=e140]:
+              - img [ref=e142]
+              - paragraph [ref=e145]: 處置建議
+              - generic [ref=e146]: "5"
+          - paragraph [ref=e148]: 上傳告警數據開始分析
+  - alert [ref=e149]

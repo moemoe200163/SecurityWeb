@@ -1,0 +1,68 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "歷史記錄" [ref=e17] [cursor=pointer]:
+          - /url: /history
+          - img [ref=e18]
+          - text: 歷史記錄
+        - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e23]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e26] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e27]
+          - text: 威脅情報調查
+        - generic [ref=e30]:
+          - link "滲透測試輔助" [ref=e31] [cursor=pointer]:
+            - /url: /pentest/assist
+            - img [ref=e32]
+            - text: 滲透測試輔助
+          - generic [ref=e37]:
+            - link "新建任務" [ref=e38] [cursor=pointer]:
+              - /url: /pentest/assist
+              - img [ref=e39]
+              - text: 新建任務
+            - link "任務歷史" [ref=e41] [cursor=pointer]:
+              - /url: /pentest/history
+              - img [ref=e42]
+              - text: 任務歷史
+            - link "分析Demo" [ref=e44] [cursor=pointer]:
+              - /url: /pentest/demo
+              - img [ref=e45]
+              - text: 分析Demo
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - generic [ref=e49]: 主題
+          - generic [ref=e50]:
+            - button "淺色" [ref=e51]:
+              - img [ref=e52]
+            - button "深色" [ref=e58]:
+              - img [ref=e59]
+        - link "設定" [ref=e61] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e62]
+          - generic [ref=e65]: 設定
+        - generic [ref=e66]: 安全智能體 v1.0
+    - main [ref=e67]:
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - img [ref=e73]
+          - generic [ref=e75]:
+            - heading "滲透測試記錄" [level=1] [ref=e76]
+            - paragraph [ref=e77]: 共 0 筆記錄
+        - button "重新整理" [ref=e78]
+  - alert [ref=e102]

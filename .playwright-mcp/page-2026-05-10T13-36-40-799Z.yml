@@ -1,0 +1,375 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "SOC 告警分析" [ref=e18] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e19]
+          - text: SOC 告警分析
+        - link "威脅情報調查" [ref=e22] [cursor=pointer]:
+          - /url: /threat/investigate
+          - img [ref=e23]
+          - text: 威脅情報調查
+        - generic [ref=e26]:
+          - link "滲透測試輔助" [ref=e27] [cursor=pointer]:
+            - /url: /pentest/assist
+            - img [ref=e28]
+            - text: 滲透測試輔助
+          - generic [ref=e33]:
+            - link "新建任務" [ref=e34] [cursor=pointer]:
+              - /url: /pentest/assist
+              - img [ref=e35]
+              - text: 新建任務
+            - link "任務歷史" [ref=e37] [cursor=pointer]:
+              - /url: /pentest/history
+              - img [ref=e38]
+              - text: 任務歷史
+      - generic [ref=e40]: 安全智能體 v1.0
+    - main [ref=e41]:
+      - generic [ref=e42]:
+        - generic [ref=e44]:
+          - generic [ref=e46]:
+            - img [ref=e48]
+            - generic [ref=e50]: 目標枚舉
+          - generic [ref=e53]:
+            - img [ref=e55]
+            - generic [ref=e57]: 漏洞掃描
+          - generic [ref=e60]:
+            - img [ref=e62]
+            - generic [ref=e64]: 漏洞驗證
+          - generic [ref=e67]:
+            - img [ref=e69]
+            - generic [ref=e71]: 漏洞利用
+          - generic [ref=e74]:
+            - img [ref=e76]
+            - generic [ref=e78]: 報告生成
+        - generic [ref=e80]:
+          - generic [ref=e81]:
+            - img [ref=e83]
+            - generic [ref=e85]:
+              - heading "Penetration Testing Assistant" [level=1] [ref=e86]
+              - paragraph [ref=e87]: Select a template and configure target to begin automated security testing
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - img [ref=e90]
+              - heading "Select Test Template" [level=2] [ref=e92]
+            - generic [ref=e93]:
+              - generic [ref=e95] [cursor=pointer]:
+                - img [ref=e97]
+                - heading "網路掃描" [level=3] [ref=e102]
+                - paragraph [ref=e103]: Nmap/Nessus | 主機發現 → 端口掃描 → 服務枚舉 → 漏洞掃描 → 報告
+                - generic [ref=e104]:
+                  - generic [ref=e105]: Nmap
+                  - generic [ref=e106]: Nessus
+              - generic [ref=e108] [cursor=pointer]:
+                - img [ref=e110]
+                - heading "Web 滲透" [level=3] [ref=e113]
+                - paragraph [ref=e114]: SQL/XSS | URL 分析 → 爬蟲 → XSS/SQL 測試 → 漏洞驗證 → 報告
+                - generic [ref=e115]:
+                  - generic [ref=e116]: SQLMap
+                  - generic [ref=e117]: Burp Suite
+              - generic [ref=e119] [cursor=pointer]:
+                - img [ref=e121]
+                - heading "API 測試" [level=3] [ref=e125]
+                - paragraph [ref=e126]: REST/GraphQL | Endpoints 發現 → Auth 測試 → Injection → 報告
+                - generic [ref=e127]:
+                  - generic [ref=e128]: Postman
+                  - generic [ref=e129]: GraphQL
+              - generic [ref=e131] [cursor=pointer]:
+                - img [ref=e133]
+                - heading "紅隊演練" [level=3] [ref=e137]
+                - paragraph [ref=e138]: 攻擊路徑 | recon → initial access → lateral movement → persistence → report
+                - generic [ref=e139]:
+                  - generic [ref=e140]: Metasploit
+                  - generic [ref=e141]: Cobalt Strike
+              - generic [ref=e143] [cursor=pointer]:
+                - img [ref=e145]
+                - heading "暴力破解" [level=3] [ref=e148]
+                - paragraph [ref=e149]: SSH/HTTP | 目標識別 → 用戶枚舉 → 密碼猜測 → 報告
+                - generic [ref=e150]:
+                  - generic [ref=e151]: Hydra
+                  - generic [ref=e152]: John
+              - generic [ref=e154] [cursor=pointer]:
+                - img [ref=e156]
+                - heading "自訂" [level=3] [ref=e159]
+                - paragraph [ref=e160]: 自由設定 | 用戶自定義步驟流程
+                - generic [ref=e162]: Custom
+          - generic [ref=e163]:
+            - generic [ref=e164]:
+              - heading "Test Progress (5/5)" [level=2] [ref=e167]
+              - button "Reset Session" [ref=e168]
+            - generic [ref=e169]:
+              - generic [ref=e172]:
+                - img [ref=e175]
+                - generic [ref=e179]:
+                  - generic [ref=e180]:
+                    - generic [ref=e181]:
+                      - heading "目標枚舉" [level=3] [ref=e182]
+                      - generic [ref=e183]:
+                        - img
+                        - generic [ref=e184]: 已完成
+                    - button "收起詳細內容" [expanded] [ref=e185]:
+                      - button "收起詳細內容" [ref=e186]:
+                        - img [ref=e187]
+                  - generic [ref=e190]:
+                    - heading "目標枚舉" [level=2] [ref=e191]
+                    - paragraph [ref=e192]: 已完成分析
+                  - paragraph [ref=e193]: 下午9:31:10
+              - generic [ref=e198]:
+                - img [ref=e201]
+                - generic [ref=e205]:
+                  - generic [ref=e206]:
+                    - generic [ref=e207]:
+                      - heading "漏洞掃描" [level=3] [ref=e208]
+                      - generic [ref=e209]:
+                        - img
+                        - generic [ref=e210]: 已完成
+                    - button "收起詳細內容" [expanded] [ref=e211]:
+                      - button "收起詳細內容" [ref=e212]:
+                        - img [ref=e213]
+                  - generic [ref=e216]:
+                    - heading "關鍵發現" [level=2] [ref=e217]
+                    - heading "1. 最高風險漏洞" [level=3] [ref=e218]
+                    - generic [ref=e219]:
+                      - generic [ref=e220]:
+                        - generic [ref=e221]: CODE
+                        - button "複製" [ref=e222]:
+                          - img [ref=e223]
+                          - generic [ref=e226]: 複製
+                      - code [ref=e228]:
+                        - code [ref=e229]: "┌─────────────────────────────────────────────────────┐ │ 1. VSFTPD 後門漏洞 (CVSS: 10.0) │ │ - 攻擊者可獲得 root 權限 │ │ - 無需認證即可利用 │ │ │ │ 2. MySQL 認證繞過漏洞 (CVSS: 9.8) │ │ - 可完全控制數據庫 │ │ - 可能導致數據洩露 │ │ │ │ 3. Shellshock 遠程代碼執行 (CVSS: 9.8) │ │ - 可執行任意系統命令 │ │ - 影響 SSH 和 HTTP 服務 │ └─────────────────────────────────────────────────────┘"
+                    - heading "2. 已被利用的漏洞" [level=3] [ref=e230]
+                    - list [ref=e231]:
+                      - listitem [ref=e232]: ✅ VSFTPD 後門 → 獲得 root shell
+                      - listitem [ref=e233]: ✅ OpenSSL 心臟出血 → 獲取會話 cookies
+                      - listitem [ref=e234]: ✅ MySQL 弱口令 → 讀取用戶數據
+                    - heading "3. 敏感數據暴露" [level=3] [ref=e235]
+                    - table [ref=e237]:
+                      - rowgroup [ref=e238]:
+                        - row "數據類型 狀態 說明" [ref=e239]:
+                          - columnheader "數據類型" [ref=e240]
+                          - columnheader "狀態" [ref=e241]
+                          - columnheader "說明" [ref=e242]
+                      - rowgroup [ref=e243]:
+                        - row "系統權限 ⚠️ 已暴露 攻擊者已獲取 root" [ref=e244]:
+                          - cell "系統權限" [ref=e245]
+                          - cell "⚠️ 已暴露" [ref=e246]
+                          - cell "攻擊者已獲取 root" [ref=e247]
+                        - row "用戶密碼 ⚠️ 已暴露 數據庫中發現明文/哈希" [ref=e248]:
+                          - cell "用戶密碼" [ref=e249]
+                          - cell "⚠️ 已暴露" [ref=e250]
+                          - cell "數據庫中發現明文/哈希" [ref=e251]
+                        - row "會話令牌 ⚠️ 已暴露 SSL 心臟出血洩露" [ref=e252]:
+                          - cell "會話令牌" [ref=e253]
+                          - cell "⚠️ 已暴露" [ref=e254]
+                          - cell "SSL 心臟出血洩露" [ref=e255]
+                        - row "數據庫內容 ⚠️ 已暴露 MySQL 用戶表" [ref=e256]:
+                          - cell "數據庫內容" [ref=e257]
+                          - cell "⚠️ 已暴露" [ref=e258]
+                          - cell "MySQL 用戶表" [ref=e259]
+                    - separator [ref=e260]
+                    - heading "修復建議" [level=2] [ref=e261]
+                    - heading "緊急修復 (24小時內)" [level=3] [ref=e262]
+                    - list [ref=e263]:
+                      - listitem [ref=e264]:
+                        - strong [ref=e265]: 立即升級
+                        - text: vsftpd 至 2.3.5+
+                      - listitem [ref=e266]:
+                        - strong [ref=e267]: 立即升級
+                        - text: MySQL 至 5.5.24+
+                      - listitem [ref=e268]:
+                        - strong [ref=e269]: 立即升級
+                        - text: OpenSSL 至 1.0.1g+
+                      - listitem [ref=e270]:
+                        - strong [ref=e271]: 更改所有
+                        - text: MySQL 密碼為強密碼
+                    - heading "短期修復 (1週內)" [level=3] [ref=e272]
+                    - list [ref=e273]:
+                      - listitem [ref=e274]: 升級 OpenSSH 至最新穩定版本
+                      - listitem [ref=e275]: 配置防火牆規則，限制 FTP/MySQL 訪問
+                      - listitem [ref=e276]: 啟用 TLS 1.2+，禁用 SSLv3
+                      - listitem [ref=e277]: 更新 Apache Tomcat 至安全版本
+                    - heading "長期改善" [level=3] [ref=e278]
+                    - list [ref=e279]:
+                      - listitem [ref=e280]: 建立定期漏洞掃描機制
+                      - listitem [ref=e281]: 實施配置管理標準
+                      - listitem [ref=e282]: 建立安全開發生命週期
+                      - listitem [ref=e283]: 定期安全培訓
+                    - separator [ref=e284]
+                    - heading "附錄" [level=2] [ref=e285]
+                    - heading "A. 使用的工具" [level=3] [ref=e286]
+                    - list [ref=e287]:
+                      - listitem [ref=e288]: Nmap 7.94 (端口掃描)
+                      - listitem [ref=e289]: OpenVAS 22.4.0 (漏洞掃描)
+                      - listitem [ref=e290]: Metasploit Framework (漏洞利用)
+                      - listitem [ref=e291]: Custom Python Scripts (心臟出血測試)
+                    - heading "B. 合規性狀態" [level=3] [ref=e292]
+                    - list [ref=e293]:
+                      - listitem [ref=e294]: "PCI-DSS: ❌ 不合格"
+                      - listitem [ref=e295]: "HIPAA: ❌ 不合格"
+                      - listitem [ref=e296]: "ISO 27001: ❌ 不合格"
+                    - heading "C. 測試限制" [level=3] [ref=e297]
+                    - list [ref=e298]:
+                      - listitem [ref=e299]: 僅限於網路層和應用層掃描
+                      - listitem [ref=e300]: 未進行社會工程學測試
+                      - listitem [ref=e301]: 未測試物理安全
+                    - separator [ref=e302]
+                    - paragraph [ref=e303]:
+                      - strong [ref=e304]: "⚠️ 警告:"
+                      - text: 本報告僅供安全評估演示用途，所有漏洞已脫敏處理。
+                    - separator [ref=e305]
+                    - blockquote [ref=e306]:
+                      - paragraph [ref=e307]:
+                        - strong [ref=e308]: 報告結束
+                        - text: 如需詳細技術報告或漏洞利用截圖，請聯繫安全測試團隊。
+              - generic [ref=e313]:
+                - img [ref=e316]
+                - generic [ref=e320]:
+                  - generic [ref=e321]:
+                    - generic [ref=e322]:
+                      - heading "漏洞驗證" [level=3] [ref=e323]
+                      - generic [ref=e324]:
+                        - img
+                        - generic [ref=e325]: 已完成
+                    - button "收起詳細內容" [expanded] [ref=e326]:
+                      - button "收起詳細內容" [ref=e327]:
+                        - img [ref=e328]
+                  - generic [ref=e331]:
+                    - heading "漏洞驗證" [level=2] [ref=e332]
+                    - paragraph [ref=e333]: 已完成分析
+              - generic [ref=e338]:
+                - img [ref=e341]
+                - generic [ref=e345]:
+                  - generic [ref=e346]:
+                    - generic [ref=e347]:
+                      - heading "漏洞利用" [level=3] [ref=e348]
+                      - generic [ref=e349]:
+                        - img
+                        - generic [ref=e350]: 已完成
+                    - button "收起詳細內容" [expanded] [ref=e351]:
+                      - button "收起詳細內容" [ref=e352]:
+                        - img [ref=e353]
+                  - generic [ref=e356]:
+                    - heading "漏洞利用" [level=2] [ref=e357]
+                    - paragraph [ref=e358]: 已完成分析
+              - generic [ref=e362]:
+                - img [ref=e365]
+                - generic [ref=e369]:
+                  - generic [ref=e370]:
+                    - generic [ref=e371]:
+                      - heading "報告生成" [level=3] [ref=e372]
+                      - generic [ref=e373]:
+                        - img
+                        - generic [ref=e374]: 已完成
+                    - button "收起詳細內容" [expanded] [ref=e375]:
+                      - button "收起詳細內容" [ref=e376]:
+                        - img [ref=e377]
+                  - generic [ref=e380]:
+                    - heading "修復建議" [level=2] [ref=e381]
+                    - heading "緊急修復 (24小時內)" [level=3] [ref=e382]
+                    - list [ref=e383]:
+                      - listitem [ref=e384]:
+                        - strong [ref=e385]: 立即升級
+                        - text: vsftpd 至 2.3.5+
+                      - listitem [ref=e386]:
+                        - strong [ref=e387]: 立即升級
+                        - text: MySQL 至 5.5.24+
+                      - listitem [ref=e388]:
+                        - strong [ref=e389]: 立即升級
+                        - text: OpenSSL 至 1.0.1g+
+                      - listitem [ref=e390]:
+                        - strong [ref=e391]: 更改所有
+                        - text: MySQL 密碼為強密碼
+                    - heading "短期修復 (1週內)" [level=3] [ref=e392]
+                    - list [ref=e393]:
+                      - listitem [ref=e394]: 升級 OpenSSH 至最新穩定版本
+                      - listitem [ref=e395]: 配置防火牆規則，限制 FTP/MySQL 訪問
+                      - listitem [ref=e396]: 啟用 TLS 1.2+，禁用 SSLv3
+                      - listitem [ref=e397]: 更新 Apache Tomcat 至安全版本
+                    - heading "長期改善" [level=3] [ref=e398]
+                    - list [ref=e399]:
+                      - listitem [ref=e400]: 建立定期漏洞掃描機制
+                      - listitem [ref=e401]: 實施配置管理標準
+                      - listitem [ref=e402]: 建立安全開發生命週期
+                      - listitem [ref=e403]: 定期安全培訓
+                    - separator [ref=e404]
+                    - heading "附錄" [level=2] [ref=e405]
+                    - heading "A. 使用的工具" [level=3] [ref=e406]
+                    - list [ref=e407]:
+                      - listitem [ref=e408]: Nmap 7.94 (端口掃描)
+                      - listitem [ref=e409]: OpenVAS 22.4.0 (漏洞掃描)
+                      - listitem [ref=e410]: Metasploit Framework (漏洞利用)
+                      - listitem [ref=e411]: Custom Python Scripts (心臟出血測試)
+                    - heading "B. 合規性狀態" [level=3] [ref=e412]
+                    - list [ref=e413]:
+                      - listitem [ref=e414]: "PCI-DSS: ❌ 不合格"
+                      - listitem [ref=e415]: "HIPAA: ❌ 不合格"
+                      - listitem [ref=e416]: "ISO 27001: ❌ 不合格"
+                    - heading "C. 測試限制" [level=3] [ref=e417]
+                    - list [ref=e418]:
+                      - listitem [ref=e419]: 僅限於網路層和應用層掃描
+                      - listitem [ref=e420]: 未進行社會工程學測試
+                      - listitem [ref=e421]: 未測試物理安全
+                    - separator [ref=e422]
+                    - paragraph [ref=e423]:
+                      - strong [ref=e424]: "⚠️ 警告:"
+                      - text: 本報告僅供安全評估演示用途，所有漏洞已脫敏處理。
+                    - separator [ref=e425]
+                    - blockquote [ref=e426]:
+                      - paragraph [ref=e427]:
+                        - strong [ref=e428]: 報告結束
+                        - text: 如需詳細技術報告或漏洞利用截圖，請聯繫安全測試團隊。
+          - generic [ref=e431]:
+            - heading "Test Report" [level=2] [ref=e434]
+            - generic [ref=e435]:
+              - generic [ref=e436]:
+                - generic [ref=e437]:
+                  - heading "Penetration Test Report" [level=2] [ref=e438]
+                  - paragraph [ref=e439]: "Scan completed for target: 192.168.20.199"
+                - button "Download PDF" [ref=e440]:
+                  - img
+                  - text: Download PDF
+              - generic [ref=e441]:
+                - generic [ref=e442]:
+                  - generic [ref=e443]:
+                    - generic [ref=e444]:
+                      - generic [ref=e445]: "Target:"
+                      - code [ref=e446]: 192.168.20.199
+                    - generic [ref=e447]: Medium Risk
+                  - generic [ref=e448]: "Pentest completed for target: 192.168.20.199. Found 1 potential vulnerability."
+                - generic [ref=e449]:
+                  - generic [ref=e450]:
+                    - generic [ref=e451]:
+                      - generic [ref=e452]: "0"
+                      - generic [ref=e453]: Critical
+                    - generic [ref=e454]:
+                      - generic [ref=e455]: "0"
+                      - generic [ref=e456]: High
+                    - generic [ref=e457]:
+                      - generic [ref=e458]: "1"
+                      - generic [ref=e459]: Medium
+                    - generic [ref=e460]:
+                      - generic [ref=e461]: "0"
+                      - generic [ref=e462]: Low
+                  - generic [ref=e463]:
+                    - heading "Vulnerabilities Found" [level=4] [ref=e464]
+                    - generic [ref=e466]:
+                      - generic [ref=e469]: Potential Security Issues
+                      - generic [ref=e471]: medium
+              - button "View Full Report" [ref=e474]:
+                - button "View Full Report" [ref=e475]:
+                  - img
+                  - text: View Full Report
+  - alert [ref=e476]

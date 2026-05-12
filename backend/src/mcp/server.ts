@@ -4,6 +4,7 @@ import { buildNmapCommand } from './tools/nmap.js';
 import { buildSqlmapCommand } from './tools/sqlmap.js';
 import { buildNiktoCommand } from './tools/nikto.js';
 import { buildHydraCommand } from './tools/hydra.js';
+import { buildHoleheCommand } from './tools/holehe.js';
 import { MCToolCall, MCToolResponse, MCPTool } from './types.js';
 
 const commandBuilders: Record<string, (args: Record<string, string | number | boolean>) => string[]> = {
@@ -11,6 +12,7 @@ const commandBuilders: Record<string, (args: Record<string, string | number | bo
   sqlmap_scan: buildSqlmapCommand,
   nikto_scan: buildNiktoCommand,
   hydra_brute: buildHydraCommand,
+  holehe_email: buildHoleheCommand,
 };
 
 export class MCPServer {

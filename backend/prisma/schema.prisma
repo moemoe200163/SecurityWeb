@@ -134,3 +134,38 @@ model SystemSetting {
 
   @@index([key])
 }
+
+// URLhaus cache
+model UrlHausResult {
+  id           String   @id @default(uuid())
+  domain       String   @unique
+  malicious    Boolean  @default(false)
+  status       String   // "online" | "offline" | "unknown" | "clean"
+  threatType   String?  // "malware_url" | "phishing_url" | etc.
+  blacklists   Json?
+  urlCount     Int      @default(0)
+  lastSeen     DateTime?
+  firstSeen   DateTime?
+  cannedResponse Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([domain])
+  @@index([malicious])
+  @@index([createdAt])
+}
+
+// OTX cache
+model OtxResult {
+  id            String   @id @default(uuid())
+  indicatorType String   @unique // "${type}_${indicator}"
+  indicator     String
+  type          String
+  data          Json
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([indicatorType])
+  @@index([indicator])
+  @@index([type])
+}

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Shield, Search, Network, AlertTriangle, TrendingUp, Clock, Activity, Terminal } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { api, type SessionDetail } from '@/lib/api';
 
 interface StatCardProps {
   label: string;
@@ -107,6 +108,8 @@ interface ActivityItem {
   time: string;
   status: 'completed' | 'in_progress' | 'failed';
 }
+
+const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
 const recentActivity: ActivityItem[] = [
   {
@@ -313,6 +316,23 @@ function ThreatAlertBanner() {
 
 export default function Dashboard() {
   const [currentTime, setCurrentTime] = useState<string>('');
+  const [recentSessions, setRecentSessions] = useState<SessionDetail[]>([]);
+  const [stats, setStats] = useState({ totalSessions: 0, totalThreats: 0, totalPentest: 0 });
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const loadActivity = useCallback(async () => {
+    try {
+      const sessions = await api.getAllSessions();
+      setRecentSessions(sessions.slice(0, 5));
+      setStats({
+        totalSessions: sessions.filter(s => s.module === 'soc').length,
+        totalThreats: sessions.filter(s => s.module === 'threat').length,
+        totalPentest: sessions.filter(s => s.module === 'pentest').length,
+      });
+    } catch (err) {
+      console.error('Failed to load activity:', err);
+    }
+  }, []);
 
   useEffect(() => {
     setCurrentTime(new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }));
@@ -321,6 +341,29 @@ export default function Dashboard() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // Load initial activity and set up auto-refresh
+  useEffect(() => {
+    loadActivity();
+    intervalRef.current = setInterval(loadActivity, REFRESH_INTERVAL);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [loadActivity]);
+
+  const activityItems: ActivityItem[] = recentSessions.slice(0, 5).map((session) => {
+    const typeLabels = { soc: 'SOC 分析', threat: '威脅情報', pentest: '滲透測試' };
+    const inputObj = session.input as Record<string, unknown>;
+    const inputValue = inputObj.indicator as string ?? inputObj.value as string ?? inputObj.target as string ?? '';
+    return {
+      id: session.id,
+      type: session.module as 'soc' | 'threat' | 'pentest',
+      title: typeLabels[session.module as keyof typeof typeLabels] || session.module,
+      description: `目標: ${inputValue.slice(0, 30) || '未知'}`,
+      time: new Date(session.createdAt).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
+      status: session.status === 'completed' ? 'completed' : 'in_progress',
+    };
+  });
 
   return (
     <div className="h-full overflow-auto bg-[var(--background)]">

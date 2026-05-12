@@ -1,0 +1,112 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "安全智能體" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e8]: 安全智能體
+      - navigation [ref=e9]:
+        - link "首頁儀表板" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: 首頁儀表板
+        - link "API 工具" [ref=e14] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e15]
+          - text: API 工具
+        - link "設定" [ref=e17] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e18]
+          - text: 設定
+        - link "SOC 告警分析" [ref=e22] [cursor=pointer]:
+          - /url: /soc/analyze
+          - img [ref=e23]
+          - text: SOC 告警分析
+        - generic [ref=e35]:
+          - link "威脅情報調查" [ref=e36] [cursor=pointer]:
+            - /url: /threat/investigate
+            - img [ref=e37]
+            - text: 威脅情報調查
+          - generic [ref=e1442]:
+            - link "IP/域名查詢" [ref=e1443] [cursor=pointer]:
+              - /url: /threat/investigate
+              - img [ref=e1444]
+              - text: IP/域名查詢
+            - link "IP 黑名單" [active] [ref=e1446] [cursor=pointer]:
+              - /url: /threat/blacklist
+              - img [ref=e1447]
+              - text: IP 黑名單
+            - link "BGP 路由查詢" [ref=e1449] [cursor=pointer]:
+              - /url: /threat/bgp
+              - img [ref=e1450]
+              - text: BGP 路由查詢
+            - link "歷史記錄" [ref=e1452] [cursor=pointer]:
+              - /url: /soc/history
+              - img [ref=e1453]
+              - text: 歷史記錄
+        - link "滲透測試輔助" [ref=e41] [cursor=pointer]:
+          - /url: /pentest/assist
+          - img [ref=e42]
+          - text: 滲透測試輔助
+      - generic [ref=e47]: 安全智能體 v1.0
+    - main [ref=e48]:
+      - generic [ref=e1477]:
+        - generic [ref=e1479]:
+          - generic [ref=e1480]:
+            - heading "IP 黑名單" [level=1] [ref=e1481]
+            - paragraph [ref=e1482]: 已收錄的威脅 IP 列表
+          - button "重新整理" [ref=e1483]:
+            - img [ref=e1484]
+            - text: 重新整理
+        - generic [ref=e1489]:
+          - generic [ref=e1490]:
+            - generic [ref=e1491]:
+              - paragraph [ref=e1492]: 總數
+              - paragraph [ref=e1493]: "1"
+            - generic [ref=e1494]:
+              - paragraph [ref=e1495]: 惡意 IP
+              - paragraph [ref=e1496]: "0"
+            - generic [ref=e1497]:
+              - paragraph [ref=e1498]: 可疑 IP
+              - paragraph [ref=e1499]: "0"
+            - generic [ref=e1500]:
+              - paragraph [ref=e1501]: 良性 IP
+              - paragraph [ref=e1502]: "1"
+          - generic [ref=e1503]:
+            - generic [ref=e1504]:
+              - img [ref=e1505]
+              - textbox "搜尋 IP 地址..." [ref=e1508]
+            - combobox [ref=e1509]:
+              - option "全部" [selected]
+              - option "惡意"
+              - option "可疑"
+          - generic [ref=e1510]:
+            - table [ref=e1512]:
+              - rowgroup [ref=e1513]:
+                - row "狀態 IP 地址 國家 ISP 舉報次數 更新時間 ↓" [ref=e1514]:
+                  - columnheader "狀態" [ref=e1515]
+                  - columnheader "IP 地址" [ref=e1516]
+                  - columnheader "國家" [ref=e1517]
+                  - columnheader "ISP" [ref=e1518]
+                  - columnheader "舉報次數" [ref=e1519] [cursor=pointer]
+                  - columnheader "更新時間 ↓" [ref=e1520] [cursor=pointer]
+              - rowgroup [ref=e1521]:
+                - row "良性 8.8.8.8 🇺🇸 United States Google LLC 67 2026/5/10 上午2:08:59" [ref=e1522] [cursor=pointer]:
+                  - cell "良性" [ref=e1523]:
+                    - generic [ref=e1524]:
+                      - img [ref=e1525]
+                      - generic [ref=e1528]: 良性
+                  - cell "8.8.8.8" [ref=e1529]
+                  - cell "🇺🇸 United States" [ref=e1530]
+                  - cell "Google LLC" [ref=e1531]
+                  - cell "67" [ref=e1532]
+                  - cell "2026/5/10 上午2:08:59" [ref=e1533]
+            - generic [ref=e1534]:
+              - paragraph [ref=e1535]: 顯示 1 - 1，共 1 筆
+              - generic [ref=e1536]:
+                - button [disabled] [ref=e1537]:
+                  - img [ref=e1538]
+                - generic [ref=e1540]: 第 1 / 1 頁
+                - button [disabled] [ref=e1541]:
+                  - img [ref=e1542]
+  - alert [ref=e133]

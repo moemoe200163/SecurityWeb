@@ -1,0 +1,2 @@
+# Prevent default server config from overriding our nginx.conf
+# This file intentionally left minimal

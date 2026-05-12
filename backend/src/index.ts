@@ -6,6 +6,8 @@ import { threatRoutes } from './routes/threat.js';
 import { pentestRoutes } from './routes/pentest.js';
 import { ipReputationRoutes } from './routes/ipReputation.js';
 import { bgpRoutes } from './routes/bgp.js';
+import { urlhausRoutes } from './routes/urlhaus.js';
+import { otxRoutes } from './routes/otx.js';
 import { reportRoutes } from './routes/report.js';
 import { settingsRoutes } from './routes/settings.js';
 
@@ -33,6 +35,8 @@ async function startServer() {
   fastify.register(pentestRoutes, { prefix: '/api/pentest' });
   fastify.register(ipReputationRoutes, { prefix: '/api/ip' });
   fastify.register(bgpRoutes, { prefix: '/api/bgp' });
+  fastify.register(urlhausRoutes, { prefix: '/api/urlhaus' });
+  fastify.register(otxRoutes, { prefix: '/api/otx' });
   fastify.register(reportRoutes, { prefix: '/api/report' });
   fastify.register(settingsRoutes, { prefix: '/api/settings' });
 
