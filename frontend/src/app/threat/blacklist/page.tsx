@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api, type IpReputationResult, type IpReputationStats, type PaginationInfo } from '@/lib/api';
 import { Loader2, Search, Shield, ShieldAlert, ShieldCheck, ShieldQuestion, RefreshCw, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { PageHero } from '@/components/layout/PageHero';
 
 // Country code to flag + name mapping
 const COUNTRY_DATA: Record<string, { flag: string; name: string }> = {
@@ -117,13 +118,13 @@ export default function BlacklistPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'malicious':
-        return <span className="px-2 py-1 bg-red-500 text-white text-xs font-medium rounded-full">惡意</span>;
+        return <span className="px-2 py-1 bg-red-500/10 text-red-500 border border-red-500/30 text-xs font-medium rounded-full">惡意</span>;
       case 'suspicious':
-        return <span className="px-2 py-1 bg-yellow-500 text-white text-xs font-medium rounded-full">可疑</span>;
+        return <span className="px-2 py-1 bg-yellow-500/10 text-yellow-500 border border-yellow-500/30 text-xs font-medium rounded-full">可疑</span>;
       case 'normal':
-        return <span className="px-2 py-1 bg-emerald-500 text-white text-xs font-medium rounded-full">良性</span>;
+        return <span className="px-2 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 text-xs font-medium rounded-full">良性</span>;
       default:
-        return <span className="px-2 py-1 bg-gray-500 text-white text-xs font-medium rounded-full">未知</span>;
+        return <span className="px-2 py-1 bg-gray-500/10 text-gray-500 border border-gray-500/30 text-xs font-medium rounded-full">未知</span>;
     }
   };
 
@@ -160,24 +161,25 @@ export default function BlacklistPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--muted)]">
-      {/* Header */}
-      <div className="bg-[var(--card)] border-b border-[var(--border)] px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold text-[var(--foreground)]">IP 黑名單</h1>
-            <p className="text-sm text-[var(--muted-foreground)] mt-1">已收錄的威脅 IP 列表</p>
-          </div>
+    <div className="min-h-screen bg-[var(--background)]">
+      <PageHero
+        icon={<ShieldAlert className="h-8 w-8 text-red-500" />}
+        title="IP 黑名單"
+        subtitle="THREAT IP BLACKLIST"
+        command="blacklist --records"
+        commandValue={`${stats?.total ?? data.length}`}
+        accentClassName="text-red-500 bg-red-500/10"
+        actions={(
           <button
             onClick={loadData}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:border-[var(--terminal-green)]/50 hover:bg-[var(--terminal-green)]/10 disabled:opacity-50 transition-all"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             重新整理
           </button>
-        </div>
-      </div>
+        )}
+      />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto p-6">
@@ -188,17 +190,17 @@ export default function BlacklistPage() {
               <p className="text-sm text-[var(--muted-foreground)]">總數</p>
               <p className="text-2xl font-semibold text-[var(--foreground)]">{stats.total.toLocaleString()}</p>
             </div>
-            <div className="bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800 p-4">
-              <p className="text-sm text-red-600 dark:text-red-400">惡意 IP</p>
-              <p className="text-2xl font-semibold text-red-700 dark:text-red-300">{stats.malicious.toLocaleString()}</p>
+            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+              <p className="text-sm text-red-500">惡意 IP</p>
+              <p className="text-2xl font-semibold text-red-500">{stats.malicious.toLocaleString()}</p>
             </div>
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800 p-4">
-              <p className="text-sm text-yellow-600 dark:text-yellow-400">可疑 IP</p>
-              <p className="text-2xl font-semibold text-yellow-700 dark:text-yellow-300">{stats.suspicious.toLocaleString()}</p>
+            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+              <p className="text-sm text-yellow-500">可疑 IP</p>
+              <p className="text-2xl font-semibold text-yellow-500">{stats.suspicious.toLocaleString()}</p>
             </div>
-            <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800 p-4">
-              <p className="text-sm text-emerald-600 dark:text-emerald-400">良性 IP</p>
-              <p className="text-2xl font-semibold text-emerald-700 dark:text-emerald-300">{stats.normal.toLocaleString()}</p>
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4">
+              <p className="text-sm text-emerald-500">良性 IP</p>
+              <p className="text-2xl font-semibold text-emerald-500">{stats.normal.toLocaleString()}</p>
             </div>
           </div>
         )}

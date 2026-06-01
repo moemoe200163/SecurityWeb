@@ -2,25 +2,18 @@
 
 import Plan from '@/components/ui/agent-plan';
 import { Terminal, Sparkles } from 'lucide-react';
+import { PageHero } from '@/components/layout/PageHero';
 
 export default function AgentPlanDemoPage() {
   return (
     <div className="min-h-screen bg-[var(--background)]">
-      {/* Header */}
-      <div className="bg-[var(--card)] border-b border-[var(--border)] px-6 py-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--terminal-green)]/10 border border-[var(--terminal-green)]/30">
-              <Terminal className="h-4 w-4 text-[var(--terminal-green)]" />
-              <span className="text-sm font-mono text-[var(--terminal-green)]">$</span>
-            </div>
-            <div>
-              <h1 className="text-xl font-semibold text-[var(--foreground)]">Agent Plan</h1>
-              <p className="text-sm text-[var(--muted-foreground)] font-mono ml-[4.5rem]">./agent-task --mode=interactive</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHero
+        icon={<Terminal className="h-8 w-8 text-[var(--terminal-green)]" />}
+        title="Agent Plan"
+        subtitle="AI TASK ORCHESTRATION"
+        command="./agent-task --mode"
+        commandValue="interactive"
+      />
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto p-6">

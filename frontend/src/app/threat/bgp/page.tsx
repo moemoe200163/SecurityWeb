@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { Loader2, Search, Shield, X, Copy, ExternalLink, AlertTriangle, Globe } from 'lucide-react';
+import { PageHero } from '@/components/layout/PageHero';
 
 // Country code to flag + name mapping
 const COUNTRY_DATA: Record<string, { flag: string; name: string }> = {
@@ -198,20 +199,14 @@ export default function BgpPage() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--background)' }}>
-      {/* Header */}
-      <div className="border-b shadow-sm" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
-        <div className="max-w-7xl mx-auto px-6 py-5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--color-threat)' }}>
-              <Shield className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-semibold" style={{ color: 'var(--foreground)' }}>BGP ASN 情報查詢</h1>
-              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>查詢 IP 或 ASN 所屬的 BGP 路由與威脅情報</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHero
+        icon={<Globe className="h-8 w-8 text-[var(--color-threat)]" />}
+        title="BGP ASN 情報查詢"
+        subtitle="BGP ROUTING INTELLIGENCE"
+        command="bgp-lookup --query-type"
+        commandValue={queryType.toUpperCase()}
+        accentClassName="text-[var(--color-threat)] bg-[var(--color-threat)]/10"
+      />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-6">

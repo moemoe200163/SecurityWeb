@@ -1,4 +1,4 @@
-import { db } from '../db/client.js';
+import { prisma } from '../db/client.js';
 import type { ToolTemplate } from '../types/rbac.js';
 
 export class WhitelistValidator {
@@ -111,13 +111,23 @@ export class WhitelistValidator {
       return;
     }
 
-    const result = await db.query(
-      'SELECT * FROM tool_templates WHERE is_approved = true'
-    );
+    const templates = await prisma.toolTemplate.findMany({
+      where: { isApproved: true }
+    });
 
     this.templateCache.clear();
-    for (const row of result.rows) {
-      this.templateCache.set(row.id, row);
+    for (const row of templates) {
+      const mapped: ToolTemplate = {
+        id: row.id,
+        name: row.name,
+        tool: row.tool,
+        command_template: row.commandTemplate,
+        allowed_params: row.allowedParams as Record<string, string[]>,
+        created_by: row.createdBy,
+        is_approved: row.isApproved,
+        created_at: row.createdAt,
+      };
+      this.templateCache.set(row.id, mapped);
     }
     this.cacheTime = now;
   }

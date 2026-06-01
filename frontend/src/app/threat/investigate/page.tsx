@@ -6,6 +6,7 @@ import { api, pollSession, type SessionDetail, type IpReputationResult } from '@
 import { Loader2, Search, AlertCircle, CheckCircle2, XCircle, Shield, ShieldAlert, ShieldCheck, ShieldQuestion, Terminal } from 'lucide-react';
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer';
 import { cn } from '@/lib/utils';
+import { PageHero } from '@/components/layout/PageHero';
 
 function ThreatInvestigateContent() {
   const searchParams = useSearchParams();
@@ -182,20 +183,14 @@ function ThreatInvestigateContent() {
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
-      {/* Header */}
-      <div className="bg-[var(--card)] border-b border-[var(--border)] px-6 py-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-[var(--color-threat)]/10 text-[var(--color-threat)]">
-              <Terminal className="h-5 w-5" />
-            </div>
-            <div>
-              <h1 className="text-xl font-semibold text-[var(--foreground)]">威脅情報調查</h1>
-              <p className="text-sm text-[var(--muted-foreground)] mt-1">輸入 IP、域名或雜湊值進行威脅情報分析</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHero
+        icon={<Terminal className="h-8 w-8 text-[var(--color-threat)]" />}
+        title="威脅情報調查"
+        subtitle="THREAT INTELLIGENCE INVESTIGATION"
+        command="threat-investigate --indicator-type"
+        commandValue={type}
+        accentClassName="text-[var(--color-threat)] bg-[var(--color-threat)]/10"
+      />
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto p-6">

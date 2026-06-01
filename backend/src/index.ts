@@ -12,6 +12,8 @@ import { reportRoutes } from './routes/report.js';
 import { settingsRoutes } from './routes/settings.js';
 import { toolRoutes } from './routes/tools.js';
 import { adminRoutes } from './routes/admin.js';
+import { alertRoutes } from './routes/alerts.js';
+import { dashboardRoutes } from './routes/dashboard.js';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 
@@ -47,6 +49,12 @@ async function startServer() {
 
   // Admin routes (protected by API key + admin role)
   fastify.register(adminRoutes, { prefix: '/api/admin' });
+
+  // Alert routes
+  fastify.register(alertRoutes, { prefix: '/api/alerts' });
+
+  // Dashboard / Stats routes
+  fastify.register(dashboardRoutes, { prefix: '/api/dashboard' });
 
   // Health check endpoint
   fastify.get('/health', async () => {

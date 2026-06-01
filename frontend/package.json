@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:light-mode": "node scripts/scan-light-mode.js",
+    "check:ui-tokens": "node scripts/scan-light-mode.js"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

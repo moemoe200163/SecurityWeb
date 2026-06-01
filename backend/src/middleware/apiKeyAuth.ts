@@ -1,11 +1,11 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import { db } from '../db/client.js';
+import { prisma } from '../db/client.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
     user?: {
       id: string;
-      api_key: string;
+      apiKey: string;
       role: 'user' | 'admin';
     };
   }
@@ -31,18 +31,22 @@ export async function apiKeyAuth(
   }
 
   try {
-    const result = await db.query(
-      'SELECT id, api_key, role FROM users WHERE api_key = $1',
-      [apiKey]
-    );
+    const user = await prisma.user.findUnique({
+      where: { apiKey },
+      select: { id: true, apiKey: true, role: true }
+    });
 
-    if (result.rows.length === 0) {
+    if (!user) {
       return reply.status(401).send({
         error: 'Invalid API key',
       });
     }
 
-    request.user = result.rows[0];
+    request.user = {
+      id: user.id,
+      apiKey: user.apiKey,
+      role: user.role as 'user' | 'admin',
+    };
   } catch (error) {
     console.error('API key auth error:', error);
     return reply.status(500).send({

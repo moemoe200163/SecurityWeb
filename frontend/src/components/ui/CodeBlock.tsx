@@ -46,22 +46,22 @@ export function CodeBlock({
   const lines = code.split('\n');
 
   return (
-    <div className="border border-neutral-200 rounded-2xl overflow-hidden bg-white">
+    <div className="border border-[var(--border)] rounded-2xl overflow-hidden bg-[var(--card)]">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-neutral-50 border-b border-neutral-200">
+      <div className="flex items-center justify-between px-4 py-2.5 bg-[var(--muted)]/50 border-b border-[var(--border)]">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-xs font-medium text-neutral-500">
+          <span className="font-mono text-xs font-medium text-[var(--muted-foreground)]">
             {languageLabels[language] || language.toUpperCase()}
           </span>
           {filename && (
-            <span className="font-mono text-xs text-neutral-400">
+            <span className="font-mono text-xs text-[var(--muted-foreground)]">
               {filename}
             </span>
           )}
         </div>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 hover:text-neutral-900 transition-colors"
+          className="flex items-center gap-1.5 text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
         >
           {copied ? (
             <>
@@ -79,14 +79,14 @@ export function CodeBlock({
 
       {/* Code Content */}
       <div className={`overflow-x-auto ${maxHeight}`}>
-        <pre className="p-4 text-sm font-mono bg-white text-neutral-900">
+        <pre className="p-4 text-sm font-mono bg-[var(--background)] text-[var(--foreground)]">
           <code>
             {showLineNumbers ? (
               <table className="w-full">
                 <tbody>
                   {lines.map((line, idx) => (
                     <tr key={idx}>
-                      <td className="text-neutral-400 pr-4 text-right select-none w-8">
+                      <td className="text-[var(--muted-foreground)] pr-4 text-right select-none w-8">
                         {idx + 1}
                       </td>
                       <td>{line || ' '}</td>
@@ -110,7 +110,7 @@ interface CodeBlockInlineProps {
 
 export function CodeBlockInline({ code }: CodeBlockInlineProps) {
   return (
-    <code className="px-1.5 py-0.5 bg-neutral-100 text-neutral-800 rounded text-sm font-mono">
+    <code className="px-1.5 py-0.5 bg-[var(--muted)] text-[var(--foreground)] rounded text-sm font-mono">
       {code}
     </code>
   );

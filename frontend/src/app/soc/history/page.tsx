@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Search, Network, Shield, Clock, ChevronRight, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { api, type SessionDetail } from '@/lib/api';
+import { PageHero } from '@/components/layout/PageHero';
 
 const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
@@ -104,20 +105,13 @@ export default function HistoryPage() {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="border-b border-[var(--border)] bg-[var(--card)] px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-semibold text-[var(--card-foreground)]">歷史分析記錄</h1>
-            <p className="text-sm text-[var(--muted-foreground)] mt-1 flex items-center gap-2">
-              共 {sessions.length} 筆記錄
-              {lastRefresh && (
-                <span className="text-xs text-[var(--muted-foreground)]">
-                  · 上次更新: {lastRefresh.toLocaleTimeString('zh-TW')}
-                </span>
-              )}
-            </p>
-          </div>
+      <PageHero
+        icon={<Shield className="h-8 w-8 text-[var(--terminal-green)]" />}
+        title="歷史分析記錄"
+        subtitle="SOC ANALYSIS RECORDS"
+        command="soc-records --count"
+        commandValue={`${sessions.length}`}
+        actions={(
           <Button
             variant="outline"
             size="sm"
@@ -127,11 +121,18 @@ export default function HistoryPage() {
             <RefreshCw className={`h-4 w-4 mr-1 ${isRefreshing ? 'animate-spin' : ''}`} />
             {isRefreshing ? '更新中...' : '重新整理'}
           </Button>
-        </div>
+        )}
+      />
+      <div className="px-6">
+        {lastRefresh && (
+          <div className="max-w-4xl mx-auto py-3 text-xs font-mono text-[var(--muted-foreground)]">
+            上次更新: {lastRefresh.toLocaleTimeString('zh-TW')}
+          </div>
+        )}
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto px-6 pb-6">
         <div className="max-w-4xl mx-auto space-y-4">
           {loading && (
             <>

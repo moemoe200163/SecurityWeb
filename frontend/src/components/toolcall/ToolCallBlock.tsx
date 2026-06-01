@@ -20,9 +20,9 @@ export function ToolCallBlock({ toolCall }: ToolCallBlockProps) {
     <div
       className={cn(
         'border rounded-lg p-4 transition-colors',
-        toolCall.status === 'calling' && 'border-blue-300 bg-blue-50',
-        toolCall.status === 'success' && 'border-green-300 bg-green-50',
-        toolCall.status === 'error' && 'border-red-300 bg-red-50'
+        toolCall.status === 'calling' && 'border-blue-500/30 bg-blue-500/10',
+        toolCall.status === 'success' && 'border-green-500/30 bg-green-500/10',
+        toolCall.status === 'error' && 'border-red-500/30 bg-red-500/10'
       )}
     >
       <div className="flex items-center justify-between">
@@ -32,7 +32,7 @@ export function ToolCallBlock({ toolCall }: ToolCallBlockProps) {
             {toolCall.toolName}
           </span>
         </div>
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-[var(--muted-foreground)]">
           {toolCall.status === 'calling' && '調用中...'}
           {toolCall.status === 'success' && '成功'}
           {toolCall.status === 'error' && '失敗'}
@@ -41,18 +41,18 @@ export function ToolCallBlock({ toolCall }: ToolCallBlockProps) {
 
       {toolCall.params && (
         <div className="mt-3">
-          <p className="text-xs text-neutral-500 mb-1 font-medium">參數</p>
-          <div className="border border-neutral-200 rounded-lg overflow-hidden">
-            <div className="flex items-center justify-between px-3 py-1.5 bg-neutral-50 border-b border-neutral-200">
-              <span className="text-xs text-neutral-400">JSON</span>
+          <p className="text-xs text-[var(--muted-foreground)] mb-1 font-medium">參數</p>
+          <div className="border border-[var(--border)] rounded-lg overflow-hidden">
+            <div className="flex items-center justify-between px-3 py-1.5 bg-[var(--muted)]/50 border-b border-[var(--border)]">
+              <span className="text-xs text-[var(--muted-foreground)]">JSON</span>
               <button
                 onClick={() => navigator.clipboard.writeText(JSON.stringify(toolCall.params, null, 2))}
-                className="text-xs text-neutral-400 hover:text-neutral-600"
+                className="text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
               >
                 複製
               </button>
             </div>
-            <pre className="p-3 text-xs font-mono text-neutral-900 bg-white overflow-x-auto">
+            <pre className="p-3 text-xs font-mono text-[var(--foreground)] bg-[var(--background)] overflow-x-auto">
               {JSON.stringify(toolCall.params, null, 2)}
             </pre>
           </div>
@@ -61,20 +61,20 @@ export function ToolCallBlock({ toolCall }: ToolCallBlockProps) {
 
       {toolCall.result != null && (
         <div className="mt-3">
-          <p className="text-xs text-neutral-500 mb-1 font-medium">結果</p>
-          <div className="border border-neutral-200 rounded-lg overflow-hidden">
-            <div className="flex items-center justify-between px-3 py-1.5 bg-neutral-50 border-b border-neutral-200">
-              <span className="text-xs text-neutral-400">OUTPUT</span>
+          <p className="text-xs text-[var(--muted-foreground)] mb-1 font-medium">結果</p>
+          <div className="border border-[var(--border)] rounded-lg overflow-hidden">
+            <div className="flex items-center justify-between px-3 py-1.5 bg-[var(--muted)]/50 border-b border-[var(--border)]">
+              <span className="text-xs text-[var(--muted-foreground)]">OUTPUT</span>
               <button
                 onClick={() => navigator.clipboard.writeText(
                   typeof toolCall.result === 'string' ? toolCall.result : JSON.stringify(toolCall.result, null, 2)
                 )}
-                className="text-xs text-neutral-400 hover:text-neutral-600"
+                className="text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
               >
                 複製
               </button>
             </div>
-            <pre className="p-3 text-xs font-mono text-neutral-900 bg-white overflow-x-auto">
+            <pre className="p-3 text-xs font-mono text-[var(--foreground)] bg-[var(--background)] overflow-x-auto">
               {typeof toolCall.result === 'string'
                 ? toolCall.result
                 : JSON.stringify(toolCall.result, null, 2)}

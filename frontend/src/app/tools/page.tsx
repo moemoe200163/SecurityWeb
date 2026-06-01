@@ -1,399 +1,575 @@
 'use client';
 
-import { useState } from 'react';
-import { Code, Send, ChevronDown, ChevronRight, Copy, Check, Loader2, Play, Terminal } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  Shield,
+  Play,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  Loader2,
+  Copy,
+  Check,
+  Terminal,
+  List,
+  History,
+  Zap,
+  WifiOff,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PageHero } from '@/components/layout/PageHero';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { ErrorState } from '@/components/ui/ErrorState';
 
-// API 端点定义
-interface ApiEndpoint {
-  category: string;
-  paths: {
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    path: string;
-    description: string;
-    params?: { name: string; type: string; required: boolean; description: string }[];
-    body?: object;
-  }[];
+interface ToolTemplate {
+  id: string;
+  name: string;
+  tool: string;
+  description: string | null;
+  commandTemplate: string;
+  allowedParams: Record<string, string[]>;
+  riskLevel: string;
+  isApproved: boolean;
+  isEnabled: boolean;
+  createdAt: string;
 }
 
-const apiEndpoints: ApiEndpoint[] = [
-  {
-    category: 'SOC 分析',
-    paths: [
-      { method: 'POST', path: '/api/soc/analyze', description: '发起 SOC 告警分析', params: [{ name: 'alertId', type: 'string', required: false, description: '告警 ID' }, { name: 'rawContent', type: 'string', required: false, description: '原始告警内容' }, { name: 'type', type: 'string', required: false, description: '类型: simulation | live' }] },
-      { method: 'GET', path: '/api/soc/sessions', description: '获取会话列表' },
-      { method: 'GET', path: '/api/soc/sessions/:id', description: '获取会话详情' },
-      { method: 'POST', path: '/api/soc/sessions/:id/messages', description: '发送消息', body: { content: 'string' } },
-    ],
-  },
-  {
-    category: '威胁情报',
-    paths: [
-      { method: 'POST', path: '/api/threat/investigate', description: '发起威胁调查', params: [{ name: 'type', type: 'string', required: true, description: '类型: ip | domain | hash' }, { name: 'value', type: 'string', required: true, description: '调查值' }, { name: 'type2', type: 'string', required: false, description: '模式: simulation | live' }] },
-      { method: 'GET', path: '/api/threat/sessions', description: '获取会话列表' },
-      { method: 'GET', path: '/api/threat/sessions/:id', description: '获取会话详情' },
-      { method: 'POST', path: '/api/threat/sessions/:id/messages', description: '发送消息', body: { content: 'string' } },
-    ],
-  },
-  {
-    category: '渗透测试',
-    paths: [
-      { method: 'POST', path: '/api/pentest/assist', description: '发起渗透测试', params: [{ name: 'template', type: 'string', required: false, description: '测试模板' }, { name: 'target', type: 'string', required: true, description: '目标' }, { name: 'scope', type: 'string', required: false, description: '测试范围' }, { name: 'testType', type: 'string', required: false, description: '测试类型' }, { name: 'type', type: 'string', required: false, description: '模式: simulation | live' }] },
-      { method: 'GET', path: '/api/pentest/sessions', description: '获取会话列表' },
-      { method: 'GET', path: '/api/pentest/sessions/:id', description: '获取会话详情' },
-      { method: 'POST', path: '/api/pentest/sessions/:id/messages', description: '发送消息', body: { content: 'string' } },
-    ],
-  },
-  {
-    category: 'BGP 路由',
-    paths: [
-      { method: 'GET', path: '/api/bgp/query', description: '查询 BGP 更新记录', params: [{ name: 'prefix', type: 'string', required: false, description: 'IP 前缀' }, { name: 'asn', type: 'string', required: false, description: 'ASN' }, { name: 'page', type: 'number', required: false, description: '页码' }, { name: 'limit', type: 'number', required: false, description: '每页数量' }, { name: 'start_time', type: 'string', required: false, description: '开始时间' }] },
-      { method: 'GET', path: '/api/bgp/stats', description: '获取 BGP 统计' },
-      { method: 'GET', path: '/api/bgp/whois/:asn', description: '查询 ASN WHOIS', params: [{ name: 'asn', type: 'string', required: true, description: 'ASN 编号' }] },
-      { method: 'GET', path: '/api/bgp/lookup', description: 'IP/前缀查找', params: [{ name: 'resource', type: 'string', required: true, description: 'IP、前缀或 ASN' }] },
-    ],
-  },
-  {
-    category: 'IP 信誉',
-    paths: [
-      { method: 'GET', path: '/api/ip/check', description: '检查 IP 信誉', params: [{ name: 'ip', type: 'string', required: true, description: 'IP 地址' }, { name: 'forceRefresh', type: 'boolean', required: false, description: '强制刷新缓存' }] },
-      { method: 'GET', path: '/api/ip/history', description: '获取 IP 检查历史' },
-      { method: 'GET', path: '/api/ip/stats', description: '获取统计信息' },
-      { method: 'GET', path: '/api/ip/blacklist', description: '获取黑名单', params: [{ name: 'page', type: 'number', required: false, description: '页码' }, { name: 'limit', type: 'number', required: false, description: '每页数量' }, { name: 'status', type: 'string', required: false, description: '状态过滤' }] },
-      { method: 'GET', path: '/api/ip/quota', description: '获取 API 配额' },
-    ],
-  },
-  {
-    category: '报告',
-    paths: [
-      { method: 'GET', path: '/api/report/:sessionId/pdf', description: '生成分析报告', params: [{ name: 'sessionId', type: 'string', required: true, description: '会话 ID' }] },
-    ],
-  },
-];
+interface ToolExecution {
+  id: string;
+  templateId: string;
+  params: Record<string, string>;
+  status: string;
+  output: string | null;
+  error: string | null;
+  durationMs: number | null;
+  createdAt: string;
+  template: {
+    id: string;
+    name: string;
+    tool: string;
+    riskLevel: string;
+  };
+}
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
+// Risk level colors
+const riskColors: Record<string, { bg: string; text: string; border: string }> = {
+  low: { bg: 'bg-green-500/10', text: 'text-green-500', border: 'border-green-500/30' },
+  medium: { bg: 'bg-yellow-500/10', text: 'text-yellow-500', border: 'border-yellow-500/30' },
+  high: { bg: 'bg-red-500/10', text: 'text-red-500', border: 'border-red-500/30' },
+};
+
+// Status icons
+const StatusIcon = ({ status }: { status: string }) => {
+  switch (status) {
+    case 'success':
+      return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+    case 'error':
+    case 'timeout':
+      return <XCircle className="h-4 w-4 text-red-500" />;
+    case 'running':
+      return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />;
+    default:
+      return <Clock className="h-4 w-4 text-gray-500" />;
+  }
+};
+
 export default function ToolsPage() {
-  const [expandedCategory, setExpandedCategory] = useState<string>(apiEndpoints[0].category);
-  const [selectedEndpoint, setSelectedEndpoint] = useState<{ method: string; path: string; category: string } | null>(null);
+  const [view, setView] = useState<'list' | 'execute' | 'history'>('list');
+  const [templates, setTemplates] = useState<ToolTemplate[]>([]);
+  const [executions, setExecutions] = useState<ToolExecution[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<ToolTemplate | null>(null);
   const [params, setParams] = useState<Record<string, string>>({});
-  const [requestBody, setRequestBody] = useState<string>('');
-  const [response, setResponse] = useState<unknown>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [executing, setExecuting] = useState(false);
+  const [result, setResult] = useState<{ success: boolean; output?: string; error?: string; durationMs?: number } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [apiKey] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    return localStorage.getItem('api_key') || '';
+  });
+  const [error, setError] = useState<string | null>(null);
+  const [isApiOnline, setIsApiOnline] = useState(true);
 
-  const toggleCategory = (category: string) => {
-    setExpandedCategory(expandedCategory === category ? '' : category);
-  };
-
-  const selectEndpoint = (endpoint: { method: string; path: string; category: string }) => {
-    setSelectedEndpoint(endpoint);
-    setParams({});
-    setRequestBody('');
-    setResponse(null);
-    setError(null);
-  };
-
-  const handleParamChange = (name: string, value: string) => {
-    setParams(prev => ({ ...prev, [name]: value }));
-  };
-
-  const buildUrl = () => {
-    if (!selectedEndpoint) return '';
-
-    let url = selectedEndpoint.path;
-    const queryParams: string[] = [];
-
-    // 替换路径参数
-    for (const [key, value] of Object.entries(params)) {
-      if (value && url.includes(`:${key}`)) {
-        url = url.replace(`:${key}`, value);
-      } else if (value) {
-        queryParams.push(`${key}=${encodeURIComponent(value)}`);
-      }
-    }
-
-    if (queryParams.length > 0) {
-      url += (url.includes('?') ? '&' : '?') + queryParams.join('&');
-    }
-
-    return url;
-  };
-
-  const getMethodColor = (method: string) => {
-    switch (method) {
-      case 'GET': return 'bg-[var(--terminal-green)]/20 text-[var(--terminal-green)] border-[var(--terminal-green)]/30';
-      case 'POST': return 'bg-blue-500/20 text-blue-500 border-blue-500/30';
-      case 'PUT': return 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30';
-      case 'DELETE': return 'bg-red-500/20 text-red-500 border-red-500/30';
-      default: return 'bg-gray-500/20 text-gray-500 border-gray-500/30';
-    }
-  };
-
-  const handleTest = async () => {
-    if (!selectedEndpoint) return;
-
+  const fetchTemplates = useCallback(async () => {
     setLoading(true);
     setError(null);
-    setResponse(null);
-
     try {
-      const url = `${API_BASE}${buildUrl()}`;
-      const options: RequestInit = {
-        method: selectedEndpoint.method,
-        headers: { 'Content-Type': 'application/json' },
-      };
-
-      if (requestBody.trim()) {
-        options.body = requestBody;
-      }
-
-      const res = await fetch(url, options);
-      const data = await res.json();
-
+      const res = await fetch(`${API_BASE}/api/tools/templates?include_disabled=true`, {
+        headers: { 'X-API-Key': apiKey },
+      });
       if (!res.ok) {
-        setError(data.message || data.error || `HTTP ${res.status}`);
-      } else {
-        setResponse(data);
+        throw new Error(`API error: ${res.status}`);
       }
+      const data = await res.json();
+      setTemplates(data.templates || []);
+      setIsApiOnline(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '请求失败');
+      console.error('Failed to fetch templates:', err);
+      setError('無法連接到後端 API');
+      setIsApiOnline(false);
     } finally {
       setLoading(false);
     }
+  }, [apiKey]);
+
+  const fetchExecutions = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_BASE}/api/tools/executions?limit=50`, {
+        headers: { 'X-API-Key': apiKey },
+      });
+      if (!res.ok) {
+        throw new Error(`API error: ${res.status}`);
+      }
+      const data = await res.json();
+      setExecutions(data.executions || []);
+      setIsApiOnline(true);
+    } catch (err) {
+      console.error('Failed to fetch executions:', err);
+      setError('無法連接到後端 API');
+      setIsApiOnline(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [apiKey]);
+
+  useEffect(() => {
+    fetchTemplates();
+    if (view === 'history') fetchExecutions();
+  }, [fetchExecutions, fetchTemplates, view]);
+
+  const handleParamChange = (key: string, value: string) => {
+    setParams(prev => ({ ...prev, [key]: value }));
   };
 
-  const copycurl = () => {
-    if (!selectedEndpoint) return;
+  const handleExecute = async () => {
+    if (!selectedTemplate) return;
 
-    const url = `${API_BASE}${buildUrl()}`;
-    let curl = `curl -X ${selectedEndpoint.method} "${url}"`;
+    setExecuting(true);
+    setResult(null);
 
-    if (requestBody.trim()) {
-      curl += ` \\\n  -H "Content-Type: application/json" \\\n  -d '${requestBody}'`;
+    try {
+      const res = await fetch(`${API_BASE}/api/tools/execute`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': apiKey,
+        },
+        body: JSON.stringify({
+          template_id: selectedTemplate.id,
+          params,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setResult({ success: false, error: data.error || 'Execution failed' });
+      } else {
+        setResult({
+          success: data.success,
+          output: data.output,
+          error: data.error,
+          durationMs: data.duration_ms,
+        });
+      }
+
+      // Refresh executions
+      if (view === 'history') {
+        await fetchExecutions();
+      }
+    } catch (err) {
+      setResult({ success: false, error: err instanceof Error ? err.message : 'Unknown error' });
+    } finally {
+      setExecuting(false);
     }
+  };
 
-    navigator.clipboard.writeText(curl);
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const currentEndpoint = selectedEndpoint
-    ? apiEndpoints.find(c => c.category === selectedEndpoint.category)
-        ?.paths.find(p => p.path === selectedEndpoint.path && p.method === selectedEndpoint.method)
-    : null;
+  const buildCurlCommand = () => {
+    if (!selectedTemplate) return '';
+
+    const url = `${API_BASE}/api/tools/execute`;
+    const queryParams = Object.entries(params)
+      .filter(([, v]) => v)
+      .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+      .join('&');
+
+    const requestUrl = queryParams ? `${url}?${queryParams}` : url;
+
+    return `curl -X POST "${requestUrl}" \\\n  -H "Content-Type: application/json" \\\n  -H "X-API-Key: ${apiKey}" \\\n  -d '${JSON.stringify({ template_id: selectedTemplate.id, params })}'`;
+  };
+
+  const selectTemplateForExecution = (template: ToolTemplate) => {
+    setSelectedTemplate(template);
+    setParams({});
+    setResult(null);
+    setView('execute');
+  };
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
-      {/* Header with Terminal aesthetic */}
-      <div className="bg-[var(--card)] border-b border-[var(--border)] px-6 py-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--terminal-green)]/10 border border-[var(--terminal-green)]/30">
-              <Terminal className="h-4 w-4 text-[var(--terminal-green)]" />
-              <span className="text-sm font-mono text-[var(--terminal-green)]">$</span>
-            </div>
-            <h1 className="text-xl font-semibold text-[var(--foreground)]">API 工具</h1>
-          </div>
-          <p className="text-sm text-[var(--muted-foreground)] mt-2 font-mono ml-[4.5rem]">./api-test --endpoint=list --action=test</p>
+      <PageHero
+        icon={<Shield className="h-8 w-8 text-[var(--terminal-green)]" />}
+        title="工具平台"
+        subtitle="TRUSTED TOOL ORCHESTRATION"
+        command="tool-manager --mode=secure"
+        commandValue="execution=whitelist"
+      />
+
+      {/* Navigation Tabs */}
+      <div className="max-w-6xl mx-auto px-6 pt-4">
+        <div className="flex gap-2 border-b border-[var(--border)] pb-2">
+          <button
+            onClick={() => setView('list')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-t-lg transition-all ${
+              view === 'list'
+                ? 'bg-[var(--terminal-green)]/10 text-[var(--terminal-green)] border border-[var(--border)] border-b-transparent'
+                : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--card)]'
+            }`}
+          >
+            <List className="h-4 w-4" />
+            <span className="font-medium">模板列表</span>
+          </button>
+          <button
+            onClick={() => setView('execute')}
+            disabled={!selectedTemplate}
+            className={`flex items-center gap-2 px-4 py-2 rounded-t-lg transition-all ${
+              view === 'execute'
+                ? 'bg-[var(--terminal-green)]/10 text-[var(--terminal-green)] border border-[var(--border)] border-b-transparent'
+                : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--card)]'
+            } ${!selectedTemplate ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <Zap className="h-4 w-4" />
+            <span className="font-medium">執行工具</span>
+          </button>
+          <button
+            onClick={() => setView('history')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-t-lg transition-all ${
+              view === 'history'
+                ? 'bg-[var(--terminal-green)]/10 text-[var(--terminal-green)] border border-[var(--border)] border-b-transparent'
+                : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--card)]'
+            }`}
+          >
+            <History className="h-4 w-4" />
+            <span className="font-medium">執行歷史</span>
+          </button>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Panel - Endpoint List */}
-        <div className="lg:col-span-1 bg-[var(--card)] rounded-xl border border-[var(--border)] divide-y divide-[var(--border)] overflow-hidden group animate-fade-in-up">
-          <div className="p-4 border-b border-[var(--border)]">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-[var(--terminal-green)]">[</span>
-              <h2 className="font-medium text-[var(--foreground)]">API 端点列表</h2>
-              <span className="text-xs font-mono text-[var(--terminal-green)]">]</span>
+      {/* Content */}
+      <div className="max-w-6xl mx-auto p-6">
+        {/* API Key Notice */}
+        {!apiKey && (
+          <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+            <div className="flex items-center gap-2 text-yellow-500">
+              <AlertTriangle className="h-4 w-4" />
+              <span className="font-medium">請先在 Settings 頁面設定 API Key</span>
             </div>
           </div>
-          <div className="max-h-[calc(100vh-220px)] overflow-y-auto">
-            {apiEndpoints.map((category, catIndex) => (
-              <div key={category.category} className="animate-fade-in-up" style={{ animationDelay: `${catIndex * 50}ms` }}>
-                <button
-                  onClick={() => toggleCategory(category.category)}
-                  className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[var(--terminal-green)]/5 transition-colors duration-300"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-[var(--muted-foreground)]">$</span>
-                    <span className="font-medium text-[var(--foreground)]">{category.category}</span>
-                  </div>
-                  {expandedCategory === category.category ? (
-                    <ChevronDown className="h-4 w-4 text-[var(--terminal-green)]" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4 text-[var(--muted-foreground)]" />
-                  )}
-                </button>
-                {expandedCategory === category.category && (
-                  <div className="bg-[var(--terminal-green)]/5 py-2">
-                    {category.paths.map((endpoint, epIndex) => (
-                      <button
-                        key={`${endpoint.method}-${endpoint.path}`}
-                        onClick={() => selectEndpoint({ method: endpoint.method, path: endpoint.path, category: category.category })}
-                        className={`w-full px-4 py-2 flex items-center gap-3 text-left hover:bg-[var(--terminal-green)]/10 transition-all duration-300 animate-fade-in-up ${
-                          selectedEndpoint?.path === endpoint.path ? 'bg-[var(--terminal-green)]/10 border-l-2 border-[var(--terminal-green)]' : 'border-l-2 border-transparent'
-                        }`}
-                        style={{ animationDelay: `${(catIndex * 50) + (epIndex * 30)}ms` }}
-                      >
-                        <span className={`text-xs px-2 py-0.5 rounded font-mono border ${getMethodColor(endpoint.method)}`}>
-                          {endpoint.method}
-                        </span>
-                        <span className="text-sm text-[var(--foreground)] truncate flex-1 font-mono" title={endpoint.path}>
-                          {endpoint.path}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        )}
 
-        {/* Right Panel - Testing */}
-        <div className="lg:col-span-2 space-y-4">
-          {selectedEndpoint ? (
-            <>
-              {/* Endpoint Info */}
-              <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4 hover:border-[var(--terminal-green)]/50 transition-all duration-300 animate-fade-in-up">
-                <div className="flex items-center gap-3 mb-4 flex-wrap">
-                  <span className={`text-sm px-2 py-1 rounded font-mono border ${getMethodColor(selectedEndpoint.method)}`}>
-                    {selectedEndpoint.method}
-                  </span>
-                  <span className="font-mono text-[var(--foreground)]">{selectedEndpoint.path}</span>
-                  <span className="text-[var(--muted-foreground)] text-sm">// {selectedEndpoint.category}</span>
+        {/* API Offline Banner */}
+        {!isApiOnline && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+            <div className="flex items-center gap-2 text-red-500">
+              <WifiOff className="h-4 w-4" />
+              <span className="font-medium">無法連接到後端 API</span>
+            </div>
+          </div>
+        )}
+
+        {/* List View */}
+        {view === 'list' && (
+          <div className="space-y-4">
+            <div className="grid gap-4">
+              {loading ? (
+                <div className="text-center py-12 text-[var(--muted-foreground)]">
+                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
+                  <span>載入中...</span>
                 </div>
-                {currentEndpoint?.description && (
-                  <p className="text-[var(--muted-foreground)] text-sm font-mono"># {currentEndpoint.description}</p>
-                )}
+              ) : templates.length === 0 ? (
+                <EmptyState
+                  icon={<Terminal className="h-12 w-12 opacity-50" />}
+                  title="尚無工具模板"
+                  description="點擊上方「執行工具」或等待系統管理員新增工具模板"
+                />
+              ) : (
+                templates.map((template) => {
+                  const colors = riskColors[template.riskLevel] || riskColors.low;
+                  return (
+                    <div
+                      key={template.id}
+                      className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4 hover:border-[var(--terminal-green)]/50 transition-all"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="font-medium text-[var(--foreground)]">{template.name}</h3>
+                            <span className={`text-xs px-2 py-0.5 rounded font-mono border ${colors.bg} ${colors.text} ${colors.border}`}>
+                              {template.riskLevel.toUpperCase()}
+                            </span>
+                            {!template.isEnabled && (
+                              <span className="text-xs px-2 py-0.5 rounded font-mono bg-gray-500/10 text-gray-500 border border-gray-500/30">
+                                已停用
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-[var(--muted-foreground)] mb-3">
+                            {template.description || '無描述'}
+                          </p>
+                          <div className="flex items-center gap-2 text-xs font-mono text-[var(--muted-foreground)]">
+                            <Terminal className="h-3 w-3" />
+                            <code className="bg-[var(--background)] px-2 py-1 rounded">
+                              {template.commandTemplate}
+                            </code>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            onClick={() => selectTemplateForExecution(template)}
+                            disabled={!template.isEnabled || !apiKey}
+                            className="flex items-center gap-1 bg-[var(--terminal-green)]/10 border border-[var(--terminal-green)]/30 text-[var(--terminal-green)] hover:bg-[var(--terminal-green)]/20"
+                          >
+                            <Play className="h-3 w-3" />
+                            執行
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Execute View */}
+        {view === 'execute' && selectedTemplate && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left: Template Info & Params */}
+            <div className="space-y-4">
+              <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className={`text-xs px-2 py-0.5 rounded font-mono border ${riskColors[selectedTemplate.riskLevel]?.bg} ${riskColors[selectedTemplate.riskLevel]?.text} ${riskColors[selectedTemplate.riskLevel]?.border}`}>
+                    {selectedTemplate.riskLevel.toUpperCase()}
+                  </span>
+                  <h2 className="font-medium text-[var(--foreground)]">{selectedTemplate.name}</h2>
+                </div>
+                <p className="text-sm text-[var(--muted-foreground)] mb-4">
+                  {selectedTemplate.description || '無描述'}
+                </p>
+                <div className="bg-[var(--background)] rounded-lg p-3 font-mono text-sm">
+                  <span className="text-[var(--terminal-green)]">$</span>
+                  <span className="ml-2">{selectedTemplate.commandTemplate}</span>
+                </div>
               </div>
 
               {/* Parameters */}
-              {currentEndpoint?.params && currentEndpoint.params.length > 0 && (
-                <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4 hover:border-[var(--terminal-green)]/50 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '50ms' }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-mono text-[var(--terminal-green)]">&gt;</span>
-                    <h3 className="font-medium text-[var(--foreground)]">请求参数</h3>
-                    <span className="text-xs font-mono text-[var(--muted-foreground)]">(params)</span>
-                  </div>
-                  <div className="space-y-3">
-                    {currentEndpoint.params.map(param => (
-                      <div key={param.name} className="grid grid-cols-4 gap-3 items-center">
-                        <label className="text-sm text-[var(--foreground)] font-mono">
-                          {param.name}
-                          {param.required && <span className="text-red-500">*</span>}
-                        </label>
+              <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4">
+                <h3 className="font-medium text-[var(--foreground)] mb-3">參數設定</h3>
+                <div className="space-y-3">
+                  {Object.entries(selectedTemplate.allowedParams || {}).map(([key, values]) => (
+                    <div key={key}>
+                      <label className="block text-sm text-[var(--foreground)] mb-1 font-mono">
+                        {key}
+                        {values.length > 0 && (
+                          <span className="text-[var(--muted-foreground)] text-xs ml-2">
+                            (可選值: {values.join(', ')})
+                          </span>
+                        )}
+                      </label>
+                      {values.length > 0 ? (
+                        <select
+                          value={params[key] || ''}
+                          onChange={(e) => handleParamChange(key, e.target.value)}
+                          className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--background)] text-[var(--foreground)] font-mono"
+                        >
+                          <option value="">請選擇</option>
+                          {values.map((v) => (
+                            <option key={v} value={v}>{v}</option>
+                          ))}
+                        </select>
+                      ) : (
                         <input
-                          type={param.type === 'number' ? 'number' : 'text'}
-                          value={params[param.name] || ''}
-                          onChange={e => handleParamChange(param.name, e.target.value)}
-                          placeholder={`${param.type}${param.required ? ' (必填)' : ''}`}
-                          className="col-span-2 border border-[var(--border)] rounded-lg px-3 py-2 text-sm font-mono bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--terminal-green)]/50 focus:border-[var(--terminal-green)]/50 transition-all duration-300"
+                          type="text"
+                          value={params[key] || ''}
+                          onChange={(e) => handleParamChange(key, e.target.value)}
+                          placeholder={`輸入 ${key}`}
+                          className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--background)] text-[var(--foreground)] font-mono"
                         />
-                        <span className="text-xs text-[var(--muted-foreground)] font-mono">// {param.description}</span>
-                      </div>
-                    ))}
-                  </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              )}
-
-              {/* Request Body */}
-              {currentEndpoint?.body && (
-                <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4 hover:border-[var(--terminal-green)]/50 transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-mono text-[var(--terminal-green)]">&gt;</span>
-                    <h3 className="font-medium text-[var(--foreground)]">请求体</h3>
-                    <span className="text-xs font-mono text-[var(--muted-foreground)]">(JSON body)</span>
-                  </div>
-                  <textarea
-                    value={requestBody}
-                    onChange={e => setRequestBody(e.target.value)}
-                    placeholder={JSON.stringify(currentEndpoint.body, null, 2)}
-                    className="w-full h-32 border border-[var(--border)] rounded-lg px-3 py-2 text-sm font-mono bg-[var(--background)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--terminal-green)]/50 focus:border-[var(--terminal-green)]/50 transition-all duration-300"
-                  />
-                </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="flex gap-3 animate-fade-in-up" style={{ animationDelay: '150ms' }}>
-                <Button
-                  onClick={handleTest}
-                  disabled={loading}
-                  className="flex items-center gap-2 bg-[var(--terminal-green)]/10 border border-[var(--terminal-green)]/30 text-[var(--terminal-green)] hover:bg-[var(--terminal-green)]/20 hover:border-[var(--terminal-green)]/50 transition-all duration-300 font-mono"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>请求中...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Play className="h-4 w-4" />
-                      <span>$ 执行</span>
-                    </>
-                  )}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={copycurl}
-                  className="flex items-center gap-2 border-[var(--border)] text-[var(--foreground)] hover:border-[var(--terminal-green)]/50 hover:text-[var(--terminal-green)] transition-all duration-300 font-mono"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="h-4 w-4" />
-                      <span>已复制</span>
-                    </>
-                  ) : (
-                    <>
-                      <Code className="h-4 w-4" />
-                      <span>curl</span>
-                    </>
-                  )}
-                </Button>
               </div>
 
-              {/* Response */}
-              {(response || error) && (
-                <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-                  <div className="p-4 border-b border-[var(--border)] flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono text-[var(--terminal-green)]">{error ? '!' : '$'}</span>
-                      <h3 className="font-medium text-[var(--foreground)]">
-                        {error ? (
-                          <span className="text-red-500">错误</span>
-                        ) : (
-                          <span className="text-[var(--terminal-green)]">响应</span>
-                        )}
-                      </h3>
-                    </div>
-                    <span className="text-xs text-[var(--muted-foreground)] font-mono">
-                      {response ? 'HTTP 200 OK' : ''}
+              {/* Execute Button */}
+              <Button
+                onClick={handleExecute}
+                disabled={executing || !apiKey}
+                className="w-full bg-[var(--terminal-green)]/10 border border-[var(--terminal-green)]/30 text-[var(--terminal-green)] hover:bg-[var(--terminal-green)]/20"
+              >
+                {executing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    執行中...
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4 mr-2" />
+                    執行工具
+                  </>
+                )}
+              </Button>
+            </div>
+
+            {/* Right: Result & Curl */}
+            <div className="space-y-4">
+              {/* Result */}
+              <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] overflow-hidden">
+                <div className="p-4 border-b border-[var(--border)] flex items-center gap-2">
+                  <span className="text-xs font-mono text-[var(--terminal-green)]">$</span>
+                  <h3 className="font-medium text-[var(--foreground)]">執行結果</h3>
+                  {result?.durationMs && (
+                    <span className="text-xs text-[var(--muted-foreground)] ml-auto">
+                      {result.durationMs}ms
                     </span>
+                  )}
+                </div>
+                <div className="p-4 bg-[var(--background)] max-h-96 overflow-auto">
+                  {result ? (
+                    result.success ? (
+                      <pre className="text-sm font-mono text-[var(--foreground)] whitespace-pre-wrap">
+                        {result.output || '(無輸出)'}
+                      </pre>
+                    ) : (
+                      <div className="text-red-500 font-mono text-sm">
+                        <XCircle className="h-4 w-4 inline mr-2" />
+                        {result.error}
+                      </div>
+                    )
+                  ) : (
+                    <div className="text-[var(--muted-foreground)] text-sm font-mono text-center py-8">
+                      填寫參數後點擊「執行工具」
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Curl Command */}
+              <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] overflow-hidden">
+                <div className="p-4 border-b border-[var(--border)] flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono text-[var(--terminal-green)]">$</span>
+                    <h3 className="font-medium text-[var(--foreground)]">cURL 命令</h3>
                   </div>
-                  <pre className="p-4 text-sm overflow-auto max-h-96 bg-[var(--terminal-green)]/5 font-mono">
-                    {error ? (
-                      <span className="text-red-500">{error}</span>
-                    ) : response ? (
-                      <span className="text-[var(--foreground)]">{JSON.stringify(response, null, 2)}</span>
-                    ) : null}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => copyToClipboard(buildCurlCommand())}
+                    className="flex items-center gap-1"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="h-3 w-3" />
+                        已複製
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-3 w-3" />
+                        複製
+                      </>
+                    )}
+                  </Button>
+                </div>
+                <div className="p-4 bg-[var(--background)]">
+                  <pre className="text-xs font-mono text-[var(--foreground)] whitespace-pre-wrap overflow-x-auto">
+                    {buildCurlCommand()}
                   </pre>
                 </div>
-              )}
-            </>
-          ) : (
-            <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-12 text-center hover:border-[var(--terminal-green)]/30 transition-all duration-300 animate-fade-in-up">
-              <div className="inline-flex p-4 rounded-xl bg-[var(--terminal-green)]/10 mb-4">
-                <Terminal className="h-12 w-12 text-[var(--terminal-green)]" />
               </div>
-              <p className="text-[var(--foreground)]">选择一个 API 端点开始测试</p>
-              <p className="text-sm text-[var(--muted-foreground)] mt-2 font-mono">./select-endpoint --from=左侧列表</p>
-              <p className="text-xs text-[var(--muted-foreground)] mt-1 font-mono"># 填写参数后点击"$ 执行"</p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {/* History View */}
+        {view === 'history' && (
+          <div className="space-y-4">
+            {loading ? (
+                <div className="text-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2 text-[var(--muted-foreground)]" />
+                  <span className="text-[var(--muted-foreground)]">載入中...</span>
+                </div>
+              ) : executions.length === 0 ? (
+                <EmptyState
+                  icon={<History className="h-12 w-12 opacity-50" />}
+                  title="尚無執行記錄"
+                  description="執行工具後記錄會顯示在這裡"
+                />
+            ) : (
+              <div className="space-y-3">
+                {executions.map((exec) => (
+                  <div
+                    key={exec.id}
+                    className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <StatusIcon status={exec.status} />
+                        <span className="font-medium text-[var(--foreground)]">
+                          {exec.template.name}
+                        </span>
+                        <span className={`text-xs px-2 py-0.5 rounded font-mono ${riskColors[exec.template.riskLevel]?.bg} ${riskColors[exec.template.riskLevel]?.text}`}>
+                          {exec.template.riskLevel}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3 text-xs text-[var(--muted-foreground)]">
+                        {exec.durationMs && (
+                          <span className="font-mono">{exec.durationMs}ms</span>
+                        )}
+                        <span className="font-mono">
+                          {new Date(exec.createdAt).toLocaleString('zh-TW')}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs font-mono text-[var(--muted-foreground)]">
+                      <span>參數:</span>
+                      <code className="bg-[var(--background)] px-2 py-0.5 rounded">
+                        {JSON.stringify(exec.params)}
+                      </code>
+                    </div>
+                    {exec.error && (
+                      <div className="mt-2 text-xs text-red-500 font-mono">
+                        {exec.error}
+                      </div>
+                    )}
+                    {exec.output && exec.status === 'success' && (
+                      <details className="mt-2">
+                        <summary className="text-xs text-[var(--muted-foreground)] cursor-pointer hover:text-[var(--foreground)]">
+                          查看輸出
+                        </summary>
+                        <pre className="mt-2 p-2 bg-[var(--background)] rounded text-xs font-mono text-[var(--foreground)] overflow-x-auto max-h-32">
+                          {exec.output}
+                        </pre>
+                      </details>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

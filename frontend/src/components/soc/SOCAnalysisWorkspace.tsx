@@ -11,6 +11,7 @@ import { AnalysisSidebar } from '@/components/soc/AnalysisSidebar';
 import { VolcanoStepCard } from '@/components/soc/VolcanoStepCard';
 import { ThreatSummaryCard } from '@/components/soc/ThreatSummaryCard';
 import { AlertUpload } from '@/components/upload/AlertUpload';
+import { PageHero } from '@/components/layout/PageHero';
 import {
   Loader2,
   CheckCircle2,
@@ -503,8 +504,16 @@ ${data.rawContent || data.alertId}
     <div className="h-full flex flex-col">
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full overflow-hidden">
+        <PageHero
+          icon={<Shield className="h-8 w-8 text-[var(--terminal-green)]" />}
+          title="SOC 深度調查"
+          subtitle="ALERT ANALYSIS WORKFLOW"
+          command="soc-investigate --progress"
+          commandValue={`${completedSteps}/${totalSteps}`}
+        />
+
         {/* Top Progress Bar */}
-        <div className="bg-[var(--card)] border-b border-[var(--border)] px-6 py-4">
+        <div className="bg-[var(--card)] border-y border-[var(--border)] px-6 py-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
               <h2 className="font-semibold text-[var(--card-foreground)]">威脅分析工作流</h2>

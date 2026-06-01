@@ -5,6 +5,7 @@ import {
   MessageSquare, Shield, Search, Activity, FileCode, Play, CheckCircle, Clock, AlertTriangle,
   Globe, Database, Server, Lock, Zap, Target, Wifi, FileWarning, Cpu, Terminal
 } from 'lucide-react';
+import { PageHero } from '@/components/layout/PageHero';
 
 const mockAlert = {
   time: '2025-03-27 23:10:20',
@@ -73,33 +74,24 @@ export default function SOCDemoPage() {
 
   return (
     <div className="min-h-screen bg-[var(--muted)] text-[var(--foreground)]">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-[var(--card)] border-b border-[var(--border)] shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <Shield className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg font-semibold text-[var(--foreground)]">SOC 告警分析</h1>
-                <p className="text-xs text-[var(--muted-foreground)]">安全事件智能分析与响应系统</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-600 rounded-full text-sm font-medium border border-green-200">
-                <CheckCircle className="h-4 w-4" />
-                分析完成
-              </span>
-            </div>
-          </div>
-        </div>
-      </header>
+      <PageHero
+        icon={<Shield className="h-8 w-8 text-[var(--terminal-green)]" />}
+        title="SOC 告警分析"
+        subtitle="SECURITY EVENT ANALYSIS DEMO"
+        command="soc-demo --status"
+        commandValue="completed"
+        actions={(
+          <span className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-full text-sm font-medium border border-emerald-500/30">
+            <CheckCircle className="h-4 w-4" />
+            分析完成
+          </span>
+        )}
+      />
 
       <main className="max-w-7xl mx-auto px-6 py-6 space-y-6">
         {/* Alert Info Banner */}
         <div className="relative overflow-hidden rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm p-5">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-950/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent" />
           <div className="relative flex flex-wrap items-center gap-4 text-sm">
             <div className="flex items-center gap-2 text-[var(--muted-foreground)]">
               <Clock className="h-4 w-4" />
@@ -336,9 +328,9 @@ export default function SOCDemoPage() {
               <p className="text-sm text-[var(--muted-foreground)] leading-relaxed p-4 rounded-lg bg-[var(--muted)]">
                 本次安全事件捕获到一个来自英国IP地址(<span className="text-red-600 dark:text-red-400">84.17.51.2</span>)对多云线上环境资产(
                 <span className="text-blue-600 dark:text-blue-400">45.78.218.192</span>)发起的可疑HTTP请求。
-                请求包含明显的CRLF注入尝试，通过在HTTP头部"zzzheadertest"中插入单个回车符试图拆分HTTP头，
+                请求包含明显的CRLF注入尝试，通过在HTTP头部&quot;zzzheadertest&quot;中插入单个回车符试图拆分HTTP头，
                 这是典型的HTTP头部注入攻击特征。请求针对非常规路径，且服务器返回了HTTP 200状态码，
-                表明请求"成功"，可能导致敏感文件被未授权访问。
+                表明请求&quot;成功&quot;，可能导致敏感文件被未授权访问。
               </p>
             </section>
 

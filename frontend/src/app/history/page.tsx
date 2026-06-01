@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Shield, Search, Network, Clock, FileText, Filter, RefreshCw, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { PageHero } from '@/components/layout/PageHero';
 
 interface HistoryRecord {
   id: string;
@@ -211,37 +212,24 @@ export default function HistoryPage() {
 
   return (
     <div className="h-full overflow-auto bg-[var(--background)]">
+      <PageHero
+        icon={<FileText className="h-8 w-8 text-[var(--terminal-green)]" />}
+        title="分析歷史記錄"
+        subtitle="HISTORY RECORDS"
+        command="records --count"
+        commandValue={`${filteredRecords.length}`}
+        actions={(
+          <button
+            onClick={() => setLastRefresh(new Date())}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--border)] bg-[var(--card)] hover:border-[var(--terminal-green)]/50 hover:bg-[var(--terminal-green)]/10 transition-all"
+          >
+            <RefreshCw className="h-4 w-4" />
+            <span className="text-sm font-medium">重新整理</span>
+          </button>
+        )}
+      />
+
       <div className="max-w-5xl mx-auto p-6 space-y-6">
-        {/* Header */}
-        <div className="relative py-6 animate-fade-in-up">
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(var(--border)_1px,transparent_1px),linear-gradient(90deg,var(--border)_1px,transparent_1px)] bg-[size:50px_50px] opacity-30" />
-          </div>
-
-          <div className="relative flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-[var(--terminal-green)]/10">
-                <FileText className="h-8 w-8 text-[var(--terminal-green)]" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-[var(--foreground)] font-mono tracking-tight">
-                  分析歷史記錄
-                </h1>
-                <p className="text-sm text-[var(--muted-foreground)] font-mono">
-                  HISTORY RECORDS · 共 {filteredRecords.length} 筆記錄
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setLastRefresh(new Date())}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--border)] bg-[var(--card)] hover:border-[var(--terminal-green)]/50 hover:bg-[var(--terminal-green)]/10 transition-all"
-            >
-              <RefreshCw className="h-4 w-4" />
-              <span className="text-sm font-medium">重新整理</span>
-            </button>
-          </div>
-        </div>
 
         {/* Filters */}
         <FilterBar

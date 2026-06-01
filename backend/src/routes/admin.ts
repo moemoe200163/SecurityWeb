@@ -25,17 +25,90 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
           take: limit,
           skip: offset,
           orderBy: { createdAt: 'desc' },
-          include: {
-            user: {
-              select: { apiKey: true }
-            }
-          }
         });
 
         return reply.send({ logs });
       } catch (error) {
         console.error('Get audit log error:', error);
         return reply.status(500).send({ error: 'Failed to get audit log' });
+      }
+    }
+  );
+
+  // Update template (enable/disable/approve)
+  fastify.patch(
+    '/templates/:id',
+    { preHandler: [apiKeyAuth, requireAdmin] },
+    async (request, reply) => {
+      try {
+        const { id } = request.params as { id: string };
+        const updateSchema = z.object({
+          name: z.string().min(1).max(255).optional(),
+          description: z.string().optional(),
+          risk_level: z.enum(['low', 'medium', 'high']).optional(),
+          is_enabled: z.boolean().optional(),
+          is_approved: z.boolean().optional(),
+        });
+
+        const body = updateSchema.parse(request.body);
+
+        const template = await prisma.toolTemplate.update({
+          where: { id },
+          data: {
+            ...(body.name && { name: body.name }),
+            ...(body.description !== undefined && { description: body.description }),
+            ...(body.risk_level && { riskLevel: body.risk_level }),
+            ...(body.is_enabled !== undefined && { isEnabled: body.is_enabled }),
+            ...(body.is_approved !== undefined && { isApproved: body.is_approved }),
+          },
+        });
+
+        // Audit log
+        await prisma.auditLog.create({
+          data: {
+            userId: request.user!.id,
+            action: 'update',
+            resourceType: 'tool_template',
+            resourceId: id,
+            details: body,
+          },
+        });
+
+        return reply.send({ template });
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          return reply.status(400).send({ error: 'Validation failed', details: error.errors });
+        }
+        console.error('Update template error:', error);
+        return reply.status(500).send({ error: 'Failed to update template' });
+      }
+    }
+  );
+
+  // Delete template
+  fastify.delete(
+    '/templates/:id',
+    { preHandler: [apiKeyAuth, requireAdmin] },
+    async (request, reply) => {
+      try {
+        const { id } = request.params as { id: string };
+
+        await prisma.toolTemplate.delete({ where: { id } });
+
+        // Audit log
+        await prisma.auditLog.create({
+          data: {
+            userId: request.user!.id,
+            action: 'delete',
+            resourceType: 'tool_template',
+            resourceId: id,
+          },
+        });
+
+        return reply.send({ message: 'Template deleted' });
+      } catch (error) {
+        console.error('Delete template error:', error);
+        return reply.status(500).send({ error: 'Failed to delete template' });
       }
     }
   );
@@ -105,6 +178,28 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
       } catch (error) {
         console.error('Get users error:', error);
         return reply.status(500).send({ error: 'Failed to get users' });
+      }
+    }
+  );
+
+  // Get all templates (admin view with all details)
+  fastify.get(
+    '/templates',
+    { preHandler: [apiKeyAuth, requireAdmin] },
+    async (request, reply) => {
+      try {
+        const { limit = 100, offset = 0 } = request.query as { limit?: number; offset?: number };
+
+        const templates = await prisma.toolTemplate.findMany({
+          take: limit,
+          skip: offset,
+          orderBy: { createdAt: 'desc' },
+        });
+
+        return reply.send({ templates });
+      } catch (error) {
+        console.error('Get templates error:', error);
+        return reply.status(500).send({ error: 'Failed to get templates' });
       }
     }
   );

@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
-import { Settings, CheckCircle, XCircle, Loader2, Terminal } from 'lucide-react';
+import { CheckCircle, XCircle, Loader2, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PageHero } from '@/components/layout/PageHero';
 
 interface AISettings {
   provider: string;
@@ -115,20 +116,16 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 animate-fade-in-up">
-      {/* Header with Terminal style */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex items-center justify-center w-10 h-10 rounded-xl border border-[var(--border)] bg-[var(--card)]">
-          <Terminal className="h-5 w-5 text-[var(--terminal-green)]" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold text-[var(--foreground)]">
-            <span className="font-mono text-[var(--terminal-green)]">$</span> ai-config
-          </h1>
-          <p className="text-sm font-mono text-[var(--muted-foreground)]">--ai-provider-settings</p>
-        </div>
-      </div>
+    <div className="min-h-full animate-fade-in-up">
+      <PageHero
+        icon={<Terminal className="h-8 w-8 text-[var(--terminal-green)]" />}
+        title="系統設定"
+        subtitle="AI PROVIDER CONFIGURATION"
+        command="ai-config --provider-settings"
+        commandValue={settings.provider}
+      />
 
+      <div className="max-w-2xl mx-auto p-6">
       <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 space-y-6">
         {/* Provider Selection */}
         <div>
@@ -275,6 +272,7 @@ export default function SettingsPage() {
             )}
           </Button>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -150,7 +150,7 @@ export interface UrlHausResult {
   urlCount: number;
   lastSeen: string | null;
   firstSeen: string | null;
-  cannedResponse: any;
+  cannedResponse: unknown;
   cached: boolean;
   updatedAt: string;
 }
@@ -180,9 +180,9 @@ export interface OtxCheckResult {
   ssdeep: string | null;
   fileType: string | null;
   fileSize: number | null;
-  malware: any;
-  analysis: any;
-  ufdst: any;
+  malware: unknown;
+  analysis: unknown;
+  ufdst: unknown;
   cached: boolean;
   updatedAt: string;
 }
@@ -360,7 +360,7 @@ export const api = {
       if (forceRefresh) params.set('forceRefresh', 'true');
       return request<UrlHausResult>(`/api/urlhaus/check?${params}`);
     },
-    async recent(limit = 10): Promise<{ urls: any[]; generated_at: string }> {
+    async recent(limit = 10): Promise<{ urls: unknown[]; generated_at: string }> {
       return request(`/api/urlhaus/recent?limit=${limit}`);
     },
   },
@@ -372,10 +372,10 @@ export const api = {
       if (forceRefresh) params.set('forceRefresh', 'true');
       return request<OtxCheckResult>(`/api/otx/check?${params}`);
     },
-    async pulse(pulseId: string): Promise<any> {
+    async pulse(pulseId: string): Promise<unknown> {
       return request(`/api/otx/pulse/${pulseId}`);
     },
-    async search(keyword: string): Promise<{ results: any[]; count: number }> {
+    async search(keyword: string): Promise<{ results: unknown[]; count: number }> {
       return request(`/api/otx/search?keyword=${encodeURIComponent(keyword)}`);
     },
   },

@@ -5,6 +5,7 @@ import { Shield, Search, Network, AlertTriangle, TrendingUp, Clock, Activity, Te
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { api, type SessionDetail } from '@/lib/api';
+import { PageHero } from '@/components/layout/PageHero';
 
 interface StatCardProps {
   label: string;
@@ -367,38 +368,14 @@ export default function Dashboard() {
 
   return (
     <div className="h-full overflow-auto bg-[var(--background)]">
+      <PageHero
+        icon={<Shield className="h-8 w-8 text-[var(--terminal-green)]" />}
+        title="安全智能體"
+        subtitle="TACTICAL OPERATIONS CENTER"
+        commandValue={currentTime}
+      />
+
       <div className="max-w-7xl mx-auto p-6 space-y-6">
-        {/* Header */}
-        <div className="relative py-8 animate-fade-in-up">
-          {/* Decorative grid background */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(var(--border)_1px,transparent_1px),linear-gradient(90deg,var(--border)_1px,transparent_1px)] bg-[size:50px_50px] opacity-30" />
-            <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--terminal-green)]/20 to-transparent" />
-          </div>
-
-          <div className="relative">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 rounded-xl bg-[var(--terminal-green)]/10">
-                <Shield className="h-8 w-8 text-[var(--terminal-green)]" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-[var(--foreground)] font-mono tracking-tight">
-                  安全智能體
-                </h1>
-                <p className="text-sm text-[var(--muted-foreground)] font-mono">TACTICAL OPERATIONS CENTER</p>
-              </div>
-            </div>
-
-            {/* Terminal-style date/time display */}
-            <div className="mt-4 font-mono text-xs text-[var(--muted-foreground)]">
-              <span className="text-[var(--terminal-green)]">$</span> current_time --zone=Asia/Taipei
-              <span className="ml-2 text-[var(--terminal-green)]">
-                {currentTime}
-              </span>
-            </div>
-          </div>
-        </div>
-
         {/* Threat Alert Banner */}
         <ThreatAlertBanner />
 

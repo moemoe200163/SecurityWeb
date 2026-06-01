@@ -93,10 +93,10 @@ export function AnalysisReport({ report, title = '安全分析報告' }: Analysi
   return (
     <Card className="overflow-hidden">
       {/* Header */}
-      <div className="px-4 py-3 border-b bg-gray-50/50 flex items-center justify-between">
+      <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--muted)]/40 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FileText className="h-4 w-4 text-gray-500" />
-          <h3 className="font-medium text-sm text-gray-700">{title}</h3>
+          <FileText className="h-4 w-4 text-[var(--muted-foreground)]" />
+          <h3 className="font-medium text-sm text-[var(--foreground)]">{title}</h3>
         </div>
         <div className="flex gap-2">
           <Button
@@ -137,12 +137,12 @@ export function AnalysisReport({ report, title = '安全分析報告' }: Analysi
       <div
         ref={contentRef}
         className={cn(
-          'p-6 max-h-96 overflow-y-auto prose prose-sm max-w-none',
-          'prose-headings:text-gray-900 prose-headings:font-semibold',
+          'p-6 max-h-96 overflow-y-auto prose prose-sm dark:prose-invert max-w-none',
+          'prose-headings:text-[var(--foreground)] prose-headings:font-semibold',
           'prose-table:text-xs prose-table:border-collapse',
-          'prose-th:bg-gray-50 prose-th:border prose-th:px-3 prose-th:py-2',
+          'prose-th:bg-[var(--muted)] prose-th:border prose-th:px-3 prose-th:py-2',
           'prose-td:border prose-td:px-3 prose-td:py-2',
-          'prose-code:text-blue-600 prose-code:bg-blue-50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded',
+          'prose-code:text-blue-500 prose-code:bg-blue-500/10 prose-code:px-1 prose-code:py-0.5 prose-code:rounded',
           'prose-pre:bg-gray-900 prose-pre:text-gray-100'
         )}
       >

@@ -11,7 +11,7 @@ interface StepProgressProps {
 
 export function StepProgress({ steps, currentStepIndex }: StepProgressProps) {
   return (
-    <div className="bg-white border-b px-6 py-4">
+    <div className="bg-[var(--card)] border-b border-[var(--border)] px-6 py-4">
       <div className="flex items-center justify-between">
         {steps.map((step, index) => {
           const isCompleted = step.status === 'success';
@@ -26,8 +26,8 @@ export function StepProgress({ steps, currentStepIndex }: StepProgressProps) {
                   className={cn(
                     'h-8 w-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300',
                     isCompleted && 'bg-green-500 text-white',
-                    isCurrent && 'bg-blue-500 text-white ring-4 ring-blue-100',
-                    isPending && 'bg-gray-100 text-gray-400 border-2 border-gray-200'
+                    isCurrent && 'bg-blue-500 text-white ring-4 ring-blue-500/20',
+                    isPending && 'bg-[var(--muted)] text-[var(--muted-foreground)] border-2 border-[var(--border)]'
                   )}
                 >
                   {isCompleted ? (
@@ -41,7 +41,7 @@ export function StepProgress({ steps, currentStepIndex }: StepProgressProps) {
                     'mt-1.5 text-xs font-medium',
                     isCompleted && 'text-green-600',
                     isCurrent && 'text-blue-600',
-                    isPending && 'text-gray-400'
+                    isPending && 'text-[var(--muted-foreground)]'
                   )}
                 >
                   {step.title}
@@ -53,7 +53,7 @@ export function StepProgress({ steps, currentStepIndex }: StepProgressProps) {
                 <div
                   className={cn(
                     'flex-1 h-0.5 mx-2 -mt-5 transition-colors duration-300',
-                    steps[index + 1].status !== 'pending' ? 'bg-green-500' : 'bg-gray-200'
+                    steps[index + 1].status !== 'pending' ? 'bg-green-500' : 'bg-[var(--border)]'
                   )}
                 />
               )}

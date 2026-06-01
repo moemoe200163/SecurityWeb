@@ -74,9 +74,9 @@ export function AlertUpload({ onSubmit, disabled = false }: AlertUploadProps) {
   };
 
   return (
-    <div className="border rounded-lg bg-white shadow-sm">
-      <div className="p-4 border-b bg-gray-50/50">
-        <h3 className="font-medium text-sm text-gray-700 flex items-center gap-2">
+    <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] shadow-sm">
+      <div className="p-4 border-b border-[var(--border)] bg-[var(--muted)]/40">
+        <h3 className="font-medium text-sm text-[var(--foreground)] flex items-center gap-2">
           <Upload className="h-4 w-4" />
           告警上傳
         </h3>
@@ -91,8 +91,8 @@ export function AlertUpload({ onSubmit, disabled = false }: AlertUploadProps) {
           className={cn(
             'border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer',
             isDragOver
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-300 hover:border-gray-400'
+              ? 'border-blue-500 bg-blue-500/10'
+              : 'border-[var(--border)] hover:border-[var(--muted-foreground)]'
           )}
         >
           <input
@@ -104,11 +104,11 @@ export function AlertUpload({ onSubmit, disabled = false }: AlertUploadProps) {
             disabled={disabled}
           />
           <label htmlFor="file-upload" className="cursor-pointer">
-            <FileText className="h-10 w-10 mx-auto mb-2 text-gray-400" />
-            <p className="text-sm text-gray-600">
+            <FileText className="h-10 w-10 mx-auto mb-2 text-[var(--muted-foreground)]" />
+            <p className="text-sm text-[var(--muted-foreground)]">
               拖拽檔案到此處，或 <span className="text-blue-500 font-medium">點擊上傳</span>
             </p>
-            <p className="text-xs text-gray-400 mt-1">支援 JSON、CSV、TXT 格式</p>
+            <p className="text-xs text-[var(--muted-foreground)] mt-1">支援 JSON、CSV、TXT 格式</p>
           </label>
         </div>
 
@@ -118,13 +118,13 @@ export function AlertUpload({ onSubmit, disabled = false }: AlertUploadProps) {
             <div className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-gray-500">或</span>
+            <span className="bg-[var(--card)] px-2 text-[var(--muted-foreground)]">或</span>
           </div>
         </div>
 
         {/* Paste area */}
         <div>
-          <label className="text-sm font-medium text-gray-700 mb-2 block">
+          <label className="text-sm font-medium text-[var(--foreground)] mb-2 block">
             貼上原始告警內容
           </label>
           <Textarea
@@ -138,12 +138,12 @@ export function AlertUpload({ onSubmit, disabled = false }: AlertUploadProps) {
 
         {/* File indicator */}
         {fileName && (
-          <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-md">
+          <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)] bg-[var(--muted)] px-3 py-2 rounded-md">
             <FileText className="h-4 w-4" />
             <span>{fileName}</span>
             <button
               onClick={handleClear}
-              className="ml-auto text-gray-400 hover:text-gray-600"
+              className="ml-auto text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
               disabled={disabled}
             >
               移除

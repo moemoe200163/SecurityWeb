@@ -17,48 +17,90 @@ import {
   Moon,
   Monitor,
   FileText,
+  AlertTriangle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ModuleType } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { useStepStore } from '@/stores/stepStore';
 
+interface NavChild {
+  label: string;
+  href: string;
+}
+
 interface NavItem {
   label: string;
   href: string;
   icon: React.ReactNode;
-  children?: { label: string; href: string }[];
+  module: ModuleType | 'tools' | 'alerts';
+  children?: NavChild[];
 }
 
-const navigation: Record<ModuleType, NavItem> = {
-  soc: {
+const navigation: NavItem[] = [
+  {
+    label: '首頁儀表板',
+    href: '/',
+    icon: <Home className="h-5 w-5" />,
+    module: 'soc',
+  },
+  {
+    label: '工具平台',
+    href: '/tools',
+    icon: <Terminal className="h-5 w-5" />,
+    module: 'tools',
+  },
+  {
+    label: '告警中心',
+    href: '/alerts',
+    icon: <AlertTriangle className="h-5 w-5" />,
+    module: 'alerts',
+  },
+  {
+    label: '歷史記錄',
+    href: '/history',
+    icon: <FileText className="h-5 w-5" />,
+    module: 'soc',
+  },
+  {
     label: 'SOC 告警分析',
     href: '/soc/analyze',
     icon: <Shield className="h-5 w-5" />,
+    module: 'soc',
     children: [
       { label: '深度調查', href: '/soc/analyze' },
       { label: '分析Demo', href: '/soc/demo' },
     ],
   },
-  threat: {
+  {
     label: '威脅情報調查',
     href: '/threat/investigate',
     icon: <Search className="h-5 w-5" />,
+    module: 'threat',
     children: [
       { label: 'IP/域名查詢', href: '/threat/investigate' },
       { label: 'IP 黑名單', href: '/threat/blacklist' },
       { label: 'BGP 路由查詢', href: '/threat/bgp' },
     ],
   },
-  pentest: {
+  {
     label: '滲透測試輔助',
     href: '/pentest/assist',
     icon: <Network className="h-5 w-5" />,
+    module: 'pentest',
     children: [
       { label: '新建任務', href: '/pentest/assist' },
       { label: '分析Demo', href: '/pentest/demo' },
     ],
   },
+];
+
+const moduleColors: Record<string, { active: string; hover: string }> = {
+  soc: { active: 'bg-[var(--soc)]/10 text-[var(--soc)] border-[var(--soc)]', hover: 'hover:bg-[var(--soc)]/5' },
+  threat: { active: 'bg-[var(--threat)]/10 text-[var(--threat)] border-[var(--threat)]', hover: 'hover:bg-[var(--threat)]/5' },
+  pentest: { active: 'bg-[var(--pentest)]/10 text-[var(--pentest)] border-[var(--pentest)]', hover: 'hover:bg-[var(--pentest)]/5' },
+  tools: { active: 'bg-[var(--terminal-green)]/10 text-[var(--terminal-green)] border-[var(--terminal-green)]', hover: 'hover:bg-[var(--terminal-green)]/5' },
+  alerts: { active: 'bg-red-500/10 text-red-500 border-red-500', hover: 'hover:bg-red-500/5' },
 };
 
 const themeOptions = [
@@ -133,62 +175,20 @@ export function Sidebar() {
 
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          <Link
-            href="/"
-            onClick={closeMobile}
-            className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-              isActive('/')
-                ? 'bg-[var(--soc)]/10 text-[var(--soc)] border-l-2 border-[var(--soc)]'
-                : 'text-[var(--sidebar-foreground)] hover:bg-[var(--sidebar-accent)]'
-            )}
-          >
-            <Home className="h-4 w-4" />
-            首頁儀表板
-          </Link>
-
-          <Link
-            href="/tools"
-            onClick={closeMobile}
-            className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-              isActive('/tools')
-                ? 'bg-[var(--terminal-green)]/10 text-[var(--terminal-green)] border-l-2 border-[var(--terminal-green)]'
-                : 'text-[var(--sidebar-foreground)] hover:bg-[var(--sidebar-accent)]'
-            )}
-          >
-            <Terminal className="h-4 w-4" />
-            API 工具
-          </Link>
-
-          <Link
-            href="/history"
-            onClick={closeMobile}
-            className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-              isActive('/history')
-                ? 'bg-[var(--terminal-green)]/10 text-[var(--terminal-green)] border-l-2 border-[var(--terminal-green)]'
-                : 'text-[var(--sidebar-foreground)] hover:bg-[var(--sidebar-accent)]'
-            )}
-          >
-            <FileText className="h-4 w-4" />
-            歷史記錄
-          </Link>
-
-          {(Object.keys(navigation) as ModuleType[]).map((key) => {
-            const nav = navigation[key];
+          {navigation.map((nav) => {
             const parentActive = isParentActive(nav);
+            const colors = moduleColors[nav.module] || moduleColors.soc;
 
             return (
-              <div key={key} className="space-y-1">
+              <div key={nav.href} className="space-y-1">
                 <Link
                   href={nav.href}
                   onClick={closeMobile}
                   className={cn(
                     'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
                     parentActive
-                      ? `bg-[var(--${key})]/10 text-[var(--${key})] border-l-2 border-[var(--${key})]`
-                      : 'text-[var(--sidebar-foreground)] hover:bg-[var(--sidebar-accent)]'
+                      ? colors.active + ' border-l-2'
+                      : 'text-[var(--sidebar-foreground)] ' + colors.hover
                   )}
                 >
                   {nav.icon}
@@ -252,7 +252,12 @@ export function Sidebar() {
           <Link
             href="/settings"
             onClick={closeMobile}
-            className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className={cn(
+              'flex items-center gap-2 text-xs transition-colors',
+              isActive('/settings')
+                ? 'text-[var(--terminal-amber)]'
+                : 'text-muted-foreground hover:text-foreground'
+            )}
           >
             <Settings className="h-4 w-4" />
             <span>設定</span>

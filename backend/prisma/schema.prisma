@@ -169,3 +169,102 @@ model OtxResult {
   @@index([indicator])
   @@index([type])
 }
+
+// ============== Week 1: New Models for Tool Platform ==============
+
+model User {
+  id        String   @id @default(uuid())
+  apiKey    String   @unique @map("api_key")
+  role      String   @default("user") // "user" | "admin"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  toolExecutions ToolExecution[]
+  auditLogs      AuditLog[]
+
+  @@map("users")
+}
+
+model ToolTemplate {
+  id               String   @id @default(uuid())
+  name             String
+  tool             String   // nmap, sqlmap, nikto, hydra, holehe
+  description      String?
+  commandTemplate  String   @map("command_template")
+  allowedParams    Json     @map("allowed_params") // Record<string, string[]>
+  riskLevel        String   @default("low") // "low" | "medium" | "high"
+  isApproved       Boolean  @default(false) @map("is_approved")
+  isEnabled        Boolean  @default(true) @map("is_enabled")
+  createdBy        String   @map("created_by")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  toolExecutions ToolExecution[]
+
+  @@map("tool_templates")
+}
+
+model ToolExecution {
+  id         String    @id @default(uuid())
+  templateId String    @map("template_id")
+  template   ToolTemplate @relation(fields: [templateId], references: [id])
+  userId     String    @map("user_id")
+  user       User      @relation(fields: [userId], references: [id])
+  sessionId  String?   @map("session_id")
+  params     Json
+  status     String    @default("pending") // "pending" | "running" | "success" | "error" | "timeout"
+  output     String?
+  error      String?
+  exitCode   Int?      @map("exit_code")
+  durationMs Int?      @map("duration_ms")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map("tool_executions")
+}
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id])
+  action       String   // "create" | "update" | "delete" | "execute" | "import" | etc.
+  resourceType String   @map("resource_type")
+  resourceId   String?  @map("resource_id")
+  details      Json?
+  createdAt    DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+model Alert {
+  id               String   @id @default(uuid())
+  source           String   // "import" | "api" | "demo" | "integration"
+  title            String
+  severity         String   // "critical" | "high" | "medium" | "low" | "info"
+  rawContent       String   @db.Text @map("raw_content")
+  normalizedFields Json?    @map("normalized_fields")
+  aiVerdict        String?  @map("ai_verdict")
+  humanVerdict     String?  @map("human_verdict")
+  status           String   @default("new") // "new" | "investigating" | "resolved" | "ignored" | "false_positive"
+  sessionId        String?  @map("session_id")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  knowledgeFeedback KnowledgeFeedback[]
+
+  @@map("alerts")
+}
+
+model KnowledgeFeedback {
+  id             String   @id @default(uuid())
+  alertId        String   @map("alert_id")
+  alert          Alert    @relation(fields: [alertId], references: [id])
+  sessionId      String?  @map("session_id")
+  aiVerdict      String   @map("ai_verdict")
+  correctVerdict String   @map("correct_verdict")
+  errorReason    String?  @map("error_reason")
+  lesson         String?  // 知識補充
+  createdAt      DateTime @default(now())
+
+  @@map("knowledge_feedback")
+}

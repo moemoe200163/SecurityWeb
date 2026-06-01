@@ -33,9 +33,9 @@ export function AIChatPanel({ messages, onSendMessage, disabled = false }: AICha
   };
 
   return (
-    <div className="border rounded-lg bg-white shadow-sm flex flex-col h-80">
-      <div className="px-4 py-3 border-b bg-gray-50/50">
-        <h3 className="font-medium text-sm text-gray-700 flex items-center gap-2">
+    <div className="border border-[var(--border)] rounded-lg bg-[var(--card)] shadow-sm flex flex-col h-80">
+      <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--muted)]/40">
+        <h3 className="font-medium text-sm text-[var(--foreground)] flex items-center gap-2">
           <Bot className="h-4 w-4 text-blue-500" />
           AI 對話助手
         </h3>
@@ -44,8 +44,8 @@ export function AIChatPanel({ messages, onSendMessage, disabled = false }: AICha
       <ScrollArea ref={scrollRef} className="flex-1 p-4">
         <div className="space-y-4">
           {messages.length === 0 && (
-            <div className="text-center text-sm text-gray-500 py-8">
-              <Bot className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+            <div className="text-center text-sm text-[var(--muted-foreground)] py-8">
+              <Bot className="h-8 w-8 mx-auto mb-2 text-[var(--muted-foreground)]" />
               <p>可以在分析過程中隨時提問</p>
               <p className="text-xs mt-1">例如：「幫我查這個 IP 的情報」</p>
             </div>
@@ -60,7 +60,7 @@ export function AIChatPanel({ messages, onSendMessage, disabled = false }: AICha
               )}
             >
               {message.role === 'assistant' && (
-                <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <div className="h-8 w-8 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
                   <Bot className="h-4 w-4 text-blue-600" />
                 </div>
               )}
@@ -70,14 +70,14 @@ export function AIChatPanel({ messages, onSendMessage, disabled = false }: AICha
                   'max-w-[80%] rounded-lg px-4 py-2 text-sm',
                   message.role === 'user'
                     ? 'bg-blue-500 text-white'
-                    : 'bg-gray-100 text-gray-800'
+                    : 'bg-[var(--muted)] text-[var(--foreground)]'
                 )}
               >
                 <p className="whitespace-pre-wrap">{message.content}</p>
                 <p
                   className={cn(
                     'text-xs mt-1',
-                    message.role === 'user' ? 'text-blue-100' : 'text-gray-400'
+                    message.role === 'user' ? 'text-blue-100' : 'text-[var(--muted-foreground)]'
                   )}
                 >
                   {new Date(message.timestamp).toLocaleTimeString('zh-TW')}
@@ -85,8 +85,8 @@ export function AIChatPanel({ messages, onSendMessage, disabled = false }: AICha
               </div>
 
               {message.role === 'user' && (
-                <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                  <User className="h-4 w-4 text-gray-600" />
+                <div className="h-8 w-8 rounded-full bg-[var(--muted)] flex items-center justify-center flex-shrink-0">
+                  <User className="h-4 w-4 text-[var(--muted-foreground)]" />
                 </div>
               )}
             </div>
@@ -94,7 +94,7 @@ export function AIChatPanel({ messages, onSendMessage, disabled = false }: AICha
         </div>
       </ScrollArea>
 
-      <form onSubmit={handleSubmit} className="p-4 border-t bg-gray-50/50">
+      <form onSubmit={handleSubmit} className="p-4 border-t border-[var(--border)] bg-[var(--muted)]/40">
         <div className="flex gap-2">
           <Input
             value={input}
