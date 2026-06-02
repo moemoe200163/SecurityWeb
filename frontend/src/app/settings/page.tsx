@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { api } from '@/lib/api';
+import { api, getApiKey, setApiKey, clearApiKey } from '@/lib/api';
 import { CheckCircle, XCircle, Loader2, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
@@ -31,6 +31,9 @@ export default function SettingsPage() {
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
   const [saveResult, setSaveResult] = useState<string | null>(null);
+  const [apiKey, setApiKeyState] = useState('');
+  const [apiKeyStatus, setApiKeyStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
+  const [testingApiKey, setTestingApiKey] = useState(false);
 
   // Load settings on mount
   useEffect(() => {
@@ -53,6 +56,14 @@ export default function SettingsPage() {
       }
     }
     loadSettings();
+  }, []);
+
+  useEffect(() => {
+    const storedKey = getApiKey();
+    if (storedKey) {
+      setApiKeyState(storedKey);
+      setApiKeyStatus('valid');
+    }
   }, []);
 
   const handleProviderChange = (provider: string) => {
@@ -107,6 +118,33 @@ export default function SettingsPage() {
     }
   };
 
+  const handleTestApiKey = async () => {
+    try {
+      setTestingApiKey(true);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/health`, {
+        headers: { 'X-API-Key': apiKey },
+      });
+      setApiKeyStatus(response.ok ? 'valid' : 'invalid');
+    } catch {
+      setApiKeyStatus('invalid');
+    } finally {
+      setTestingApiKey(false);
+    }
+  };
+
+  const handleSaveApiKey = () => {
+    if (apiKey.trim()) {
+      setApiKey(apiKey.trim());
+      setApiKeyStatus('valid');
+    }
+  };
+
+  const handleClearApiKey = () => {
+    clearApiKey();
+    setApiKeyState('');
+    setApiKeyStatus('idle');
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -127,6 +165,44 @@ export default function SettingsPage() {
 
       <div className="max-w-2xl mx-auto p-6">
       <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-6 space-y-6">
+        {/* API Key Management */}
+        <div className="space-y-4">
+          <label className="block text-sm font-medium text-[var(--foreground)]">
+            <span className="font-mono text-[var(--terminal-green)]">$</span> api-key-management
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => { setApiKeyState(e.target.value); setApiKeyStatus('idle'); }}
+              placeholder="輸入你的 API Key"
+              className="flex-1 px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] font-mono focus:outline-none focus:ring-2 focus:ring-[var(--terminal-green)] focus:border-[var(--terminal-green)]/50 transition-all duration-300"
+            />
+            <Button variant="outline" onClick={handleTestApiKey} disabled={testingApiKey || !apiKey.trim()} className="border-[var(--border)] text-[var(--foreground)] hover:border-[var(--terminal-green)]/50">
+              {testingApiKey ? '測試中...' : '測試'}
+            </Button>
+            <Button onClick={handleSaveApiKey} disabled={!apiKey.trim()} className="bg-[var(--terminal-green)] hover:bg-[var(--terminal-green)]/90 text-black font-medium">
+              儲存
+            </Button>
+            <Button variant="outline" onClick={handleClearApiKey} disabled={!apiKey} className="border-[var(--border)] text-[var(--foreground)] hover:border-red-500/50 hover:text-red-500">
+              清除
+            </Button>
+          </div>
+          {apiKeyStatus === 'valid' && (
+            <div className="flex items-center gap-2 text-sm text-[var(--terminal-green)] font-mono">
+              <CheckCircle className="h-4 w-4" />
+              API Key 已設定且有效
+            </div>
+          )}
+          {apiKeyStatus === 'invalid' && (
+            <div className="flex items-center gap-2 text-sm text-[var(--terminal-amber)] font-mono">
+              <XCircle className="h-4 w-4" />
+              API Key 無效或無法連線
+            </div>
+          )}
+        </div>
+        <div className="border-t border-[var(--border)]" />
+
         {/* Provider Selection */}
         <div>
           <label className="block text-sm font-medium mb-3 text-[var(--foreground)]">
