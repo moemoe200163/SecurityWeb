@@ -17,3 +17,9 @@ services:
   db:
     ports:
       - "5432:5432"  # Postgres host port; required for `psql` and DB GUIs
+
+  sandbox:
+    environment:
+      EGRESS_ALLOW: "10.0.0.0/8:443/tcp,10.0.0.0/8:80/tcp,host.docker.internal:443/tcp"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

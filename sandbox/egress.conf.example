@@ -1,0 +1,7 @@
+{
+  "_comment": "Example egress config for the sandbox. Copy to /etc/sandbox/egress.conf inside the container, or set EGRESS_ALLOW env var.",
+  "allow": [
+    { "cidr": "10.0.0.0/8", "ports": [80, 443], "proto": "tcp" }
+  ],
+  "allowIcmp": false
+}
