@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { api, ApiError, getApiKey, setApiKey, clearApiKey } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { MyApiKeyPanel } from '@/components/settings/MyApiKeyPanel';
 import { CheckCircle, XCircle, Loader2, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
@@ -211,6 +212,10 @@ export default function SettingsPage() {
             </div>
           )}
         </div>
+
+        {/* Self-service API key management (rotate, test, clear local) */}
+        <MyApiKeyPanel />
+
         <div className="border-t border-[var(--border)]" />
 
         {/* Provider Selection */}
