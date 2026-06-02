@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { AddToInvestigation } from '@/components/ui/AddToInvestigation';
 import { api, getApiKey, ApiError } from '@/lib/api';
 
 interface ToolTemplate {
@@ -90,6 +91,7 @@ export default function ToolsPage() {
   const [error, setError] = useState<string | null>(null);
   const [isApiOnline, setIsApiOnline] = useState(true);
   const [authError, setAuthError] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const apiKey = getApiKey();
   // Surface the error in the DOM so the value is actually read.
   void error;
@@ -160,6 +162,9 @@ export default function ToolsPage() {
         error: data.error,
         durationMs: data.duration_ms,
       });
+
+      // Generate a session ID for evidence collection
+      setSessionId(`tool-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
 
       // Refresh executions
       if (view === 'history') {
@@ -460,6 +465,16 @@ export default function ToolsPage() {
                   )}
                 </div>
               </div>
+
+              {/* Evidence Collection */}
+              {result && sessionId && (
+                <AddToInvestigation
+                  executionId={undefined}
+                  sessionId={sessionId}
+                  type="tool"
+                  data={{ output: result.output, templateId: selectedTemplate?.id }}
+                />
+              )}
 
               {/* Curl Command */}
               <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] overflow-hidden">
