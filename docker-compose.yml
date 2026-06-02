@@ -178,10 +178,6 @@ services:
     profiles:
       - tools
     restart: unless-stopped
-    volumes:
-      - ./sandbox/egress.conf.example:/etc/sandbox/egress.conf:ro
-    environment:
-      EGRESS_CONF: /etc/sandbox/egress.conf
     networks:
       - securityweb_sandbox
     deploy:

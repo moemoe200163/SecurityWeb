@@ -198,3 +198,6 @@ apply_rules() {
 resolve_config
 apply_rules
 log "Egress rules applied (allow=${#ALLOW_LINES[@]} lines, allowIcmp=$ALLOW_ICMP)"
+
+# Hand off to CMD (e.g. tail -f /dev/null)
+exec "$@"
