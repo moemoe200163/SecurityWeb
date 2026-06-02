@@ -108,11 +108,11 @@ const themeOptions = [
   { value: 'dark', label: '深色', icon: Moon },
   { value: 'system', label: '系統', icon: Monitor },
 ];
+void themeOptions;
 
 export function Sidebar() {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const theme = useStepStore((state) => state.theme);
   const toggleTheme = useStepStore((state) => state.toggleTheme);
 

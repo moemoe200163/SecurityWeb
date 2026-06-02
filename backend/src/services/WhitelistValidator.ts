@@ -6,11 +6,23 @@ export class WhitelistValidator {
   private cacheTime: number = 0;
   private readonly CACHE_TTL = 60000; // 1 minute
 
+  /**
+   * Required params are the placeholder names in `command_template`
+   * (e.g. `nmap -sT {target}` requires `target`). This is derived at
+   * validation time so the whitelist stays declarative.
+   */
+  private getRequiredParams(commandTemplate: string): string[] {
+    const matches = commandTemplate.matchAll(/\{(\w+)\}/g);
+    return Array.from(new Set(Array.from(matches, m => m[1])));
+  }
+
   async getTemplate(templateId: string): Promise<ToolTemplate | null> {
     await this.refreshCacheIfNeeded();
 
     const cached = this.templateCache.get(templateId);
-    if (cached && cached.is_approved) {
+    // Must be BOTH approved and enabled. Disabled templates are reachable by
+    // id from the DB but must not be eligible for execution.
+    if (cached && cached.is_approved && cached.is_enabled !== false) {
       return cached;
     }
     return null;
@@ -28,19 +40,36 @@ export class WhitelistValidator {
     const template = await this.getTemplate(templateId);
 
     if (!template) {
-      return { valid: false, error: 'Template not found or not approved' };
+      return {
+        valid: false,
+        error: 'Template not found, not approved, or disabled',
+      };
     }
 
-    // Validate parameters against allowed_params
-    const validationResult = this.validateParams(template, params);
-    if (!validationResult.valid) {
-      return validationResult;
+    // 1. Required params: every {placeholder} in command_template must be
+    //    supplied by the caller.
+    const required = this.getRequiredParams(template.command_template);
+    for (const name of required) {
+      if (!params[name] || params[name].trim() === '') {
+        return {
+          valid: false,
+          error: `Missing required parameter '${name}'`,
+        };
+      }
     }
 
-    // Build command from template
+    // 2. Allowed params: every supplied key must be in allowed_params.
+    //    Values are constrained to allowed_values when the list is non-empty.
+    const paramResult = this.validateParams(template, params);
+    if (!paramResult.valid) {
+      return paramResult;
+    }
+
+    // 3. Build the executable command array from the template.
     const command = this.buildCommand(template, params);
 
-    // Final whitelist validation - ensure command matches template exactly
+    // 4. Final sanity check: produced command must match the template's
+    //    placeholders, no extras, no missing.
     if (!this.isCommandWhitelisted(template, command)) {
       return { valid: false, error: 'Command does not match approved template' };
     }
@@ -55,12 +84,15 @@ export class WhitelistValidator {
     const allowed = template.allowed_params || {};
 
     for (const [key, value] of Object.entries(params)) {
-      if (!allowed[key]) {
-        return { valid: false, error: `Parameter '${key}' is not allowed for this template` };
+      if (!(key in allowed)) {
+        return {
+          valid: false,
+          error: `Parameter '${key}' is not allowed for this template`,
+        };
       }
 
       const allowedValues = allowed[key];
-      if (allowedValues.length > 0 && !allowedValues.includes(value)) {
+      if (Array.isArray(allowedValues) && allowedValues.length > 0 && !allowedValues.includes(value)) {
         return {
           valid: false,
           error: `Invalid value '${value}' for parameter '${key}'. Allowed: ${allowedValues.join(', ')}`,
@@ -111,8 +143,11 @@ export class WhitelistValidator {
       return;
     }
 
+    // Only approved AND enabled templates are eligible for execution. Disabled
+    // templates must not be returned by the validator even if the caller
+    // supplies the correct id.
     const templates = await prisma.toolTemplate.findMany({
-      where: { isApproved: true }
+      where: { isApproved: true, isEnabled: true },
     });
 
     this.templateCache.clear();
@@ -122,9 +157,10 @@ export class WhitelistValidator {
         name: row.name,
         tool: row.tool,
         command_template: row.commandTemplate,
-        allowed_params: row.allowedParams as Record<string, string[]>,
+        allowed_params: (row.allowedParams ?? {}) as Record<string, string[]>,
         created_by: row.createdBy,
         is_approved: row.isApproved,
+        is_enabled: row.isEnabled,
         created_at: row.createdAt,
       };
       this.templateCache.set(row.id, mapped);

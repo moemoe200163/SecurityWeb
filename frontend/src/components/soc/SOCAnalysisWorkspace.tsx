@@ -7,7 +7,6 @@ import { useStepStore } from '@/stores/stepStore';
 import { api, pollSession, type SessionDetail } from '@/lib/api';
 import type { AlertData, Message, ToolCall } from '@/lib/types';
 import type { SessionSummary } from '@/components/soc/AnalysisSidebar';
-import { AnalysisSidebar } from '@/components/soc/AnalysisSidebar';
 import { VolcanoStepCard } from '@/components/soc/VolcanoStepCard';
 import { ThreatSummaryCard } from '@/components/soc/ThreatSummaryCard';
 import { AlertUpload } from '@/components/upload/AlertUpload';
@@ -22,14 +21,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import {
-  Shield,
-  AlertCircle,
-  Zap,
-  History,
-  ChevronRight,
-  Clock,
-} from 'lucide-react';
+import { Shield } from 'lucide-react';
 
 function HistorySessionLoader({
   onLoad,
@@ -69,9 +61,10 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
     addMessage,
     resetAll,
   } = useStepStore();
+  void currentStepIndex; void setCurrentModule;
 
   const pollCleanupRef = useRef<(() => void) | null>(null);
-  const [sidebarSession, setSidebarSession] = useState<SessionSummary | undefined>(undefined);
+  const [, setSidebarSession] = useState<SessionSummary | undefined>(undefined);
 
   // Cleanup poll on unmount
   useEffect(() => {
@@ -200,6 +193,7 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- store setters and refs are stable; depending on them would re-fire on every render
   }, [initialSessionId]);
 
   // Handle history session load
@@ -354,40 +348,6 @@ ${data.rawContent || data.alertId}
       console.error('Analysis error:', error);
       stopExecution();
       alert('分析啟動失敗：' + (error as Error).message);
-    }
-  };
-
-  // Send message
-  const handleSendMessage = async (text: string) => {
-    if (!currentSessionId) {
-      alert('請先開始分析');
-      return;
-    }
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: text,
-      timestamp: new Date().toISOString(),
-    };
-    addMessage(userMessage);
-
-    try {
-      const response = await api.soc.sendMessage(currentSessionId, text);
-      addMessage({
-        id: response.message.id,
-        role: 'assistant',
-        content: response.message.content,
-        timestamp: response.message.createdAt,
-      });
-    } catch (error) {
-      console.error('Send message error:', error);
-      addMessage({
-        id: Date.now().toString(),
-        role: 'assistant',
-        content: '抱歉，發送消息失敗：' + (error as Error).message,
-        timestamp: new Date().toISOString(),
-      });
     }
   };
 

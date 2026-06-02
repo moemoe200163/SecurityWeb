@@ -42,10 +42,9 @@ const borderColors: Record<StepStatus, string> = {
 interface StepCardProps {
   step: Step;
   isLast?: boolean;
-  toolPanel?: React.ReactNode;
 }
 
-export function StepCard({ step, isLast = false, toolPanel }: StepCardProps) {
+export function StepCard({ step, isLast = false }: StepCardProps) {
   const [isOpen, setIsOpen] = useState(step.status === 'running' || step.status === 'success' || step.status === 'error');
   const config = statusConfig[step.status];
 

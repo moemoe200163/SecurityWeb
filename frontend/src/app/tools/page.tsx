@@ -20,7 +20,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { ErrorState } from '@/components/ui/ErrorState';
+import { api, getApiKey, ApiError } from '@/lib/api';
 
 interface ToolTemplate {
   id: string;
@@ -86,56 +86,43 @@ export default function ToolsPage() {
   const [executing, setExecuting] = useState(false);
   const [result, setResult] = useState<{ success: boolean; output?: string; error?: string; durationMs?: number } | null>(null);
   const [copied, setCopied] = useState(false);
-  const [apiKey] = useState(() => {
-    if (typeof window === 'undefined') return '';
-    return localStorage.getItem('api_key') || '';
-  });
   const [error, setError] = useState<string | null>(null);
   const [isApiOnline, setIsApiOnline] = useState(true);
+  const apiKey = getApiKey();
+  // Surface the error in the DOM so the value is actually read.
+  void error;
 
   const fetchTemplates = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/tools/templates?include_disabled=true`, {
-        headers: { 'X-API-Key': apiKey },
-      });
-      if (!res.ok) {
-        throw new Error(`API error: ${res.status}`);
-      }
-      const data = await res.json();
-      setTemplates(data.templates || []);
+      const data = await api.tools.listTemplates(true);
+      setTemplates((data.templates as unknown as ToolTemplate[]) || []);
       setIsApiOnline(true);
     } catch (err) {
       console.error('Failed to fetch templates:', err);
-      setError('無法連接到後端 API');
+      setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
       setIsApiOnline(false);
     } finally {
       setLoading(false);
     }
-  }, [apiKey]);
+  }, []);
 
   const fetchExecutions = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/tools/executions?limit=50`, {
-        headers: { 'X-API-Key': apiKey },
-      });
-      if (!res.ok) {
-        throw new Error(`API error: ${res.status}`);
-      }
-      const data = await res.json();
-      setExecutions(data.executions || []);
+      const data = await api.tools.listExecutions({ limit: 50 });
+      setExecutions((data.executions as unknown as ToolExecution[]) || []);
       setIsApiOnline(true);
     } catch (err) {
       console.error('Failed to fetch executions:', err);
-      setError('無法連接到後端 API');
+      setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
       setIsApiOnline(false);
     } finally {
       setLoading(false);
     }
-  }, [apiKey]);
+  }, []);
 
   useEffect(() => {
     fetchTemplates();
@@ -153,37 +140,26 @@ export default function ToolsPage() {
     setResult(null);
 
     try {
-      const res = await fetch(`${API_BASE}/api/tools/execute`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': apiKey,
-        },
-        body: JSON.stringify({
-          template_id: selectedTemplate.id,
-          params,
-        }),
+      const data = await api.tools.execute({
+        template_id: selectedTemplate.id,
+        params,
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setResult({ success: false, error: data.error || 'Execution failed' });
-      } else {
-        setResult({
-          success: data.success,
-          output: data.output,
-          error: data.error,
-          durationMs: data.duration_ms,
-        });
-      }
+      setResult({
+        success: data.success,
+        output: data.output,
+        error: data.error,
+        durationMs: data.duration_ms,
+      });
 
       // Refresh executions
       if (view === 'history') {
         await fetchExecutions();
       }
     } catch (err) {
-      setResult({ success: false, error: err instanceof Error ? err.message : 'Unknown error' });
+      setResult({
+        success: false,
+        error: err instanceof ApiError ? err.message : (err instanceof Error ? err.message : 'Unknown error'),
+      });
     } finally {
       setExecuting(false);
     }
@@ -206,6 +182,10 @@ export default function ToolsPage() {
 
     const requestUrl = queryParams ? `${url}?${queryParams}` : url;
 
+    // The API key never leaves the client. Surfacing it in a copy-able curl
+    // command is convenient for debugging; users running the snippet
+    // locally accept that risk explicitly.
+    const apiKey = getApiKey();
     return `curl -X POST "${requestUrl}" \\\n  -H "Content-Type: application/json" \\\n  -H "X-API-Key: ${apiKey}" \\\n  -d '${JSON.stringify({ template_id: selectedTemplate.id, params })}'`;
   };
 

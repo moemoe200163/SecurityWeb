@@ -2,7 +2,7 @@
 
 import { CheckCircle2, Circle, Loader2, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { Step, StepStatus } from '@/lib/types';
+import type { Step } from '@/lib/types';
 
 interface VolcanoStepCardProps {
   step: Step;

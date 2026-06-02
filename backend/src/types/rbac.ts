@@ -16,6 +16,7 @@ export interface ToolTemplate {
   allowed_params: Record<string, string[]>;
   created_by: string;
   is_approved: boolean;
+  is_enabled: boolean;
   created_at: Date;
 }
 

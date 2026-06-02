@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireUser } from '../middleware/rbac.js';
 import { WhitelistValidator } from '../services/WhitelistValidator.js';
-import { getMCPServer } from '../mcp/server.js';
+import { SandboxManager } from '../services/SandboxManager.js';
 import { prisma } from '../db/client.js';
 
 const executeToolSchema = z.object({
@@ -18,6 +18,7 @@ const listTemplatesSchema = z.object({
 
 export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
   const validator = new WhitelistValidator();
+  const sandboxManager = new SandboxManager();
 
   // Get all templates (for admin/management)
   fastify.get(
@@ -165,11 +166,15 @@ export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
         template_id = body.template_id;
         const { params, session_id } = body;
 
-        // Validate and build command from whitelist
+        // 1. Validate against the whitelist (approved + enabled, required
+        //    params, allowed values). This is the ONLY place that decides
+        //    what can run.
         const validation = await validator.validateAndBuildCommand(template_id, params);
 
         if (!validation.valid || !validation.command) {
-          // Record failed execution attempt
+          // Record a failed execution attempt so the audit trail is honest.
+          // We still write the row even if the templateId doesn't exist in
+          // tool_templates — the schema marks the relation as optional.
           await prisma.toolExecution.create({
             data: {
               templateId: template_id,
@@ -187,7 +192,7 @@ export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
           });
         }
 
-        // Record pending execution
+        // 2. Record the running execution with the validated params.
         const execution = await prisma.toolExecution.create({
           data: {
             templateId: template_id,
@@ -198,18 +203,18 @@ export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
           },
         });
 
-        // Execute via MCP server
-        const mcpServer = await getMCPServer();
-        const toolName = getToolNameFromTemplate(template_id);
-        const result = await mcpServer.executeTool({
-          name: toolName,
-          arguments: params,
-        });
+        // 3. Execute the WHITELIST-VALIDATED command directly in the sandbox.
+        //    We do NOT re-derive the command from raw params: the validator
+        //    already produced a safe command array and that is the only
+        //    thing we ever run.
+        await sandboxManager.ensureSandbox();
+        const executor = sandboxManager.getExecutor();
+        const result = await executor.executeDirect(validation.command, 300000);
 
         const durationMs = Date.now() - startTime;
         const finalStatus = result.success ? 'success' : 'error';
 
-        // Update execution record
+        // 4. Update execution record.
         await prisma.toolExecution.update({
           where: { id: execution.id },
           data: {
@@ -220,7 +225,7 @@ export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
           },
         });
 
-        // Create audit log
+        // 5. Create audit log.
         await prisma.auditLog.create({
           data: {
             userId: request.user!.id,
@@ -231,6 +236,7 @@ export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
               executionId: execution.id,
               success: result.success,
               durationMs,
+              command: validation.command,
             },
           },
         });
@@ -251,37 +257,26 @@ export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
         }
         console.error('Tool execution error:', error);
 
-        // Record failed execution
-        if (template_id && await prisma.toolTemplate.findUnique({ where: { id: template_id } })) {
-          await prisma.toolExecution.create({
-            data: {
-              templateId: template_id,
-              userId: request.user!.id,
-              params: {},
-              status: 'error',
-              error: error instanceof Error ? error.message : 'Unknown error',
-              durationMs: Date.now() - startTime,
-            },
-          });
+        // Record failed execution if we can.
+        if (template_id) {
+          await prisma.toolExecution
+            .create({
+              data: {
+                templateId: template_id,
+                userId: request.user!.id,
+                params: {},
+                status: 'error',
+                error: error instanceof Error ? error.message : 'Unknown error',
+                durationMs: Date.now() - startTime,
+              },
+            })
+            .catch(() => {
+              /* best-effort audit */
+            });
         }
 
         return reply.status(500).send({ error: 'Tool execution failed' });
       }
     }
   );
-}
-
-function getToolNameFromTemplate(templateId: string): string {
-  const mapping: Record<string, string> = {
-    nmap_basic: 'nmap_scan',
-    nmap_stealth: 'nmap_scan',
-    nmap_full: 'nmap_scan',
-    sql_basic: 'sqlmap_scan',
-    sql_dump: 'sqlmap_scan',
-    nikto_web: 'nikto_scan',
-    nikto_ssl: 'nikto_scan',
-    hydra_ssh: 'hydra_brute',
-    hydra_http: 'hydra_brute',
-  };
-  return mapping[templateId] || 'nmap_scan';
 }

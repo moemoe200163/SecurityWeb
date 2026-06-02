@@ -149,16 +149,7 @@ export default function BlacklistPage() {
   const handlePageChange = (page: number) => {
     setCurrentPage(Math.max(1, Math.min(page, totalPages)));
   };
-
-  const handleFilterChange = (newFilter: typeof filter) => {
-    setFilter(newFilter);
-    setCurrentPage(1);
-  };
-
-  const handleSearchChange = (value: string) => {
-    setSearchIp(value);
-    setCurrentPage(1);
-  };
+  void handlePageChange;
 
   return (
     <div className="min-h-screen bg-[var(--background)]">

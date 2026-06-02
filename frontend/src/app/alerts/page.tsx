@@ -21,6 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { api, ApiError } from '@/lib/api';
 
 interface Alert {
   id: string;
@@ -82,6 +83,7 @@ const statusLabels: Record<string, string> = {
 };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+void API_BASE;
 
 export default function AlertsPage() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -89,10 +91,6 @@ export default function AlertsPage() {
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   const [filters, setFilters] = useState({ status: '', severity: '', source: '' });
   const [searchQuery, setSearchQuery] = useState('');
-  const [apiKey] = useState(() => {
-    if (typeof window === 'undefined') return '';
-    return localStorage.getItem('api_key') || '';
-  });
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportData, setReportData] = useState<ReportData | null>(null);
@@ -104,30 +102,27 @@ export default function AlertsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [isApiOnline, setIsApiOnline] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  void error;
 
   const fetchAlerts = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams();
-      if (filters.status) params.set('status', filters.status);
-      if (filters.severity) params.set('severity', filters.severity);
-      if (filters.source) params.set('source', filters.source);
-
-      const res = await fetch(`${API_BASE}/api/alerts?${params}`, {
-        headers: { 'X-API-Key': apiKey },
+      const data = await api.alerts.list({
+        status: filters.status || undefined,
+        severity: filters.severity || undefined,
+        source: filters.source || undefined,
       });
-      const data = await res.json();
-      setAlerts(data.alerts || []);
+      setAlerts((data.alerts as unknown as Alert[]) || []);
       setIsApiOnline(true);
     } catch (err) {
       console.error('Failed to fetch alerts:', err);
-      setError('無法連接到後端 API');
+      setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
       setIsApiOnline(false);
     } finally {
       setLoading(false);
     }
-  }, [apiKey, filters.severity, filters.source, filters.status]);
+  }, [filters.severity, filters.source, filters.status]);
 
   useEffect(() => {
     fetchAlerts();
@@ -135,14 +130,7 @@ export default function AlertsPage() {
 
   const handleResolve = async (alertId: string, newStatus: string) => {
     try {
-      await fetch(`${API_BASE}/api/alerts/${alertId}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': apiKey,
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      await api.alerts.updateStatus(alertId, { status: newStatus });
       await fetchAlerts();
       setSelectedAlert(null);
     } catch (err) {
@@ -272,19 +260,18 @@ export default function AlertsPage() {
             variant="outline"
             size="sm"
             className="text-xs"
-            onClick={() => {
-              // Demo: import sample alerts
-              fetch(`${API_BASE}/api/alerts/import`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
-                body: JSON.stringify({
+            onClick={async () => {
+              // Demo: import a sample alert via the shared protected client.
+              await api.alerts
+                .importOne({
                   source: 'import',
                   title: '測試告警 - SQL 注入',
                   severity: 'high',
                   raw_content: JSON.stringify({ timestamp: new Date().toISOString(), type: 'sqli_test' }),
                   ai_verdict: 'attack_attempt',
-                }),
-              }).then(() => fetchAlerts());
+                })
+                .then(() => fetchAlerts())
+                .catch((err) => console.error('Failed to import demo alert:', err));
             }}
           >
             匯入測試資料
@@ -494,11 +481,8 @@ export default function AlertsPage() {
                     variant="outline"
                     onClick={async () => {
                       try {
-                        const res = await fetch(`${API_BASE}/api/dashboard/report/${selectedAlert.id}`, {
-                          headers: { 'X-API-Key': apiKey },
-                        });
-                        const data = await res.json();
-                        setReportData(data);
+                        const data = await api.dashboard.report(selectedAlert.id);
+                        setReportData(data as unknown as ReportData);
                         setShowReportModal(true);
                       } catch (err) {
                         console.error('Failed to generate report:', err);
@@ -576,15 +560,11 @@ export default function AlertsPage() {
                     if (!feedbackForm.correct_verdict) return;
                     setSubmitting(true);
                     try {
-                      await fetch(`${API_BASE}/api/alerts/${selectedAlert.id}/feedback`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
-                        body: JSON.stringify({
-                          ai_verdict: selectedAlert.aiVerdict,
-                          correct_verdict: feedbackForm.correct_verdict,
-                          error_reason: feedbackForm.error_reason || undefined,
-                          lesson: feedbackForm.lesson || undefined,
-                        }),
+                      await api.alerts.submitFeedback(selectedAlert.id, {
+                        ai_verdict: selectedAlert.aiVerdict || '',
+                        correct_verdict: feedbackForm.correct_verdict,
+                        error_reason: feedbackForm.error_reason || undefined,
+                        lesson: feedbackForm.lesson || undefined,
                       });
                       setShowFeedbackModal(false);
                       await fetchAlerts();

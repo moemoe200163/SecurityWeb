@@ -1,0 +1,19 @@
+# =============================================================================
+# SecurityWeb — Dev override
+# =============================================================================
+# Use together with the main docker-compose.yml to publish ports to the host
+# for local development and for the backend test runner.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile dev up
+#
+# This file is merged on top of the main compose and MUST NOT be used in prod.
+# =============================================================================
+
+services:
+  backend:
+    ports:
+      - "4000:4000"  # Backend API host port; required for `pnpm test` and curl
+
+  db:
+    ports:
+      - "5432:5432"  # Postgres host port; required for `psql` and DB GUIs

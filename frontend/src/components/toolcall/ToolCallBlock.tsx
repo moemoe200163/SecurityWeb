@@ -2,7 +2,6 @@
 
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { CodeBlockInline } from '@/components/ui/CodeBlock';
 import type { ToolCall } from '@/lib/types';
 
 interface ToolCallBlockProps {

@@ -9,15 +9,12 @@ import {
   Zap,
   History,
   ChevronRight,
-  Clock,
   CheckCircle2,
   XCircle,
   Copy,
   Download,
   Share2,
   RefreshCw,
-  ExternalLink,
-  FileText,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -86,7 +83,8 @@ export function AnalysisSidebar({
   onQuickAction,
   onToolUse,
 }: AnalysisSidebarProps) {
-  const pathname = usePathname();
+  void currentModule; void onToolUse;
+  usePathname();
   const [activeSection, setActiveSection] = useState<'info' | 'actions' | 'tools' | 'history'>('info');
 
   type TabId = 'info' | 'actions' | 'history';

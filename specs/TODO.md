@@ -6,49 +6,118 @@
 - 威脅情報調查（自動化線索挖掘）
 - 滲透測試輔助（步驟引導、報告生成）
 
-## 當前任務
+## 狀態圖例
+- `[x]` 完成
+- `[~]` 部分完成 / 進行中
+- `[ ]` 未開始
+- `[!]` 阻塞中（標記原因）
 
-### Phase 1: 項目初始化
+---
+
+## 已完成階段
+
+### Phase 1: 項目初始化 `[x]`
 - [x] 初始化 Next.js 14 前端專案
 - [x] 設定 Tailwind + shadcn/ui
 - [x] 建立 specs 目錄結構
 - [x] 撰寫規格文件
 
-### Phase 2: 前端核心框架
+### Phase 2: 前端核心框架 `[x]`
 - [x] 建立頁面佈局（Sidebar + MainContent）
 - [x] 實作頂部進度條組件（StepProgress）
 - [x] 實作步進式卡片組件（StepCard）
 - [x] 實作工具調用展示區（ToolCallBlock）
 - [x] 建立狀態管理（Zustand stepStore）
 
-### Phase 3: SOC 模組頁面
+### Phase 3: SOC 模組頁面 `[x]`
 - [x] 建立 /soc/analyze 頁面
 - [x] 實作告警上傳區（AlertUpload）
 - [x] 實作 AI 即時對話面板（AIChatPanel）
 - [x] 實作分析報告生成（AnalysisReport）
 
-### Phase 4: 威脅情報模組
+### Phase 4: 威脅情報模組 `[x]`
 - [x] 建立 /threat/investigate 頁面
 - [x] 實作 IP/Domain/Hash 輸入區
 - [x] 實作線索挖掘流程
 
-### Phase 5: 滲透測試模組
+### Phase 5: 滲透測試模組 `[x]`
 - [x] 建立 /pentest/assist 頁面
 - [x] 實作目標枚舉步驟
 - [x] 實作漏洞驗證流程
 
-### Phase 6: 後端 API 層
+### Phase 6: 後端 API 層 `[x]`
 - [x] 初始化後端專案
 - [x] 設定 Prisma + PostgreSQL
-- [x] 實作 AI Bridge 抽象層
+- [x] 實作 AI Bridge 抽象層（OllamaAdapter / MiniMaxAdapter / AIServiceFactory）
 - [x] 實作 API 路由
 
-### Phase 7: Docker 部署
+### Phase 7: Docker 部署 `[x]`
 - [x] 撰寫前端 Dockerfile
 - [x] 撰寫後端 Dockerfile
 - [x] 撰寫 docker-compose.yml
 
+### Phase 8: RBAC 與 API Key 認證 `[x]`
+- [x] User / API Key 模型（schema + seed）
+- [x] `apiKeyAuth` middleware（64-char key）
+- [x] `requireRole` / `requireUser` / `requireAdmin` middleware
+- [x] 套用到所有受保護路由
+
+### Phase 9: 工具平台（Whitelist） `[x]`
+- [x] `ToolTemplate` 與 `ToolExecution` 模型
+- [x] `WhitelistValidator`：approved + enabled 雙重檢查
+- [x] 必要參數檢查（從 `command_template` 的 `{placeholder}` 推導）
+- [x] 允許值檢查（`allowed_params` 值域）
+- [x] 沙箱執行 + 審計 log
+- [x] 工具歷史 / 單筆查詢 / 列表
+- [x] Admin template 管理（enable / disable / approve / 刪除）
+
+### Phase 10: 告警中心 `[x]`
+- [x] `Alert` 與 `KnowledgeFeedback` 模型
+- [x] 列表 / 查詢 / 匯入（單筆 / 批次）/ 更新狀態 / 反饋
+- [x] 調查流程建立真實 Session（不再以 alertId 充當 sessionId）
+- [x] Dashboard 統計 + 時間軸 + 報告
+
+### Phase 11: BGP / Docker `[x]`
+- [x] `BgpUpdate` / `BgpAsnInfo` 模型
+- [x] BGP 路由查詢與統計
+- [x] BGP consumer / wrapper 腳本
+- [x] 沙箱（Kali）執行安全工具
+
+### Phase 12: Pentest Assist MVP `[x]`
+- [x] `pentest/assist` 模組化流程
+- [x] 目標枚舉 / 漏洞驗證 / 報告生成
+- [x] 模組化 Steps（ToolCallBlock / StepCard）
+- [x] AI 對話 + 中文支援
+
 ---
 
-## 完成條件
-所有 `[ ]` 項目都變成 `[x]` 且 ACCEPTANCE.md 所有條目為 PASS 時，專案完成。
+## 進行中 / 部分完成
+
+### Phase 13: MVP 驗收穩定化 `[~]`
+- [x] 修復 DB drift（migration 20260520000000 修掉重複段；重置 dev DB 重新套用）
+- [x] 修復後端測試可信度（移除假 summary、改用 setup 注入 TEST_API_KEY、寫實的 23 個測試）
+- [x] 修復工具執行安全（WhitelistValidator 雙重檢查 + required params；tools.ts 用 validated command 執行）
+- [x] 修復 protected API client（`api.tools` / `api.alerts` / `api.dashboard` + `getApiKey` / `ApiError`）
+- [x] 修復告警調查流程（建立真實 Session）
+- [x] 開始 ACCEPTANCE tracking（見 `specs/ACCEPTANCE.md`）
+- [~] 清理前端 lint 警告（66 → TBD）
+- [~] Docker / BGP 本地 profile 整理（port 暴露、profile 化）
+
+---
+
+## 下一階段
+
+### Phase 14: 正式驗收 `[ ]`
+- [ ] 端到端驗收每個使用者旅程（SOC / Threat / Pentest）
+- [ ] 在 staging-like 環境跑一次完整流程
+- [ ] 文件化操作手冊（如何 seed、如何取得 admin key）
+- [ ] 安全性檢查：CSRF / CSP / Rate limit 補齊
+
+---
+
+## 已知風險 / 待辦細項
+- [ ] sandbox 對每個 template 的 timeout 與資源上限需逐一調校
+- [ ] Sandbox 網路策略：是否允許 egress 目前是開放的
+- [ ] API key 沒有過期 / 撤銷機制（目前只支援 admin 強制重發）
+- [ ] 沒有 audit_log 保留策略（會無限增長）
+- [ ] 沒有 i18n（前端文案目前混用繁中 + 英文）

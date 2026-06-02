@@ -208,10 +208,6 @@ CREATE TABLE IF NOT EXISTS "audit_logs" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "audit_logs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id")
 );
-    "details" JSONB,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "audit_logs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id")
-);
 
 -- Alerts table
 CREATE TABLE IF NOT EXISTS "alerts" (

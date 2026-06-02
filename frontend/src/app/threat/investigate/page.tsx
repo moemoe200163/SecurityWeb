@@ -168,7 +168,7 @@ function ThreatInvestigateContent() {
     }
   };
 
-  const getStatusBadge = (status: string, _threatLevel: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case 'malicious':
         return <span className="px-3 py-1 bg-[var(--color-threat)] text-white text-sm font-medium rounded-full">MALICIOUS</span>;
@@ -264,7 +264,7 @@ function ThreatInvestigateContent() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <span className="font-mono text-lg font-semibold text-[var(--foreground)]">{ipReputation.ip}</span>
-                    {getStatusBadge(ipReputation.status, ipReputation.threatLevel)}
+                    {getStatusBadge(ipReputation.status)}
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                     {ipReputation.countryName && (

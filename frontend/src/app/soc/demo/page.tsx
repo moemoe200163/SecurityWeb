@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import {
-  MessageSquare, Shield, Search, Activity, FileCode, Play, CheckCircle, Clock, AlertTriangle,
-  Globe, Database, Server, Lock, Zap, Target, Wifi, FileWarning, Cpu, Terminal
+  MessageSquare, Shield, Search, Activity, FileCode, Play, CheckCircle, Clock,
+  Globe, Database, Zap, Target, FileWarning, Cpu, Terminal
 } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
 

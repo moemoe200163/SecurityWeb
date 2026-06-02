@@ -120,7 +120,7 @@ export function getTemplateSteps(templateId: string): Step[] {
 
 export const useStepStore = create<StepStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       currentModule: 'soc',
       setCurrentModule: (module) => {
         set({

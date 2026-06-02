@@ -296,33 +296,54 @@ export async function alertRoutes(fastify: FastifyInstance): Promise<void> {
           type: z.enum(['soc', 'threat', 'pentest']).default('threat'),
         }).parse(request.body);
 
-        // Get the alert
+        // Get the alert (404 must come back from this query, not from a
+        // later cascade failure).
         const alert = await prisma.alert.findUnique({ where: { id } });
         if (!alert) {
           return reply.status(404).send({ error: 'Alert not found' });
         }
 
-        // Update alert status
-        await prisma.alert.update({
-          where: { id },
-          data: { status: 'investigating', sessionId: id },
+        // Create a real Session row. The session id (UUID) is what we link
+        // to the alert — NOT the alert id. The session's `input` carries
+        // enough context to reproduce the investigation later.
+        const session = await prisma.session.create({
+          data: {
+            module: type,
+            input: {
+              source: 'alert_investigation',
+              alertId: alert.id,
+              alertTitle: alert.title,
+              alertSeverity: alert.severity,
+              aiVerdict: alert.aiVerdict,
+              rawContent: alert.rawContent,
+              normalizedFields: alert.normalizedFields ?? {},
+            } as object,
+            status: 'in_progress',
+          },
         });
 
-        // Audit log
+        // Link the alert to the new session, and mark it as being investigated.
+        await prisma.alert.update({
+          where: { id },
+          data: { status: 'investigating', sessionId: session.id },
+        });
+
+        // Audit log records the linkage so an investigator can follow the
+        // session history for an alert.
         await prisma.auditLog.create({
           data: {
             userId: request.user!.id,
             action: 'investigate',
             resourceType: 'alert',
             resourceId: id,
-            details: { type },
+            details: { type, sessionId: session.id },
           },
         });
 
         return reply.send({
           message: 'Investigation started',
           alert_id: id,
-          session_id: id,
+          session_id: session.id,
           type,
         });
       } catch (error) {

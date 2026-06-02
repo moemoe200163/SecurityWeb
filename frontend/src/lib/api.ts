@@ -3,37 +3,94 @@
  */
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_KEY_STORAGE = 'api_key';
+
+export class ApiError extends Error {
+  status: number;
+  details?: unknown;
+  constructor(message: string, status: number, details?: unknown) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.details = details;
+  }
+}
+
+/**
+ * Read the X-API-Key from localStorage. Centralized here so callers don't
+ * sprinkle `localStorage.getItem('api_key')` across the codebase.
+ */
+export function getApiKey(): string {
+  if (typeof window === 'undefined') return '';
+  return window.localStorage.getItem(API_KEY_STORAGE) || '';
+}
+
+export function setApiKey(key: string): void {
+  if (typeof window === 'undefined') return;
+  if (key) window.localStorage.setItem(API_KEY_STORAGE, key);
+  else window.localStorage.removeItem(API_KEY_STORAGE);
+}
+
+export function clearApiKey(): void {
+  if (typeof window === 'undefined') return;
+  window.localStorage.removeItem(API_KEY_STORAGE);
+}
 
 interface RequestOptions {
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   body?: unknown;
+  /** When true, attach X-API-Key from localStorage. Default true. */
+  requireAuth?: boolean;
+  signal?: AbortSignal;
 }
 
 async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-  const { method = 'GET', body } = options;
+  const { method = 'GET', body, requireAuth = false, signal } = options;
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
 
+  if (requireAuth) {
+    const key = getApiKey();
+    if (!key) {
+      throw new ApiError('Missing API key. Please sign in again.', 401);
+    }
+    headers['X-API-Key'] = key;
+  }
+
   const config: RequestInit = {
     method,
     headers,
+    ...(signal ? { signal } : {}),
   };
 
-  if (body) {
+  if (body !== undefined && body !== null) {
     config.body = JSON.stringify(body);
   }
 
   const response = await fetch(`${API_BASE}${endpoint}`, config);
 
+  const text = await response.text();
+  const data = text ? safeJsonParse(text) : undefined;
+
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-    const errorMessage = error.message || error.error || `HTTP ${response.status}`;
-    throw new Error(errorMessage);
+    const message =
+      (data as { error?: string; message?: string } | undefined)?.error ||
+      (data as { message?: string } | undefined)?.message ||
+      `HTTP ${response.status}`;
+    throw new ApiError(message, response.status, data);
   }
 
-  return response.json();
+  return data as T;
+}
+
+function safeJsonParse(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return undefined;
+  }
 }
 
 // Types
@@ -414,6 +471,145 @@ export const api = {
   // Health check
   async health(): Promise<{ status: string; timestamp: string }> {
     return request('/health');
+  },
+
+  // Tools (protected: requires X-API-Key)
+  tools: {
+    async listTemplates(includeDisabled = false): Promise<{
+      templates: Array<{
+        id: string;
+        name: string;
+        tool: string;
+        description?: string;
+        commandTemplate: string;
+        allowedParams: Record<string, string[]>;
+        riskLevel: string;
+        isApproved: boolean;
+        isEnabled: boolean;
+        createdAt: string;
+        createdBy: string;
+      }>;
+    }> {
+      const qs = includeDisabled ? '?include_disabled=true' : '';
+      return request(`/api/tools/templates${qs}`, { requireAuth: true });
+    },
+    async getTemplate(id: string): Promise<{ template: Record<string, unknown> }> {
+      return request(`/api/tools/templates/${id}`, { requireAuth: true });
+    },
+    async listExecutions(params: { limit?: number; offset?: number; status?: string } = {}): Promise<{
+      executions: Array<Record<string, unknown>>;
+      total: number;
+      limit: number;
+      offset: number;
+    }> {
+      const query = new URLSearchParams();
+      if (params.limit !== undefined) query.set('limit', String(params.limit));
+      if (params.offset !== undefined) query.set('offset', String(params.offset));
+      if (params.status) query.set('status', params.status);
+      const qs = query.toString() ? `?${query}` : '';
+      return request(`/api/tools/executions${qs}`, { requireAuth: true });
+    },
+    async execute(input: {
+      template_id: string;
+      params: Record<string, string>;
+      session_id?: string;
+    }): Promise<{
+      execution_id: string;
+      success: boolean;
+      output?: string;
+      error?: string;
+      duration_ms?: number;
+    }> {
+      return request('/api/tools/execute', {
+        method: 'POST',
+        body: input,
+        requireAuth: true,
+      });
+    },
+  },
+
+  // Alerts (protected: requires X-API-Key)
+  alerts: {
+    async list(params: { status?: string; severity?: string; source?: string; limit?: number; offset?: number } = {}): Promise<{
+      alerts: Array<Record<string, unknown>>;
+      total: number;
+      limit: number;
+      offset: number;
+    }> {
+      const query = new URLSearchParams();
+      if (params.status) query.set('status', params.status);
+      if (params.severity) query.set('severity', params.severity);
+      if (params.source) query.set('source', params.source);
+      if (params.limit !== undefined) query.set('limit', String(params.limit));
+      if (params.offset !== undefined) query.set('offset', String(params.offset));
+      const qs = query.toString() ? `?${query}` : '';
+      return request(`/api/alerts${qs}`, { requireAuth: true });
+    },
+    async get(id: string): Promise<{ alert: Record<string, unknown> }> {
+      return request(`/api/alerts/${id}`, { requireAuth: true });
+    },
+    async importOne(input: {
+      source: string;
+      title: string;
+      severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
+      raw_content: string;
+      normalized_fields?: unknown;
+      ai_verdict?: string;
+    }): Promise<{ alert: Record<string, unknown> }> {
+      return request('/api/alerts/import', {
+        method: 'POST',
+        body: input,
+        requireAuth: true,
+      });
+    },
+    async updateStatus(id: string, input: { status?: string; human_verdict?: string }): Promise<{ alert: Record<string, unknown> }> {
+      return request(`/api/alerts/${id}/status`, {
+        method: 'PATCH',
+        body: input,
+        requireAuth: true,
+      });
+    },
+    async submitFeedback(
+      id: string,
+      input: {
+        session_id?: string;
+        ai_verdict: string;
+        correct_verdict: string;
+        error_reason?: string;
+        lesson?: string;
+      }
+    ): Promise<{ feedback: Record<string, unknown> }> {
+      return request(`/api/alerts/${id}/feedback`, {
+        method: 'POST',
+        body: input,
+        requireAuth: true,
+      });
+    },
+    async investigate(id: string, type: 'soc' | 'threat' | 'pentest' = 'threat'): Promise<{
+      message: string;
+      session_id: string;
+      alert_id: string;
+      type: string;
+    }> {
+      return request(`/api/alerts/${id}/investigate`, {
+        method: 'POST',
+        body: { type },
+        requireAuth: true,
+      });
+    },
+  },
+
+  // Dashboard (protected: requires X-API-Key)
+  dashboard: {
+    async stats(): Promise<{ metrics: Record<string, unknown>; recentExecutions?: unknown[]; recentAlerts?: unknown[] }> {
+      return request('/api/dashboard/stats', { requireAuth: true });
+    },
+    async timeline(days = 7): Promise<{ timeline: Record<string, unknown> }> {
+      return request(`/api/dashboard/stats/timeline?days=${days}`, { requireAuth: true });
+    },
+    async report(alertId: string): Promise<Record<string, unknown>> {
+      return request(`/api/dashboard/report/${alertId}`, { requireAuth: true });
+    },
   },
 
   // Get all sessions (combined from all modules)

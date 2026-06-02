@@ -252,16 +252,18 @@ export async function dashboardRoutes(fastify: FastifyInstance): Promise<void> {
             total: toolExecutions.length,
             successful: toolExecutions.filter(e => e.status === 'success').length,
             failed: toolExecutions.filter(e => e.status === 'error').length,
-            executions: toolExecutions.map(e => ({
-              tool: e.template.name,
-              toolType: e.template.tool,
-              riskLevel: e.template.riskLevel,
-              status: e.status,
-              durationMs: e.durationMs,
-              output: e.output,
-              error: e.error,
-              executedAt: e.createdAt.toISOString(),
-            })),
+            executions: toolExecutions
+              .filter(e => e.template)
+              .map(e => ({
+                tool: e.template!.name,
+                toolType: e.template!.tool,
+                riskLevel: e.template!.riskLevel,
+                status: e.status,
+                durationMs: e.durationMs,
+                output: e.output,
+                error: e.error,
+                executedAt: e.createdAt.toISOString(),
+              })),
           },
           knowledgeFeedback: alert.knowledgeFeedback.map(fb => ({
             aiVerdict: fb.aiVerdict,

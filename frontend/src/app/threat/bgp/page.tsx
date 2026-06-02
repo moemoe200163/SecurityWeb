@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Loader2, Search, Shield, X, Copy, ExternalLink, AlertTriangle, Globe } from 'lucide-react';
+import { Loader2, Search, X, Copy, ExternalLink, Globe } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
 
 // Country code to flag + name mapping

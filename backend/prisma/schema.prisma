@@ -207,7 +207,10 @@ model ToolTemplate {
 model ToolExecution {
   id         String    @id @default(uuid())
   templateId String    @map("template_id")
-  template   ToolTemplate @relation(fields: [templateId], references: [id])
+  // Template is optional because the API can record failed attempts whose
+  // template_id does not match a current row in tool_templates. The DB does
+  // not enforce a FK (see migration 20260520000000_add_all_tables).
+  template   ToolTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   userId     String    @map("user_id")
   user       User      @relation(fields: [userId], references: [id])
   sessionId  String?   @map("session_id")
@@ -226,7 +229,7 @@ model ToolExecution {
 model AuditLog {
   id           String   @id @default(uuid())
   userId       String   @map("user_id")
-  user         User     @relation(fields: [userId], references: [id])
+  user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   action       String   // "create" | "update" | "delete" | "execute" | "import" | etc.
   resourceType String   @map("resource_type")
   resourceId   String?  @map("resource_id")

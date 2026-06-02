@@ -1,3 +1,18 @@
+# =============================================================================
+# SecurityWeb — Docker Compose
+# =============================================================================
+# Profiles:
+#   default   - frontend, backend, db (core app stack)
+#   dev       - dev-only port mappings (psql access, host port for backend);
+#               use `docker compose --profile dev up` together with `docker-compose.dev.yml`
+#   tools     - sandbox (Kali) for nmap/sqlmap/nikto etc.   HEAVY: seccomp=unconfined, NET_ADMIN
+#   bgp       - bgp-consumer (Python long-running BGP sync)
+#   edge      - nginx reverse proxy with WAF (prod edge)
+#
+# Heavy/privileged services MUST be profile-gated. Host port mappings SHOULD
+# come from docker-compose.dev.yml, not the main file.
+# =============================================================================
+
 services:
   frontend:
     build:
@@ -26,6 +41,10 @@ services:
     user: root
     env_file:
       - ./backend/.env
+    # Port 4000 is NOT published here on purpose. The backend is reachable
+    # from the host only via:
+    #   - dev override (docker-compose.dev.yml) for `pnpm test` and curl
+    #   - nginx edge profile in prod (port 80/443 -> backend:4000)
     environment:
       - DATABASE_URL=postgresql://securityweb:securityweb123@db:5432/securityweb
       - PORT=4000
@@ -131,8 +150,9 @@ services:
       -c log_min_duration_statement=2000
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    # Postgres 5432 is NOT published to the host by default. Reach the DB
+    # from the host only via the dev override (docker-compose.dev.yml).
+    # The backend connects to db:5432 over the internal network.
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U securityweb"]
       interval: 5s
