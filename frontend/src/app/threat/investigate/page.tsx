@@ -7,6 +7,7 @@ import { Loader2, Search, AlertCircle, CheckCircle2, XCircle, Shield, ShieldAler
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer';
 import { cn } from '@/lib/utils';
 import { PageHero } from '@/components/layout/PageHero';
+import { AddToInvestigation } from '@/components/ui/AddToInvestigation';
 
 function ThreatInvestigateContent() {
   const searchParams = useSearchParams();
@@ -412,6 +413,15 @@ function ThreatInvestigateContent() {
                 ))}
             </div>
           </div>
+        )}
+
+        {/* Evidence Collection */}
+        {session && sessionIdFromUrl && (
+          <AddToInvestigation
+            sessionId={sessionIdFromUrl}
+            type="intelligence"
+            data={{ query: indicator, type, result: session }}
+          />
         )}
 
         {/* Empty State */}
