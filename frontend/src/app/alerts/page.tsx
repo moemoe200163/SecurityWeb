@@ -21,6 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { api, ApiError } from '@/lib/api';
 
 interface Alert {
@@ -101,6 +102,7 @@ export default function AlertsPage() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [isApiOnline, setIsApiOnline] = useState(true);
+  const [authError, setAuthError] = useState(false);
   const [error, setError] = useState<string | null>(null);
   void error;
 
@@ -116,9 +118,13 @@ export default function AlertsPage() {
       setAlerts((data.alerts as unknown as Alert[]) || []);
       setIsApiOnline(true);
     } catch (err) {
-      console.error('Failed to fetch alerts:', err);
-      setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
-      setIsApiOnline(false);
+      if (err instanceof ApiError && err.status === 401) {
+        setAuthError(true);
+      } else {
+        console.error('Failed to fetch alerts:', err);
+        setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
+        setIsApiOnline(false);
+      }
     } finally {
       setLoading(false);
     }
@@ -161,6 +167,10 @@ export default function AlertsPage() {
     if (!value) return '-';
     return new Date(value).toLocaleString('zh-TW');
   };
+
+  if (authError) {
+    return <ApiKeyRequired />;
+  }
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
