@@ -5,6 +5,7 @@ import { requireUser } from '../middleware/rbac.js';
 import { WhitelistValidator } from '../services/WhitelistValidator.js';
 import { SandboxManager } from '../services/SandboxManager.js';
 import { prisma } from '../db/client.js';
+import { sanitizeAuditDetails, sanitizeCommand } from '../utils/sanitize.js';
 
 const executeToolSchema = z.object({
   template_id: z.string().min(1),
@@ -232,12 +233,12 @@ export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
             action: 'execute',
             resourceType: 'tool_template',
             resourceId: template_id,
-            details: {
+            details: sanitizeAuditDetails({
               executionId: execution.id,
               success: result.success,
               durationMs,
-              command: validation.command,
-            },
+              command: sanitizeCommand(validation.command || []),
+            }),
           },
         });
 

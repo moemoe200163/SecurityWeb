@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireAdmin } from '../middleware/rbac.js';
 import { prisma } from '../db/client.js';
+import { sanitizeAuditDetails } from '../utils/sanitize.js';
 
 const createTemplateSchema = z.object({
   id: z.string().min(1).max(100),
@@ -70,7 +71,7 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
             action: 'update',
             resourceType: 'tool_template',
             resourceId: id,
-            details: body,
+            details: sanitizeAuditDetails(body as Record<string, unknown>),
           },
         });
 
