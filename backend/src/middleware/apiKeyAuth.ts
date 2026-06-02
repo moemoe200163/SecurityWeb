@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'node:crypto';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { prisma } from '../db/client.js';
 import { hashApiKey, isValidKeyFormat, extractPrefix } from '../utils/keyHash.js';
@@ -104,7 +105,7 @@ export async function apiKeyAuth(
       return reply.status(401).send({ error: 'Invalid API key' });
     }
 
-    if (user.hashedKey !== hashed) {
+    if (!constantTimeEqualHex(user.hashedKey, hashed)) {
       await prisma.auditLog.create({
         data: {
           userId: user.id,
@@ -125,4 +126,15 @@ export async function apiKeyAuth(
     request.log.error({ err: error }, 'API key auth error');
     return reply.status(500).send({ error: 'Authentication failed' });
   }
+}
+
+/**
+ * Constant-time hex string comparison.
+ *
+ * SHA-256 digests are always 64 hex chars (32 bytes); the length check makes
+ * `timingSafeEqual` safe to call without its length-mismatch throw.
+ */
+function constantTimeEqualHex(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(Buffer.from(a, 'hex'), Buffer.from(b, 'hex'));
 }
