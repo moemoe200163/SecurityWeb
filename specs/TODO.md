@@ -91,33 +91,68 @@
 
 ---
 
-## 進行中 / 部分完成
-
-### Phase 13: MVP 驗收穩定化 `[~]`
+### Phase 13: MVP 驗收穩定化 `[x]`
 - [x] 修復 DB drift（migration 20260520000000 修掉重複段；重置 dev DB 重新套用）
 - [x] 修復後端測試可信度（移除假 summary、改用 setup 注入 TEST_API_KEY、寫實的 23 個測試）
 - [x] 修復工具執行安全（WhitelistValidator 雙重檢查 + required params；tools.ts 用 validated command 執行）
 - [x] 修復 protected API client（`api.tools` / `api.alerts` / `api.dashboard` + `getApiKey` / `ApiError`）
 - [x] 修復告警調查流程（建立真實 Session）
 - [x] 開始 ACCEPTANCE tracking（見 `specs/ACCEPTANCE.md`）
-- [~] 清理前端 lint 警告（66 → TBD）
-- [~] Docker / BGP 本地 profile 整理（port 暴露、profile 化）
+- [x] 清理前端 lint warnings
+- [x] Docker / BGP 本地 profile 整理（default/dev/tools/bgp profiles）
+
+### Phase 14: 可信 UI 與可用入口 `[x]`
+- [x] `ApiKeyRequired` 共用組件（統一 401 錯誤提示 UI）
+- [x] Settings 頁面 API Key 管理區（輸入、測試、保存、清除）
+- [x] Tools / Alerts / Dashboard 401 統一處理
+- [x] Threat / Investigation / Settings / Pentest 401 統一處理
+- [x] Pentest Assist 接回 TargetInputPanel
+- [x] Alerts「開始調查」導向真實 Session
+
+### Phase 15: 深度調查工作台 `[x]`
+- [x] 三欄式 Investigation Workspace（Alert+IOC / Timeline / Verdict+Actions）
+- [x] 跨模組 session 載入（soc/threat/pentest）
+- [x] IOC 自動提取（IP/Domain/Hash）
+- [x] Alert context 關聯顯示
+
+### Phase 16: 工具與情報證據化 `[x]`
+- [x] `Evidence` Prisma model（含 FK to Session/User）
+- [x] Evidence CRUD API（POST/GET/DELETE `/api/sessions/:sessionId/evidence`）
+- [x] `AddToInvestigation` 共用組件接入真實 API
+- [x] 工具頁面 / 情報頁面「加入證據」按鈕
+- [x] Audit log 敏感參數 mask（`sanitizeAuditDetails` 覆蓋 tools/alerts/admin/evidence）
+- [x] 高風險工具模板（sql_dump, hydra）預設 disabled
+
+### Phase 17: 安全治理補強 `[x]`
+- [x] Rate limiting middleware（tools/execute 10/min, alerts/import 20/min, settings/ai/test 5/min）
+- [x] Audit log sanitization 全覆蓋（alerts.ts 5 處 + tools.ts + admin.ts + evidence.ts）
+
+### Phase 18: 前端一致性 `[x]`
+- [x] ApiKeyRequired 統一到全部 7 個工作流頁面
+- [x] StatusBadge 組件統一替換 alerts/tools/threat 的 inline badge
+- [x] 移除重複 color map（severityColors, riskColors）
 
 ---
 
 ## 下一階段
 
-### Phase 14: 正式驗收 `[ ]`
+### Phase 19: 上線治理 `[ ]`
+- [ ] API key 改 hash 儲存（DB 不保存明文 key）
+- [ ] 補資料保留策略（audit log / tool execution output / BGP update retention）
+- [ ] Sandbox egress policy 預設限制到授權 scope
+- [ ] 完整 E2E smoke test（Playwright）
+
+### Phase 20: 驗收與交付 `[ ]`
 - [ ] 端到端驗收每個使用者旅程（SOC / Threat / Pentest）
-- [ ] 在 staging-like 環境跑一次完整流程
 - [ ] 文件化操作手冊（如何 seed、如何取得 admin key）
-- [ ] 安全性檢查：CSRF / CSP / Rate limit 補齊
+- [ ] Docker profile 驗收文件
+- [ ] Demo dataset → 完整 AISOC 閉環展示
 
 ---
 
 ## 已知風險 / 待辦細項
 - [ ] sandbox 對每個 template 的 timeout 與資源上限需逐一調校
-- [ ] Sandbox 網路策略：是否允許 egress 目前是開放的
+- [ ] Sandbox 網路策略：egress 目前是開放的，需收緊
 - [ ] API key 沒有過期 / 撤銷機制（目前只支援 admin 強制重發）
 - [ ] 沒有 audit_log 保留策略（會無限增長）
-- [ ] 沒有 i18n（前端文案目前混用繁中 + 英文）
+- [ ] 沒有完整 i18n（前端文案以繁中為主，英文保留技術名詞）

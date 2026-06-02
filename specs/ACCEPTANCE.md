@@ -17,7 +17,7 @@
 ### DB 與 Migration
 | 項目 | 狀態 | 證據 |
 |------|------|------|
-| Prisma schema 與實際 DB 一致 | **PASS** | `prisma migrate deploy` 成功套用 3 個 migration，17 張表全部存在 |
+| Prisma schema 與實際 DB 一致 | **PASS** | `prisma migrate deploy` 成功套用 4 個 migration，18 張表全部存在（含 evidence） |
 | Migration history 與 schema 一致 | **PASS** | `_prisma_migrations` 與 `prisma/migrations/` 對齊 |
 | 沒有 orphan rows 阻擋 relation query | **PASS** | 改用 optional relation（`ToolExecution.template` / `AuditLog.user`）讓 schema 與 DB 對齊 |
 
@@ -86,7 +86,54 @@
 
 ---
 
-## 6. Docker / 本地開發
+## 6. Evidence API（P2）
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| Prisma Evidence model 有 FK 到 Session | **PASS** | `schema.prisma` 含 `session Session @relation(...)` + `onDelete: Cascade` |
+| `POST /api/sessions/:sessionId/evidence` 建立證據 | **PASS** | Zod 驗證 + `max(10000)` content + audit log |
+| `GET /api/sessions/:sessionId/evidence` 列表 | **PASS** | 回傳 evidence 陣列，按 createdAt 排序 |
+| `DELETE /api/sessions/:sessionId/evidence/:id` 刪除 | **PASS** | 404 on missing, audit log 記錄 |
+| Evidence 路由受 auth 保護 | **PASS** | `apiKeyAuth + requireUser` middleware |
+| 敏感欄位 audit log mask | **PASS** | `sanitizeAuditDetails()` 覆蓋所有 evidence 路由 |
+| 前端 `api.evidence` 共用 client | **PASS** | `api.evidence.add()` / `.list()` / `.remove()` |
+| `AddToInvestigation` 組件接回 API | **PASS** | 使用 `api.evidence.add()` 取代 raw fetch |
+
+---
+
+## 7. Investigation Workspace（P1）
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| 三欄式佈局（Alert+IOC / Timeline / Verdict+Actions） | **PASS** | `InvestigationWorkspace.tsx` 實作 |
+| 跨模組 session 載入 | **PASS** | `loadSessionFromAnyModule()` 嘗試 soc/threat/pentest API |
+| IOC 自動提取（IP/domain/hash） | **PASS** | regex 提取 IP/Domain/Hash |
+| Alert context 關聯顯示 | **PASS** | 左欄顯示 severity, source, rawContent |
+
+---
+
+## 8. 安全治理（P3）
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| Rate limiting — tools/execute 10/min | **PASS** | `rateLimit(10, 60_000)` middleware |
+| Rate limiting — alerts/import 20/min | **PASS** | `rateLimit(20, 60_000)` middleware |
+| Rate limiting — settings/ai/test 5/min | **PASS** | `rateLimit(5, 60_000)` middleware |
+| Audit log 敏感欄位 sanitization 全覆蓋 | **PASS** | `sanitizeAuditDetails()` 覆蓋 alerts(5處) + tools + admin + evidence |
+
+---
+
+## 9. 前端一致性（P4）
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| ApiKeyRequired 套用到全部 7 個工作流頁面 | **PASS** | soc/analyze, alerts, tools, dashboard, threat/investigate, settings, pentest/assist |
+| StatusBadge 組件統一替換 inline badge | **PASS** | alerts/page.tsx, tools/page.tsx, threat/investigate/page.tsx |
+| 移除重複 color map（severityColors, riskColors） | **PASS** | 改用 StatusBadge 內建 variants |
+
+---
+
+## 10. Docker / 本地開發
 
 | 項目 | 狀態 | 證據 |
 |------|------|------|
@@ -102,7 +149,9 @@
 - 沙箱實際執行工具（需要 Kali image 在 host 上啟動 docker-in-docker，尚未在 CI 跑）
 - AI 對話生成（需要 OLLAMA 或 MiniMax API key 才有真實回應；mock 模式只回固定模板）
 - BGP consumer 持續運作（需 RIPEstat 或公開 feed 連線；測試環境不跑）
-- 生產環境的密鑰管理（目前 .env 直接 commit 進版本庫，需要改用 secret manager）
-- CSRF / 速率限制（後端目前未實作）
+- 生產環境的密鑰管理（目前 .env 直接 commit 進版本庫，需要改用 secret manager；TODO Phase 19 API key hash 儲存）
+- CSRF 保護（後端目前未實作）
 - 完整 E2E（含前端互動，需要 Playwright 環境）
 - 完整 i18n 切換（目前只有繁中）
+- API key 過期 / 撤銷機制（目前只支援 admin 強制重發）
+- 資料保留策略（audit log / tool execution output / BGP update 會無限增長）
