@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Shield, Search, Network, AlertTriangle, TrendingUp, Clock, Activity, Terminal } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { api, type SessionDetail } from '@/lib/api';
+import { api, ApiError, type SessionDetail } from '@/lib/api';
+import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { PageHero } from '@/components/layout/PageHero';
 
 interface StatCardProps {
@@ -319,6 +320,7 @@ export default function Dashboard() {
   const [currentTime, setCurrentTime] = useState<string>('');
   const [recentSessions, setRecentSessions] = useState<SessionDetail[]>([]);
   const [stats, setStats] = useState({ totalSessions: 0, totalThreats: 0, totalPentest: 0 });
+  const [authError, setAuthError] = useState(false);
   void stats;
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -332,7 +334,11 @@ export default function Dashboard() {
         totalPentest: sessions.filter(s => s.module === 'pentest').length,
       });
     } catch (err) {
-      console.error('Failed to load activity:', err);
+      if (err instanceof ApiError && err.status === 401) {
+        setAuthError(true);
+      } else {
+        console.error('Failed to load activity:', err);
+      }
     }
   }, []);
 
@@ -367,6 +373,10 @@ export default function Dashboard() {
       status: session.status === 'completed' ? 'completed' : 'in_progress',
     };
   });
+
+  if (authError) {
+    return <ApiKeyRequired />;
+  }
 
   return (
     <div className="h-full overflow-auto bg-[var(--background)]">
