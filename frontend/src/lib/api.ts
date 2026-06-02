@@ -669,6 +669,46 @@ export const api = {
       return [];
     }
   },
+
+  // API Key self-service (protected: requires X-API-Key)
+  me: {
+    getApiKey: () => request<{
+      prefix: string | null;
+      createdAt: string | null;
+      revokedAt: string | null;
+      expiresAt: string | null;
+    }>('/api/me/api-key', { requireAuth: true }),
+
+    rotateApiKey: () => request<{
+      plaintext: string;
+      metadata: { prefix: string; createdAt: string; revokedAt: null; expiresAt: null };
+    }>('/api/me/api-key/rotate', { method: 'POST', requireAuth: true }),
+  },
+
+  // Admin API key management (protected: requires X-API-Key)
+  adminKeys: {
+    list: () => request<{
+      keys: Array<{
+        prefix: string | null;
+        createdAt: string | null;
+        revokedAt: string | null;
+        expiresAt: string | null;
+        user: { id: string; email: string; role: string };
+      }>;
+    }>('/api/admin/keys', { requireAuth: true }),
+
+    rotate: (userId: string) => request<{
+      plaintext: string;
+      metadata: { prefix: string; createdAt: string; revokedAt: null; expiresAt: null };
+    }>(`/api/admin/keys/${userId}/rotate`, { method: 'POST', requireAuth: true }),
+
+    revoke: async (userId: string) => {
+      await request<null>(`/api/admin/keys/${userId}`, {
+        method: 'DELETE',
+        requireAuth: true,
+      });
+    },
+  },
 };
 
 // Polling utility for session status
