@@ -17,6 +17,7 @@ model Session {
   updatedAt DateTime  @updatedAt
   steps     Step[]
   messages  Message[]
+  evidence  Evidence[]
 
   @@index([module])
   @@index([status])
@@ -181,6 +182,7 @@ model User {
 
   toolExecutions ToolExecution[]
   auditLogs      AuditLog[]
+  evidence       Evidence[]
 
   @@map("users")
 }
@@ -270,4 +272,24 @@ model KnowledgeFeedback {
   createdAt      DateTime @default(now())
 
   @@map("knowledge_feedback")
+}
+
+model Evidence {
+  id              String    @id @default(uuid())
+  sessionId       String    @map("session_id")
+  session         Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  alertId         String?   @map("alert_id")
+  toolExecutionId String?   @map("tool_execution_id")
+  type            String    // "tool" | "intelligence" | "manual" | "ai"
+  title           String
+  content         String    @db.Text  // Human-readable summary
+  data            Json?                // Structured payload (tool output, intel result, etc.)
+  createdById     String?   @map("created_by_id")
+  createdBy       User?     @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt       DateTime  @default(now())
+
+  @@index([sessionId])
+  @@index([alertId])
+  @@index([type])
+  @@map("evidence")
 }

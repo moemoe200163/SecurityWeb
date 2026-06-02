@@ -4,56 +4,27 @@ import React, { useState, useCallback } from 'react';
 import { Plus, Check, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
+import { api, ApiError } from '@/lib/api';
 
 type EvidenceType = 'tool' | 'intelligence';
 
 interface AddToInvestigationProps {
-  /** Tool execution ID (when type is 'tool') */
   executionId?: string;
-  /** Alert ID (when adding alert-related evidence) */
   alertId?: string;
-  /** Investigation session ID to attach evidence to */
   sessionId?: string;
-  /** Arbitrary evidence payload (serialized to JSON and sent as content) */
   data?: unknown;
-  /** Whether this is a tool execution result or threat intelligence query result */
   type: EvidenceType;
-  /** Called after evidence is successfully added */
   onSuccess?: () => void;
-  /** Additional CSS classes */
   className?: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-
-function getApiKey(): string {
-  if (typeof window === 'undefined') return '';
-  return window.localStorage.getItem('api_key') || '';
-}
-
-/**
- * Builds a human-readable summary line describing the evidence being added.
- */
-function buildEvidenceLabel(type: EvidenceType, executionId?: string, alertId?: string): string {
-  if (type === 'tool' && executionId) {
-    return `[工具執行結果] execution_id: ${executionId}`;
-  }
-  if (type === 'intelligence' && alertId) {
-    return `[威脅情報查詢結果] alert_id: ${alertId}`;
-  }
+function buildTitle(type: EvidenceType, executionId?: string, alertId?: string): string {
   if (type === 'tool') {
-    return '[工具執行結果]';
+    return executionId ? `工具執行結果 (${executionId.slice(0, 8)})` : '工具執行結果';
   }
-  return '[威脅情報查詢結果]';
+  return alertId ? `威脅情報查詢結果 (${alertId.slice(0, 8)})` : '威脅情報查詢結果';
 }
 
-/**
- * AddToInvestigation — shared button that adds tool execution results or
- * threat intelligence query results as investigation evidence to a session.
- *
- * State machine: idle -> loading -> success (terminal).
- * The button is disabled when no sessionId is provided or after a successful add.
- */
 export function AddToInvestigation({
   executionId,
   alertId,
@@ -75,41 +46,23 @@ export function AddToInvestigation({
     setErrorMessage(null);
 
     try {
-      const apiKey = getApiKey();
-      if (!apiKey) {
-        throw new Error('請先登入以使用此功能');
-      }
+      const title = buildTitle(type, executionId, alertId);
+      const content = data ? JSON.stringify(data, null, 2) : title;
 
-      const label = buildEvidenceLabel(type, executionId, alertId);
-      const content = data ? `${label}\n${JSON.stringify(data, null, 2)}` : label;
-
-      const response = await fetch(`${API_BASE}/api/sessions/${sessionId}/evidence`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': apiKey,
-        },
-        body: JSON.stringify({
-          type,
-          executionId,
-          alertId,
-          content,
-          data,
-        }),
+      await api.evidence.add(sessionId!, {
+        type,
+        title,
+        content,
+        data,
+        alertId,
+        toolExecutionId: type === 'tool' ? executionId : undefined,
       });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        const msg = (body as { error?: string }).error || `HTTP ${response.status}`;
-        throw new Error(msg);
-      }
 
       setStatus('success');
       onSuccess?.();
     } catch (err) {
       setStatus('error');
-      setErrorMessage(err instanceof Error ? err.message : '新增證據失敗');
-      // Allow retry after a short delay
+      setErrorMessage(err instanceof ApiError ? err.message : '新增證據失敗');
       setTimeout(() => setStatus('idle'), 3000);
     }
   }, [isDisabled, sessionId, type, executionId, alertId, data, onSuccess]);

@@ -251,6 +251,19 @@ export interface PaginationInfo {
   totalPages: number;
 }
 
+export interface Evidence {
+  id: string;
+  sessionId: string;
+  alertId: string | null;
+  toolExecutionId: string | null;
+  type: 'tool' | 'intelligence' | 'manual' | 'ai';
+  title: string;
+  content: string;
+  data: unknown;
+  createdById: string | null;
+  createdAt: string;
+}
+
 // API Functions
 export const api = {
   // SOC
@@ -609,6 +622,35 @@ export const api = {
     },
     async report(alertId: string): Promise<Record<string, unknown>> {
       return request(`/api/dashboard/report/${alertId}`, { requireAuth: true });
+    },
+  },
+
+  // Evidence (protected: requires X-API-Key)
+  evidence: {
+    async add(sessionId: string, input: {
+      type: 'tool' | 'intelligence' | 'manual' | 'ai';
+      title: string;
+      content: string;
+      data?: unknown;
+      alertId?: string;
+      toolExecutionId?: string;
+    }): Promise<{ evidence: Evidence }> {
+      return request(`/api/sessions/${sessionId}/evidence`, {
+        method: 'POST',
+        body: input,
+        requireAuth: true,
+      });
+    },
+    async list(sessionId: string): Promise<{ evidence: Evidence[] }> {
+      return request(`/api/sessions/${sessionId}/evidence`, {
+        requireAuth: true,
+      });
+    },
+    async remove(sessionId: string, evidenceId: string): Promise<{ success: boolean }> {
+      return request(`/api/sessions/${sessionId}/evidence/${evidenceId}`, {
+        method: 'DELETE',
+        requireAuth: true,
+      });
     },
   },
 

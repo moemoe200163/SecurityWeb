@@ -13,6 +13,7 @@ import { settingsRoutes } from './routes/settings.js';
 import { toolRoutes } from './routes/tools.js';
 import { adminRoutes } from './routes/admin.js';
 import { alertRoutes } from './routes/alerts.js';
+import { evidenceRoutes } from './routes/evidence.js';
 import { dashboardRoutes } from './routes/dashboard.js';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
@@ -51,6 +52,9 @@ async function startServer() {
 
   // Alert routes
   fastify.register(alertRoutes, { prefix: '/api/alerts' });
+
+  // Evidence routes (linked to sessions)
+  fastify.register(evidenceRoutes, { prefix: '/api/sessions' });
 
   // Dashboard / Stats routes
   fastify.register(dashboardRoutes, { prefix: '/api/dashboard' });
