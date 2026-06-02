@@ -16,50 +16,31 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
-# Production image
+# Production image - lean backend API
 FROM debian:bookworm-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Install Node.js and Python with Playwright
+# Install only what's needed for the backend API
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
-    python3 \
-    python3-pip \
-    locales \
     fonts-noto-cjk \
     && rm -rf /var/libapt/lists/*
 
 # Set locale for Chinese
 RUN sed -i -e 's/# zh_TW.UTF-8 UTF-8/zh_TW.UTF-8 UTF-8/' /etc/locale.gen && locale-gen zh_TW.UTF-8
 
-# Install Node.js runtime
+# Install Node.js runtime only
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y --no-install-recommends nodejs && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install Playwright and BGP consumer dependencies
-RUN pip3 install --no-cache-dir --break-system-packages \
-    playwright \
-    jinja2 \
-    websockets>=12.0 \
-    sqlalchemy>=2.0.0 \
-    psycopg2-binary>=2.9.9 && \
-    playwright install chromium && \
-    playwright install-deps
-
-# Install Docker CLI for sandbox access
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    docker.io && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/scripts ./scripts
 
-# Copy Chinese font for PDF generation
+# Copy Chinese font for PDF generation (pdfkit uses bundled fonts, but we keep for fallback)
 COPY --from=builder /app/fonts ./fonts
 COPY package.json ./
 
