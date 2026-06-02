@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { PrismaClient } from '@prisma/client';
-import { TEST_API_KEY, TEST_USER_ID } from './setup.js';
-import { hashApiKey, extractPrefix, generateApiKey } from '../src/utils/keyHash.js';
+import { TEST_API_KEY } from './setup.js';
+import { generateApiKey } from '../src/utils/keyHash.js';
 
 const API_BASE = process.env.TEST_API_BASE || 'http://localhost:4000';
 const prisma = new PrismaClient();
@@ -27,6 +27,14 @@ let tempUserId: string;
 let tempUserKey: string;
 
 beforeAll(async () => {
+  // Sanity: the API must be reachable before running real assertions.
+  const health = await fetch(`${API_BASE}/health`).catch(() => null);
+  if (!health || !health.ok) {
+    throw new Error(
+      `Backend not reachable at ${API_BASE}. Start it (e.g. docker compose --profile dev up -d backend) before running tests.`,
+    );
+  }
+
   const { plaintext, prefix, hashed } = generateApiKey();
   tempUserId = `me-test-${Date.now()}`;
   tempUserKey = plaintext;

@@ -34,9 +34,23 @@ async function createUserWithKey(): Promise<{ id: string; plaintext: string }> {
   return { id, plaintext };
 }
 
+beforeAll(async () => {
+  // Sanity: the API must be reachable before running real assertions.
+  const health = await fetch(`${API_BASE}/health`).catch(() => null);
+  if (!health || !health.ok) {
+    throw new Error(
+      `Backend not reachable at ${API_BASE}. Start it (e.g. docker compose --profile dev up -d backend) before running tests.`,
+    );
+  }
+});
+
 afterAll(async () => {
-  await prisma.user.deleteMany({ where: { id: { in: tempUserIds } } });
+  // Audit logs must be deleted before users (FK constraint: audit_logs.user_id -> users.id, NOT NULL).
+  // The "DELETE then old key" test causes apiKeyAuth to write an auth_denied log with
+  // userId pointing at the target user, which would block the subsequent user.deleteMany.
   await prisma.auditLog.deleteMany({ where: { resourceId: { in: tempUserIds } } });
+  await prisma.auditLog.deleteMany({ where: { userId: { in: tempUserIds } } });
+  await prisma.user.deleteMany({ where: { id: { in: tempUserIds } } });
   await prisma.$disconnect();
 });
 
