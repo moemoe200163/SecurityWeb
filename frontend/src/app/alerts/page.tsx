@@ -144,6 +144,17 @@ export default function AlertsPage() {
     }
   };
 
+  const handleInvestigate = async (alertId: string) => {
+    try {
+      const result = await api.alerts.investigate(alertId, 'soc');
+      await fetchAlerts();
+      setSelectedAlert(null);
+      window.location.href = `/investigations/${result.session_id}`;
+    } catch (err) {
+      console.error('Failed to start investigation:', err);
+    }
+  };
+
   const filteredAlerts = useMemo(() => alerts.filter(alert => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
@@ -418,7 +429,7 @@ export default function AlertsPage() {
                     <>
                       <Button
                         size="sm"
-                        onClick={() => handleResolve(selectedAlert.id, 'investigating')}
+                        onClick={() => handleInvestigate(selectedAlert.id)}
                         className="bg-blue-500/10 border border-blue-500/30 text-blue-500 hover:bg-blue-500/20"
                       >
                         <Eye className="h-3 w-3 mr-1" />
