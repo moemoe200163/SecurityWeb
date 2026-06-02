@@ -9,7 +9,9 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "test": "vitest run tests/api.test.ts",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@fastify/cors": "^11.2.0",
