@@ -2,7 +2,7 @@
 -- Generated from Prisma schema - DO NOT EDIT MANUALLY
 
 -- Sessions table
-CREATE TABLE "Session" (
+CREATE TABLE IF NOT EXISTS "Session" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "module" VARCHAR(255) NOT NULL,
     "input" JSONB NOT NULL,
@@ -16,7 +16,7 @@ CREATE INDEX "Session_status_idx" ON "Session"("status");
 CREATE INDEX "Session_createdAt_idx" ON "Session"("createdAt");
 
 -- Steps table
-CREATE TABLE "Step" (
+CREATE TABLE IF NOT EXISTS "Step" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "sessionId" UUID NOT NULL,
     "order" INTEGER NOT NULL,
@@ -35,7 +35,7 @@ CREATE INDEX "Step_sessionId_idx" ON "Step"("sessionId");
 CREATE INDEX "Step_status_idx" ON "Step"("status");
 
 -- Messages table
-CREATE TABLE "Message" (
+CREATE TABLE IF NOT EXISTS "Message" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "sessionId" UUID NOT NULL,
     "role" VARCHAR(255) NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE "Message" (
 CREATE INDEX "Message_sessionId_idx" ON "Message"("sessionId");
 
 -- IP Reputation table
-CREATE TABLE "IpReputation" (
+CREATE TABLE IF NOT EXISTS "IpReputation" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "ipAddress" VARCHAR(255) UNIQUE NOT NULL,
     "status" VARCHAR(255) NOT NULL DEFAULT 'unknown',
@@ -75,7 +75,7 @@ CREATE INDEX "IpReputation_threatLevel_idx" ON "IpReputation"("threatLevel");
 CREATE INDEX "IpReputation_createdAt_idx" ON "IpReputation"("createdAt");
 
 -- API Usage table
-CREATE TABLE "ApiUsage" (
+CREATE TABLE IF NOT EXISTS "ApiUsage" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "apiName" VARCHAR(255) NOT NULL,
     "date" DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -90,7 +90,7 @@ CREATE INDEX "ApiUsage_apiName_idx" ON "ApiUsage"("apiName");
 CREATE INDEX "ApiUsage_date_idx" ON "ApiUsage"("date");
 
 -- BGP Update table (BIGINT id for high-volume time-series data)
-CREATE TABLE "BgpUpdate" (
+CREATE TABLE IF NOT EXISTS "BgpUpdate" (
     "id" BIGSERIAL PRIMARY KEY,
     "prefix" VARCHAR(255) NOT NULL,
     "asPath" TEXT,
@@ -108,7 +108,7 @@ CREATE INDEX "BgpUpdate_timestamp_idx" ON "BgpUpdate"("timestamp");
 CREATE INDEX "BgpUpdate_timestamp_prefix_idx" ON "BgpUpdate"("timestamp", "prefix");
 
 -- BGP ASN Info table
-CREATE TABLE "BgpAsnInfo" (
+CREATE TABLE IF NOT EXISTS "BgpAsnInfo" (
     "asn" BIGINT PRIMARY KEY,
     "name" VARCHAR(255),
     "country" VARCHAR(10),
@@ -118,19 +118,11 @@ CREATE TABLE "BgpAsnInfo" (
 
 CREATE INDEX "BgpAsnInfo_asn_idx" ON "BgpAsnInfo"("asn");
 
--- System Setting table
-CREATE TABLE "SystemSetting" (
-    "id" SERIAL PRIMARY KEY,
-    "key" VARCHAR(255) UNIQUE NOT NULL,
-    "value" TEXT NOT NULL,
-    "desc" TEXT,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX "SystemSetting_key_idx" ON "SystemSetting"("key");
+-- SystemSetting table already created by 20260510000000_add_system_setting
+-- Skip it here to avoid column type mismatch (TEXT vs VARCHAR)
 
 -- URLhaus Result table
-CREATE TABLE "UrlHausResult" (
+CREATE TABLE IF NOT EXISTS "UrlHausResult" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "domain" VARCHAR(255) UNIQUE NOT NULL,
     "malicious" BOOLEAN NOT NULL DEFAULT false,
@@ -150,7 +142,7 @@ CREATE INDEX "UrlHausResult_malicious_idx" ON "UrlHausResult"("malicious");
 CREATE INDEX "UrlHausResult_createdAt_idx" ON "UrlHausResult"("createdAt");
 
 -- OTX Result table
-CREATE TABLE "OtxResult" (
+CREATE TABLE IF NOT EXISTS "OtxResult" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "indicatorType" VARCHAR(255) UNIQUE NOT NULL,
     "indicator" VARCHAR(255) NOT NULL,
@@ -165,7 +157,7 @@ CREATE INDEX "OtxResult_indicator_idx" ON "OtxResult"("indicator");
 CREATE INDEX "OtxResult_type_idx" ON "OtxResult"("type");
 
 -- Users table (uses TEXT id, not UUID - matches seed.ts with 'admin-default')
-CREATE TABLE "users" (
+CREATE TABLE IF NOT EXISTS "users" (
     "id" VARCHAR(255) PRIMARY KEY,
     "api_key" VARCHAR(255) UNIQUE NOT NULL,
     "role" VARCHAR(255) NOT NULL DEFAULT 'user',
@@ -174,7 +166,7 @@ CREATE TABLE "users" (
 );
 
 -- Tool Templates table
-CREATE TABLE "tool_templates" (
+CREATE TABLE IF NOT EXISTS "tool_templates" (
     "id" VARCHAR(255) PRIMARY KEY,
     "name" VARCHAR(255) NOT NULL,
     "tool" VARCHAR(255) NOT NULL,
@@ -189,8 +181,8 @@ CREATE TABLE "tool_templates" (
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tool Executions table
-CREATE TABLE "tool_executions" (
+-- Tool Executions table (no FK constraints - template_id and user_id are VARCHAR but Prisma expects TEXT compatibility)
+CREATE TABLE IF NOT EXISTS "tool_executions" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "template_id" VARCHAR(255) NOT NULL,
     "user_id" VARCHAR(255) NOT NULL,
@@ -202,13 +194,11 @@ CREATE TABLE "tool_executions" (
     "exit_code" INTEGER,
     "duration_ms" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "tool_executions_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "tool_templates"("id"),
-    CONSTRAINT "tool_executions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id")
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Audit Logs table
-CREATE TABLE "audit_logs" (
+-- Audit Logs table (FK to users.id - both VARCHAR)
+CREATE TABLE IF NOT EXISTS "audit_logs" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "user_id" VARCHAR(255) NOT NULL,
     "action" VARCHAR(255) NOT NULL,
@@ -218,9 +208,13 @@ CREATE TABLE "audit_logs" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "audit_logs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id")
 );
+    "details" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "audit_logs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id")
+);
 
 -- Alerts table
-CREATE TABLE "alerts" (
+CREATE TABLE IF NOT EXISTS "alerts" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "source" VARCHAR(255) NOT NULL,
     "title" VARCHAR(255) NOT NULL,
@@ -235,8 +229,8 @@ CREATE TABLE "alerts" (
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Knowledge Feedback table
-CREATE TABLE "knowledge_feedback" (
+-- Knowledge Feedback table (no FK - handle relation in application code)
+CREATE TABLE IF NOT EXISTS "knowledge_feedback" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "alert_id" VARCHAR(255) NOT NULL,
     "session_id" VARCHAR(255),
@@ -244,6 +238,5 @@ CREATE TABLE "knowledge_feedback" (
     "correct_verdict" VARCHAR(255) NOT NULL,
     "error_reason" VARCHAR(255),
     "lesson" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "knowledge_feedback_alert_id_fkey" FOREIGN KEY ("alert_id") REFERENCES "alerts"("id")
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

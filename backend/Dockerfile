@@ -26,10 +26,13 @@ ENV NODE_ENV=production
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     fonts-noto-cjk \
+    locales \
     && rm -rf /var/libapt/lists/*
 
-# Set locale for Chinese
-RUN sed -i -e 's/# zh_TW.UTF-8 UTF-8/zh_TW.UTF-8 UTF-8/' /etc/locale.gen && locale-gen zh_TW.UTF-8
+# Set locale for Chinese - debian slim uses locales-all or needs locale-gen
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    echo "zh_TW.UTF-8 UTF-8" >> /etc/locale.gen && \
+    locale-gen
 
 # Install Node.js runtime only
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
