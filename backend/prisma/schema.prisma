@@ -174,11 +174,16 @@ model OtxResult {
 // ============== Week 1: New Models for Tool Platform ==============
 
 model User {
-  id           String    @id @default(uuid())
-  keyPrefix    String?   @unique @map("key_prefix")
+  id        String  @id @default(uuid())
+  // Nullable: revocation clears the row. First 11 chars ("sk-" + 8 hex) used for DB lookup.
+  keyPrefix String? @unique @map("key_prefix")
+  // Nullable: revocation clears the row. SHA-256 of full key (64-char hex).
   hashedKey    String?   @unique @map("hashed_key")
+  // May predate `createdAt` if the user was created by admin without a key; backfilled from `createdAt` for existing rows.
   keyCreatedAt DateTime? @map("key_created_at")
+  // Set when an admin (or self-service) revokes the key. NULL means key is active.
   keyRevokedAt DateTime? @map("key_revoked_at")
+  // Optional expiry; checked at auth time, not enforced by the database.
   keyExpiresAt DateTime? @map("key_expires_at")
   role         String    @default("user")
   createdAt    DateTime  @default(now())
