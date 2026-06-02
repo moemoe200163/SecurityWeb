@@ -40,8 +40,9 @@ async function createUserWithState(state: { revoked?: boolean; expired?: boolean
 
 async function seedUserWithPrefixButNoHash(): Promise<{ userId: string; prefix: string }> {
   const id = `test-nokey-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  // Use a known prefix that won't collide with any real key
-  const prefix = `sk-${'a'.repeat(8)}`;
+  // Use a unique prefix per run (8 hex chars) so repeated runs don't trip the
+  // `key_prefix` unique constraint when afterAll doesn't run (e.g. --bail).
+  const prefix = `sk-${Date.now().toString(16).padStart(8, '0').slice(-8)}`;
   await prisma.user.create({
     data: { id, keyPrefix: prefix, hashedKey: null, role: 'user' },
   });
@@ -49,8 +50,16 @@ async function seedUserWithPrefixButNoHash(): Promise<{ userId: string; prefix: 
 }
 
 afterAll(async () => {
-  await prisma.auditLog.deleteMany({ where: { user: { id: { startsWith: 'test-' } } } });
-  await prisma.user.deleteMany({ where: { id: { startsWith: 'test-' } } });
+  // Delete audit logs and users by id range. The relation filter
+  // `user: { id: { startsWith: 'test-' } }` skips logs whose userId points
+  // at a deleted user, so we filter directly on `userId` here. Exclude
+  // `test-admin` (the global setup's admin fixture used by api.test.ts).
+  await prisma.auditLog.deleteMany({
+    where: { userId: { startsWith: 'test-', not: 'test-admin' } },
+  });
+  await prisma.user.deleteMany({
+    where: { id: { startsWith: 'test-', not: 'test-admin' } },
+  });
   await prisma.$disconnect();
 });
 
