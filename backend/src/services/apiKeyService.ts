@@ -1,6 +1,7 @@
 import { prisma } from '../db/client.js';
 import { generateApiKey } from '../utils/keyHash.js';
 import { sanitizeAuditDetails } from '../utils/sanitize.js';
+import type { Prisma } from '@prisma/client';
 
 export interface ApiKeyMetadata {
   prefix: string | null;
@@ -22,12 +23,16 @@ export interface ApiKeyWithUser extends ApiKeyMetadata {
   };
 }
 
-function metadataFromUser(user: {
-  keyPrefix: string | null;
-  keyCreatedAt: Date | null;
-  keyRevokedAt: Date | null;
-  keyExpiresAt: Date | null;
-}): ApiKeyMetadata {
+type KeyMetadataRow = Prisma.UserGetPayload<{
+  select: {
+    keyPrefix: true;
+    keyCreatedAt: true;
+    keyRevokedAt: true;
+    keyExpiresAt: true;
+  };
+}>;
+
+function metadataFromUser(user: KeyMetadataRow): ApiKeyMetadata {
   return {
     prefix: user.keyPrefix,
     createdAt: user.keyCreatedAt?.toISOString() ?? null,
@@ -124,32 +129,29 @@ export async function revokeUserApiKey(
   adminId: string,
   reason?: string
 ): Promise<void> {
-  // Idempotent: if already revoked, no-op (no audit log)
-  const existing = await prisma.user.findUnique({
-    where: { id: targetUserId },
-    select: { keyRevokedAt: true },
+  // Idempotent and race-free: updateMany with a `keyRevokedAt: null` guard
+  // is a single atomic statement. If count === 0, the user was already
+  // revoked (or doesn't exist) and we skip the audit log.
+  const now = new Date();
+  const result = await prisma.user.updateMany({
+    where: { id: targetUserId, keyRevokedAt: null },
+    data: { keyPrefix: null, hashedKey: null, keyRevokedAt: now },
   });
-  if (existing?.keyRevokedAt) {
+
+  if (result.count === 0) {
     return;
   }
 
-  const now = new Date();
-  await prisma.$transaction([
-    prisma.user.update({
-      where: { id: targetUserId },
-      data: { keyPrefix: null, hashedKey: null, keyRevokedAt: now },
-    }),
-    prisma.auditLog.create({
-      data: {
-        userId: adminId,
-        action: 'revoke_key',
-        resourceType: 'api_key',
-        resourceId: targetUserId,
-        details: sanitizeAuditDetails({
-          target: targetUserId,
-          reason: reason ?? 'admin_action',
-        }),
-      },
-    }),
-  ]);
+  await prisma.auditLog.create({
+    data: {
+      userId: adminId,
+      action: 'revoke_key',
+      resourceType: 'api_key',
+      resourceId: targetUserId,
+      details: sanitizeAuditDetails({
+        target: targetUserId,
+        reason: reason ?? 'admin_action',
+      }),
+    },
+  });
 }

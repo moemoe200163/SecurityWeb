@@ -74,8 +74,8 @@ describe('apiKeyService.listAllApiKeys', () => {
 describe('apiKeyService.revokeUserApiKey', () => {
   it('sets keyPrefix/hashedKey to null and keyRevokedAt to now', async () => {
     const id = await createUser();
+    const adminId = await createUser('admin');
     await rotateMyApiKey(id);
-    const adminId = 'test-admin';
     await revokeUserApiKey(id, adminId, 'test');
 
     const dbUser = await prisma.user.findUnique({ where: { id } });
@@ -86,10 +86,11 @@ describe('apiKeyService.revokeUserApiKey', () => {
 
   it('writes revoke_key audit log entry', async () => {
     const id = await createUser();
+    const adminId = await createUser('admin');
     await rotateMyApiKey(id);
-    await revokeUserApiKey(id, 'test-admin');
+    await revokeUserApiKey(id, adminId);
     const log = await prisma.auditLog.findFirst({
-      where: { userId: 'test-admin', action: 'revoke_key' },
+      where: { userId: adminId, action: 'revoke_key' },
       orderBy: { createdAt: 'desc' },
     });
     expect(log).toBeTruthy();
@@ -99,7 +100,7 @@ describe('apiKeyService.revokeUserApiKey', () => {
 describe('apiKeyService.rotateUserApiKey', () => {
   it('admin can rotate another users key', async () => {
     const targetId = await createUser();
-    const adminId = 'test-admin';
+    const adminId = await createUser('admin');
     const result = await rotateUserApiKey(targetId, adminId);
     expect(result.plaintext).toMatch(/^sk-[a-f0-9]{64}$/);
   });
