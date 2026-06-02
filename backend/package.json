@@ -10,7 +10,7 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "test": "vitest run tests/api.test.ts",
+    "test": "vitest run",
     "test:watch": "vitest",
     "validate-egress": "tsx src/scripts/validateEgressConfig.ts ../sandbox/egress.conf.example"
   },

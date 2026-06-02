@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, RotateCw, Trash2, Eye, EyeOff, Copy } from 'lucide-react';
+import { CheckCircle, XCircle, RotateCw, Trash2, Copy } from 'lucide-react';
 import { api, setApiKey, clearApiKey } from '@/lib/api';
 
 interface Meta {

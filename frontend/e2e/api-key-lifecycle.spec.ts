@@ -56,7 +56,7 @@ test.describe('Phase 19.1: API key lifecycle', () => {
       headers: { 'X-API-Key': adminKey },
     });
     const list = await listRes.json();
-    const victim = list.keys.find((k: any) => k.user.id === victimId);
+    const victim = list.keys.find((k: { user: { id: string } }) => k.user.id === victimId);
     expect(victim.revokedAt).not.toBeNull();
   });
 });
