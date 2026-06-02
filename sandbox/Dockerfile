@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     hydra \
     python3 \
     python3-pip \
+    iptables \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

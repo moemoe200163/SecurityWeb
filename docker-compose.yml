@@ -178,7 +178,15 @@ services:
     profiles:
       - tools
     restart: unless-stopped
-    command: tail -f /dev/null
+    command: >
+      sh -c "
+        if [ -f /app/egress-policy.sh ]; then
+          /app/egress-policy.sh || echo '[egress-policy] Warning: failed to apply egress rules (may need NET_ADMIN cap)'
+        fi &&
+        tail -f /dev/null
+      "
+    volumes:
+      - ./sandbox/egress-policy.sh:/app/egress-policy.sh:ro
     networks:
       - securityweb_sandbox
     deploy:

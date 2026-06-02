@@ -1,16 +1,27 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { prisma } from '../db/client.js';
+import { hashApiKey, isValidKeyFormat, extractPrefix } from '../utils/keyHash.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
     user?: {
       id: string;
-      apiKey: string;
+      keyPrefix: string;
       role: 'user' | 'admin';
     };
   }
 }
 
+/**
+ * Authenticate requests via X-API-Key header.
+ *
+ * Flow:
+ * 1. Extract full key from header
+ * 2. Validate format (sk- + 64 hex chars = 67 total)
+ * 3. Hash the full key with SHA-256
+ * 4. Look up user by keyPrefix (first 11 chars)
+ * 5. Verify hashedKey matches the computed hash
+ */
 export async function apiKeyAuth(
   request: FastifyRequest,
   reply: FastifyReply
@@ -24,19 +35,22 @@ export async function apiKeyAuth(
     });
   }
 
-  if (typeof apiKey !== 'string' || apiKey.length !== 64) {
+  if (!isValidKeyFormat(apiKey)) {
     return reply.status(401).send({
       error: 'Invalid API key format',
     });
   }
 
   try {
+    const prefix = extractPrefix(apiKey);
+    const hashed = hashApiKey(apiKey);
+
     const user = await prisma.user.findUnique({
-      where: { apiKey },
-      select: { id: true, apiKey: true, role: true }
+      where: { keyPrefix: prefix },
+      select: { id: true, hashedKey: true, role: true },
     });
 
-    if (!user) {
+    if (!user || user.hashedKey !== hashed) {
       return reply.status(401).send({
         error: 'Invalid API key',
       });
@@ -44,7 +58,7 @@ export async function apiKeyAuth(
 
     request.user = {
       id: user.id,
-      apiKey: user.apiKey,
+      keyPrefix: prefix,
       role: user.role as 'user' | 'admin',
     };
   } catch (error) {

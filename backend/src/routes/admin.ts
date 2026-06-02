@@ -4,6 +4,8 @@ import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireAdmin } from '../middleware/rbac.js';
 import { prisma } from '../db/client.js';
 import { sanitizeAuditDetails } from '../utils/sanitize.js';
+import { generateApiKey } from '../utils/keyHash.js';
+import { runRetentionCleanup } from '../utils/retention.js';
 
 const createTemplateSchema = z.object({
   id: z.string().min(1).max(100),
@@ -168,7 +170,7 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
         const users = await prisma.user.findMany({
           select: {
             id: true,
-            apiKey: true,
+            keyPrefix: true,
             role: true,
             createdAt: true,
           },
@@ -212,24 +214,66 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
     async (request, reply) => {
       try {
         const { id } = request.params as { id: string };
-        const newApiKey = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
+        const { plaintext, prefix, hashed } = generateApiKey();
 
         await prisma.user.update({
           where: { id },
           data: {
-            apiKey: newApiKey,
+            keyPrefix: prefix,
+            hashedKey: hashed,
             updatedAt: new Date(),
           },
         });
 
+        // Plaintext is returned ONCE — never stored, never retrievable again.
         return reply.send({
           message: 'API key regenerated',
           user_id: id,
-          api_key: newApiKey,
+          api_key: plaintext,
         });
       } catch (error) {
         console.error('Regenerate API key error:', error);
         return reply.status(500).send({ error: 'Failed to regenerate API key' });
+      }
+    }
+  );
+
+  // POST /retention/cleanup — Run data retention cleanup
+  fastify.post(
+    '/retention/cleanup',
+    { preHandler: [apiKeyAuth, requireAdmin] },
+    async (request, reply) => {
+      try {
+        const body = (request.body || {}) as {
+          audit_log_days?: number;
+          tool_execution_days?: number;
+          bgp_update_days?: number;
+        };
+
+        const result = await runRetentionCleanup({
+          auditLogDays: body.audit_log_days,
+          toolExecutionDays: body.tool_execution_days,
+          bgpUpdateDays: body.bgp_update_days,
+        });
+
+        // Audit log the cleanup action
+        await prisma.auditLog.create({
+          data: {
+            userId: request.user!.id,
+            action: 'cleanup',
+            resourceType: 'retention',
+            details: result as unknown as Record<string, any>,
+          },
+        });
+
+        return reply.send({
+          success: true,
+          message: 'Retention cleanup completed',
+          result,
+        });
+      } catch (error) {
+        console.error('Retention cleanup error:', error);
+        return reply.status(500).send({ error: 'Failed to run retention cleanup' });
       }
     }
   );

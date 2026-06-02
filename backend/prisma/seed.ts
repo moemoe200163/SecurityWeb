@@ -1,23 +1,25 @@
 import { PrismaClient } from '@prisma/client';
+import { generateApiKey } from '../src/utils/keyHash.js';
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Starting seed...');
 
-  // 1. Create default admin user
-  const adminApiKey = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
+  // 1. Create default admin user with hashed API key
+  const { plaintext: adminApiKey, prefix: adminPrefix, hashed: adminHashed } = generateApiKey();
   const admin = await prisma.user.upsert({
-    where: { apiKey: adminApiKey },
-    update: {},
+    where: { id: 'admin-default' },
+    update: { keyPrefix: adminPrefix, hashedKey: adminHashed },
     create: {
       id: 'admin-default',
-      apiKey: adminApiKey,
+      keyPrefix: adminPrefix,
+      hashedKey: adminHashed,
       role: 'admin',
     },
   });
   console.log(`✅ Admin user created: ${admin.id}`);
-  console.log(`   API Key: ${adminApiKey}`);
+  console.log(`   API Key (save this NOW — never shown again): ${adminApiKey}`);
 
   // 2. Create default tool templates
   const toolTemplates = [
