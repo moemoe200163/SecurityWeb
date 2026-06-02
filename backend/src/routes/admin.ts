@@ -207,6 +207,10 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
     }
   );
 
+  /**
+   * @deprecated Use `POST /api/admin/keys/:userId/rotate` instead.
+   * Retained for backward compatibility; will be removed in 20.x.
+   */
   // Create new API key for user
   fastify.post(
     '/users/:id/api-key',
@@ -238,6 +242,12 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
     }
   );
 
+  /**
+   * @deprecated Replaced by Phase 19.2 retention admin endpoints
+   * (`GET /api/admin/retention/status`, `POST /api/admin/retention/run`,
+   * `POST /api/admin/retention/dry-run`). Retained for backward
+   * compatibility; will be removed in 20.x.
+   */
   // POST /retention/cleanup — Run data retention cleanup
   fastify.post(
     '/retention/cleanup',
