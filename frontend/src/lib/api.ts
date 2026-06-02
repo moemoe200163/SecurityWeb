@@ -709,6 +709,50 @@ export const api = {
       });
     },
   },
+
+  // Admin retention (protected: requires X-API-Key + admin role)
+  adminRetention: {
+    status: () =>
+      request<{
+        counts: { auditLog: number; toolExecution: number; bgpUpdate: number };
+        lastRunAt: string | null;
+        lastResult: {
+          auditLogsDeleted: number;
+          toolExecutionsTrimmed: number;
+          bgpUpdatesDeleted: number;
+        } | null;
+        policy: { auditLogDays: number; toolExecutionDays: number; bgpUpdateDays: number };
+      }>('/api/admin/retention/status', { requireAuth: true }),
+
+    run: (
+      dryRun: boolean,
+      config?: { auditLogDays?: number; toolExecutionDays?: number; bgpUpdateDays?: number }
+    ) =>
+      request<
+        | {
+            mode: 'dry-run';
+            preview: {
+              auditLogsWouldDelete: number;
+              toolExecutionsWouldTrim: number;
+              bgpUpdatesWouldDelete: number;
+            };
+            ranAt: string;
+          }
+        | {
+            mode: 'execute';
+            result: {
+              auditLogsDeleted: number;
+              toolExecutionsTrimmed: number;
+              bgpUpdatesDeleted: number;
+            };
+            ranAt: string;
+          }
+      >(`/api/admin/retention/run${dryRun ? '?dryRun=true' : ''}`, {
+        method: 'POST',
+        body: config ?? {},
+        requireAuth: true,
+      }),
+  },
 };
 
 // Polling utility for session status
