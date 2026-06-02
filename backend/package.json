@@ -11,7 +11,8 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "test": "vitest run tests/api.test.ts",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "validate-egress": "tsx src/scripts/validateEgressConfig.ts ../sandbox/egress.conf.example"
   },
   "dependencies": {
     "@fastify/cors": "^11.2.0",
