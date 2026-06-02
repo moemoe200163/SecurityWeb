@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -87,6 +88,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 void API_BASE;
 
 export default function AlertsPage() {
+  const router = useRouter();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
@@ -149,7 +151,7 @@ export default function AlertsPage() {
       const result = await api.alerts.investigate(alertId, 'soc');
       await fetchAlerts();
       setSelectedAlert(null);
-      window.location.href = `/investigations/${result.session_id}`;
+      router.push(`/investigations/${result.session_id}`);
     } catch (err) {
       console.error('Failed to start investigation:', err);
     }
