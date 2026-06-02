@@ -3,6 +3,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    profiles:
+      - edge
     environment:
       - NEXT_PUBLIC_API_URL=http://backend:4000
     depends_on:
@@ -48,11 +50,48 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
+    command: >
+      sh -c "
+        echo 'Running Prisma migrations...' &&
+        npx prisma migrate deploy &&
+        echo 'Starting backend...' &&
+        node dist/index.js
+      "
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  bgp-consumer:
+    build:
+      context: ./backend
+      dockerfile: scripts/Dockerfile-bgp-consumer
+    environment:
+      - DATABASE_URL=postgresql://securityweb:securityweb123@db:5432/securityweb
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - securityweb
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
 
   nginx:
     build:
       context: ./nginx/docker
       dockerfile: Dockerfile
+    profiles:
+      - edge
     ports:
       - "80:80"
       - "443:443"

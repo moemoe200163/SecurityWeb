@@ -39,10 +39,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y --no-install-recommends nodejs && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Playwright
+# Install Playwright and BGP consumer dependencies
 RUN pip3 install --no-cache-dir --break-system-packages \
     playwright \
-    jinja2 && \
+    jinja2 \
+    websockets>=12.0 \
+    sqlalchemy>=2.0.0 \
+    psycopg2-binary>=2.9.9 && \
     playwright install chromium && \
     playwright install-deps
 

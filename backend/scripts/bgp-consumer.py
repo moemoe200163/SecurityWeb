@@ -118,8 +118,7 @@ async def run():
 
                 updates = parse_bgp_update(msg_data)
                 if updates:
-                    with engine.connect() as conn:
-                        conn.execute(text("COMMIT"))
+                    with engine.begin() as conn:
                         for u in updates:
                             try:
                                 # Convert Unix timestamp to datetime

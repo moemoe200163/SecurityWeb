@@ -70,54 +70,106 @@ async function fetchWithIPv4(urlStr: string, options?: RequestInit & { signal?: 
   });
 }
 
-async function checkHijackSuspicion(
-  prefix: string,
-  originAsn: bigint,
-  timestamp: Date
-): Promise<HijackSuspicion> {
-  const oneHourAgo = new Date(timestamp.getTime() - 60 * 60 * 1000);
+// Batch version of checkHijackSuspicion to avoid N+1 queries
+async function batchCheckHijackSuspicion(
+  records: Array<{ prefix: string; originAsn: bigint | null; timestamp: Date }>
+): Promise<Map<string, HijackSuspicion>> {
+  const result = new Map<string, HijackSuspicion>();
 
-  const differentOrigins = await prisma.bgpUpdate.findMany({
-    where: {
-      prefix: prefix,
-      timestamp: {
-        gte: oneHourAgo,
-        lte: timestamp,
-      },
-      originAsn: {
-        not: originAsn,
-      },
-    },
-    select: {
-      originAsn: true,
-    },
-    distinct: ['originAsn'],
-  });
+  if (records.length === 0) return result;
 
-  if (differentOrigins.length === 0) {
-    return {
-      hijack_suspicion: false,
-      suspicion_level: 'none',
-      suspicion_reasons: [],
-    };
+  // Collect all unique (prefix, originASN) pairs and their time windows
+  const prefixOriginMap = new Map<string, { originAsn: bigint; timestamp: Date }>();
+
+  // For each record, check if there's a different origin within 1 hour before
+  // We need to query all records that have the same prefix and timestamp within 1 hour window
+
+  // Group records by prefix for efficient querying
+  const prefixGroups = new Map<string, typeof records>();
+  for (const r of records) {
+    const existing = prefixGroups.get(r.prefix) || [];
+    existing.push(r);
+    prefixGroups.set(r.prefix, existing);
   }
 
-  const reason = `同一前綴 1 小時內出現 ${differentOrigins.length + 1} 個不同 Origin ASN`;
+  // For each prefix, query all records within the time window once
+  for (const [prefix, recs] of prefixGroups) {
+    const timestamps = recs.map(r => r.timestamp);
+    const minTs = new Date(Math.min(...timestamps.map(t => t.getTime())));
+    const maxTs = new Date(Math.max(...timestamps.map(t => t.getTime())));
 
-  let suspicion_level: 'low' | 'medium' | 'high';
-  if (differentOrigins.length === 1) {
-    suspicion_level = 'low';
-  } else if (differentOrigins.length === 2) {
-    suspicion_level = 'medium';
-  } else {
-    suspicion_level = 'high';
+    // Query all records for this prefix within the time range
+    const oneHourBefore = new Date(minTs.getTime() - 60 * 60 * 1000);
+
+    const historicalRecords = await prisma.bgpUpdate.findMany({
+      where: {
+        prefix: prefix,
+        timestamp: {
+          gte: oneHourBefore,
+          lte: maxTs,
+        },
+      },
+      select: {
+        prefix: true,
+        originAsn: true,
+        timestamp: true,
+      },
+      distinct: ['prefix', 'originAsn', 'timestamp'],
+    });
+
+    // Build a map of timestamp -> Set of origin ASNs for this prefix
+    const timestampOriginsMap = new Map<number, Set<string>>();
+    for (const hr of historicalRecords) {
+      const tsKey = hr.timestamp.getTime();
+      if (!timestampOriginsMap.has(tsKey)) {
+        timestampOriginsMap.set(tsKey, new Set());
+      }
+      timestampOriginsMap.get(tsKey)!.add(hr.originAsn?.toString() ?? 'null');
+    }
+
+    // For each original record, calculate suspicion
+    for (const r of recs) {
+      const tsKey = r.timestamp.getTime();
+      const originsAtTime = timestampOriginsMap.get(tsKey) || new Set();
+
+      // Count different origins within the 1-hour window before this record's timestamp
+      const hourBefore = r.timestamp.getTime() - 60 * 60 * 1000;
+      const differentOrigins = new Set<string>();
+
+      for (const [otherTs, origins] of timestampOriginsMap) {
+        if (otherTs >= hourBefore && otherTs <= tsKey) {
+          for (const origin of origins) {
+            if (origin !== (r.originAsn?.toString() ?? 'null')) {
+              differentOrigins.add(origin);
+            }
+          }
+        }
+      }
+
+      const key = `${prefix}-${r.timestamp.getTime()}`;
+      if (differentOrigins.size === 0) {
+        result.set(key, {
+          hijack_suspicion: false,
+          suspicion_level: 'none',
+          suspicion_reasons: [],
+        });
+      } else {
+        const count = differentOrigins.size;
+        let suspicion_level: 'low' | 'medium' | 'high';
+        if (count === 1) suspicion_level = 'low';
+        else if (count === 2) suspicion_level = 'medium';
+        else suspicion_level = 'high';
+
+        result.set(key, {
+          hijack_suspicion: true,
+          suspicion_level,
+          suspicion_reasons: [`同一前綴 1 小時內出現 ${count + 1} 個不同 Origin ASN`],
+        });
+      }
+    }
   }
 
-  return {
-    hijack_suspicion: true,
-    suspicion_level,
-    suspicion_reasons: [reason],
-  };
+  return result;
 }
 
 const whoisCache = new Map<string, WhoisCache>();
@@ -167,29 +219,33 @@ export async function bgpRoutes(fastify: FastifyInstance): Promise<void> {
     });
     const asnInfoMap = new Map(asnInfos.map(info => [info.asn.toString(), info]));
 
-    const data = await Promise.all(
-      records.map(async (r) => {
-        const suspicion = await checkHijackSuspicion(
-          r.prefix,
-          r.originAsn ?? BigInt(0),
-          r.timestamp
-        );
-        const asnInfo = r.originAsn ? asnInfoMap.get(r.originAsn.toString()) : null;
-        return {
-          id: r.id.toString(),
-          prefix: r.prefix,
-          asPath: r.asPath,
-          peerAsn: r.peerAsn?.toString(),
-          originAsn: r.originAsn?.toString(),
-          timestamp: r.timestamp,
-          type: r.type,
-          source: r.source,
-          country: r.country,
-          org: asnInfo?.name || null,
-          ...suspicion,
-        };
-      })
+    // Batch check hijack suspicion (avoids N+1)
+    const suspicionMap = await batchCheckHijackSuspicion(
+      records.map(r => ({ prefix: r.prefix, originAsn: r.originAsn, timestamp: r.timestamp }))
     );
+
+    const data = records.map(r => {
+      const key = `${r.prefix}-${r.timestamp.getTime()}`;
+      const suspicion = suspicionMap.get(key) || {
+        hijack_suspicion: false,
+        suspicion_level: 'none' as const,
+        suspicion_reasons: [] as string[],
+      };
+      const asnInfo = r.originAsn ? asnInfoMap.get(r.originAsn.toString()) : null;
+      return {
+        id: r.id.toString(),
+        prefix: r.prefix,
+        asPath: r.asPath,
+        peerAsn: r.peerAsn?.toString(),
+        originAsn: r.originAsn?.toString(),
+        timestamp: r.timestamp,
+        type: r.type,
+        source: r.source,
+        country: r.country,
+        org: asnInfo?.name || null,
+        ...suspicion,
+      };
+    });
 
     return reply.send({
       data,
