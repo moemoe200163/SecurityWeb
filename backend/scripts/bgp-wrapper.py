@@ -23,7 +23,7 @@ def run_consumer():
     print(f"[{datetime.utcnow().isoformat()}] Starting bgp-consumer.py...")
     env = os.environ.copy()
     proc = subprocess.Popen(
-        ["python", "scripts/bgp-consumer.py"],
+        ["python", "bgp-consumer.py"],
         cwd="/app",
         env=env
     )

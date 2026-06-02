@@ -3,8 +3,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    profiles:
-      - edge
     environment:
       - NEXT_PUBLIC_API_URL=http://backend:4000
     depends_on:
@@ -66,6 +64,8 @@ services:
     build:
       context: ./backend
       dockerfile: scripts/Dockerfile-bgp-consumer
+    profiles:
+      - bgp
     environment:
       - DATABASE_URL=postgresql://securityweb:securityweb123@db:5432/securityweb
       - PYTHONUNBUFFERED=1
@@ -155,6 +155,8 @@ services:
       context: ./sandbox
       dockerfile: Dockerfile
     container_name: securityweb-sandbox
+    profiles:
+      - tools
     restart: unless-stopped
     command: tail -f /dev/null
     networks:
