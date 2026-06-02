@@ -22,6 +22,7 @@ import { PageHero } from '@/components/layout/PageHero';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { AddToInvestigation } from '@/components/ui/AddToInvestigation';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { api, getApiKey, ApiError } from '@/lib/api';
 
 interface ToolTemplate {
@@ -55,13 +56,6 @@ interface ToolExecution {
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-
-// Risk level colors
-const riskColors: Record<string, { bg: string; text: string; border: string }> = {
-  low: { bg: 'bg-green-500/10', text: 'text-green-500', border: 'border-green-500/30' },
-  medium: { bg: 'bg-yellow-500/10', text: 'text-yellow-500', border: 'border-yellow-500/30' },
-  high: { bg: 'bg-red-500/10', text: 'text-red-500', border: 'border-red-500/30' },
-};
 
 // Status icons
 const StatusIcon = ({ status }: { status: string }) => {
@@ -304,7 +298,6 @@ export default function ToolsPage() {
                 />
               ) : (
                 templates.map((template) => {
-                  const colors = riskColors[template.riskLevel] || riskColors.low;
                   return (
                     <div
                       key={template.id}
@@ -314,13 +307,14 @@ export default function ToolsPage() {
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <h3 className="font-medium text-[var(--foreground)]">{template.name}</h3>
-                            <span className={`text-xs px-2 py-0.5 rounded font-mono border ${colors.bg} ${colors.text} ${colors.border}`}>
+                            <StatusBadge
+                              variant={template.riskLevel === 'high' ? 'danger' : template.riskLevel === 'medium' ? 'warning' : 'success'}
+                              dot
+                            >
                               {template.riskLevel.toUpperCase()}
-                            </span>
+                            </StatusBadge>
                             {!template.isEnabled && (
-                              <span className="text-xs px-2 py-0.5 rounded font-mono bg-gray-500/10 text-gray-500 border border-gray-500/30">
-                                已停用
-                              </span>
+                              <StatusBadge variant="muted">已停用</StatusBadge>
                             )}
                           </div>
                           <p className="text-sm text-[var(--muted-foreground)] mb-3">
@@ -360,9 +354,12 @@ export default function ToolsPage() {
             <div className="space-y-4">
               <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className={`text-xs px-2 py-0.5 rounded font-mono border ${riskColors[selectedTemplate.riskLevel]?.bg} ${riskColors[selectedTemplate.riskLevel]?.text} ${riskColors[selectedTemplate.riskLevel]?.border}`}>
+                  <StatusBadge
+                    variant={selectedTemplate.riskLevel === 'high' ? 'danger' : selectedTemplate.riskLevel === 'medium' ? 'warning' : 'success'}
+                    dot
+                  >
                     {selectedTemplate.riskLevel.toUpperCase()}
-                  </span>
+                  </StatusBadge>
                   <h2 className="font-medium text-[var(--foreground)]">{selectedTemplate.name}</h2>
                 </div>
                 <p className="text-sm text-[var(--muted-foreground)] mb-4">
@@ -539,9 +536,11 @@ export default function ToolsPage() {
                         <span className="font-medium text-[var(--foreground)]">
                           {exec.template.name}
                         </span>
-                        <span className={`text-xs px-2 py-0.5 rounded font-mono ${riskColors[exec.template.riskLevel]?.bg} ${riskColors[exec.template.riskLevel]?.text}`}>
+                        <StatusBadge
+                          variant={exec.template.riskLevel === 'high' ? 'danger' : exec.template.riskLevel === 'medium' ? 'warning' : 'success'}
+                        >
                           {exec.template.riskLevel}
-                        </span>
+                        </StatusBadge>
                       </div>
                       <div className="flex items-center gap-3 text-xs text-[var(--muted-foreground)]">
                         {exec.durationMs && (

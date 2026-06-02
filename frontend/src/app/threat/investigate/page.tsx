@@ -9,6 +9,7 @@ import MarkdownRenderer from '@/components/ui/MarkdownRenderer';
 import { cn } from '@/lib/utils';
 import { PageHero } from '@/components/layout/PageHero';
 import { AddToInvestigation } from '@/components/ui/AddToInvestigation';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 
 function ThreatInvestigateContent() {
   const searchParams = useSearchParams();
@@ -182,13 +183,13 @@ function ThreatInvestigateContent() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'malicious':
-        return <span className="px-3 py-1 bg-[var(--color-threat)] text-white text-sm font-medium rounded-full">MALICIOUS</span>;
+        return <StatusBadge variant="danger" dot>MALICIOUS</StatusBadge>;
       case 'suspicious':
-        return <span className="px-3 py-1 bg-[var(--terminal-amber)] text-white text-sm font-medium rounded-full">SUSPICIOUS</span>;
+        return <StatusBadge variant="warning" dot>SUSPICIOUS</StatusBadge>;
       case 'normal':
-        return <span className="px-3 py-1 bg-[var(--terminal-green)] text-white text-sm font-medium rounded-full">SAFE</span>;
+        return <StatusBadge variant="success" dot>SAFE</StatusBadge>;
       default:
-        return <span className="px-3 py-1 bg-[var(--muted-foreground)] text-white text-sm font-medium rounded-full">UNKNOWN</span>;
+        return <StatusBadge variant="muted">UNKNOWN</StatusBadge>;
     }
   };
 

@@ -23,6 +23,7 @@ import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { api, ApiError } from '@/lib/api';
 
 interface Alert {
@@ -67,14 +68,6 @@ interface ReportData {
   };
   recommendations?: string[];
 }
-
-const severityColors: Record<string, { bg: string; text: string; border: string }> = {
-  critical: { bg: 'bg-red-500/10', text: 'text-red-500', border: 'border-red-500/30' },
-  high: { bg: 'bg-orange-500/10', text: 'text-orange-500', border: 'border-orange-500/30' },
-  medium: { bg: 'bg-yellow-500/10', text: 'text-yellow-500', border: 'border-yellow-500/30' },
-  low: { bg: 'bg-blue-500/10', text: 'text-blue-500', border: 'border-blue-500/30' },
-  info: { bg: 'bg-gray-500/10', text: 'text-gray-500', border: 'border-gray-500/30' },
-};
 
 const statusLabels: Record<string, string> = {
   new: '新進',
@@ -321,7 +314,6 @@ export default function AlertsPage() {
               />
             ) : (
               filteredAlerts.map((alert) => {
-                const colors = severityColors[alert.severity] || severityColors.info;
                 const isSelected = selectedAlert?.id === alert.id;
                 return (
                   <div
@@ -333,12 +325,17 @@ export default function AlertsPage() {
                   >
                     <div className="flex items-start justify-between gap-3 mb-2">
                       <div className="flex items-center gap-2">
-                        <span className={`text-xs px-2 py-0.5 rounded font-mono border ${colors.bg} ${colors.text} ${colors.border}`}>
+                        <StatusBadge
+                          variant={alert.severity === 'critical' ? 'danger' : alert.severity === 'high' ? 'danger' : alert.severity === 'medium' ? 'warning' : alert.severity === 'low' ? 'info' : 'muted'}
+                          dot
+                        >
                           {alert.severity.toUpperCase()}
-                        </span>
-                        <span className="text-xs px-2 py-0.5 rounded bg-gray-500/10 text-gray-500 border border-gray-500/30">
+                        </StatusBadge>
+                        <StatusBadge
+                          variant={alert.status === 'new' ? 'info' : alert.status === 'investigating' ? 'warning' : alert.status === 'resolved' ? 'success' : 'muted'}
+                        >
                           {statusLabels[alert.status] || alert.status}
-                        </span>
+                        </StatusBadge>
                       </div>
                       <span className="text-xs text-[var(--muted-foreground)] font-mono">
                         {new Date(alert.createdAt).toLocaleString('zh-TW')}
@@ -384,8 +381,13 @@ export default function AlertsPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="text-xs text-[var(--muted-foreground)] font-mono">嚴重等級</label>
-                      <div className={`inline-block mt-1 text-xs px-2 py-0.5 rounded font-mono border ${severityColors[selectedAlert.severity]?.bg} ${severityColors[selectedAlert.severity]?.text} ${severityColors[selectedAlert.severity]?.border}`}>
-                        {selectedAlert.severity.toUpperCase()}
+                      <div className="mt-1">
+                        <StatusBadge
+                          variant={selectedAlert.severity === 'critical' ? 'danger' : selectedAlert.severity === 'high' ? 'danger' : selectedAlert.severity === 'medium' ? 'warning' : selectedAlert.severity === 'low' ? 'info' : 'muted'}
+                          dot
+                        >
+                          {selectedAlert.severity.toUpperCase()}
+                        </StatusBadge>
                       </div>
                     </div>
                     <div>
@@ -654,11 +656,9 @@ export default function AlertsPage() {
                       <div key={idx} className="p-3 bg-[var(--background)] rounded-lg text-sm">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-medium">{exec.tool}</span>
-                          <span className={`text-xs px-1.5 py-0.5 rounded ${
-                            exec.status === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
-                          }`}>
+                          <StatusBadge variant={exec.status === 'success' ? 'success' : 'danger'}>
                             {exec.status}
-                          </span>
+                          </StatusBadge>
                           {exec.durationMs && (
                             <span className="text-xs text-[var(--muted-foreground)]">{exec.durationMs}ms</span>
                           )}
