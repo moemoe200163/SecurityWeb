@@ -12,6 +12,8 @@ import { reportRoutes } from './routes/report.js';
 import { settingsRoutes } from './routes/settings.js';
 import { toolRoutes } from './routes/tools.js';
 import { adminRoutes } from './routes/admin.js';
+import { adminKeysRoutes } from './routes/adminKeys.js';
+import { meRoutes } from './routes/me.js';
 import { alertRoutes } from './routes/alerts.js';
 import { evidenceRoutes } from './routes/evidence.js';
 import { dashboardRoutes } from './routes/dashboard.js';
@@ -49,6 +51,12 @@ async function startServer() {
 
   // Admin routes (protected by API key + admin role)
   fastify.register(adminRoutes, { prefix: '/api/admin' });
+
+  // Admin API key management (separate file from admin.ts to keep concerns isolated)
+  fastify.register(adminKeysRoutes, { prefix: '/api/admin' });
+
+  // Self-service API key routes (any authenticated user)
+  fastify.register(meRoutes, { prefix: '/api/me' });
 
   // Alert routes
   fastify.register(alertRoutes, { prefix: '/api/alerts' });
