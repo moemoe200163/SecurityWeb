@@ -1,6 +1,5 @@
 -- Migration: Add all tables for SecurityWeb
--- Create extension for UUID generation
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+-- Generated from Prisma schema - DO NOT EDIT MANUALLY
 
 -- Sessions table
 CREATE TABLE "Session" (
@@ -19,7 +18,7 @@ CREATE INDEX "Session_createdAt_idx" ON "Session"("createdAt");
 -- Steps table
 CREATE TABLE "Step" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    "sessionId" UUID NOT NULL REFERENCES "Session"("id") ON DELETE CASCADE,
+    "sessionId" UUID NOT NULL,
     "order" INTEGER NOT NULL,
     "title" VARCHAR(255) NOT NULL,
     "status" VARCHAR(255) NOT NULL DEFAULT 'pending',
@@ -28,7 +27,8 @@ CREATE TABLE "Step" (
     "toolCalls" JSONB,
     "timestamp" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Step_sessionId_fkey" FOREIGN KEY ("sessionId") REFERENCES "Session"("id") ON DELETE CASCADE
 );
 
 CREATE INDEX "Step_sessionId_idx" ON "Step"("sessionId");
@@ -37,10 +37,11 @@ CREATE INDEX "Step_status_idx" ON "Step"("status");
 -- Messages table
 CREATE TABLE "Message" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    "sessionId" UUID NOT NULL REFERENCES "Session"("id") ON DELETE CASCADE,
+    "sessionId" UUID NOT NULL,
     "role" VARCHAR(255) NOT NULL,
     "content" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Message_sessionId_fkey" FOREIGN KEY ("sessionId") REFERENCES "Session"("id") ON DELETE CASCADE
 );
 
 CREATE INDEX "Message_sessionId_idx" ON "Message"("sessionId");
@@ -82,13 +83,13 @@ CREATE TABLE "ApiUsage" (
     "dailyLimit" INTEGER NOT NULL DEFAULT 1000,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE("apiName", "date")
+    CONSTRAINT "ApiUsage_apiName_date_key" UNIQUE ("apiName", "date")
 );
 
 CREATE INDEX "ApiUsage_apiName_idx" ON "ApiUsage"("apiName");
 CREATE INDEX "ApiUsage_date_idx" ON "ApiUsage"("date");
 
--- BGP Update table (BigInt id for high-volume data)
+-- BGP Update table (BIGINT id for high-volume time-series data)
 CREATE TABLE "BgpUpdate" (
     "id" BIGSERIAL PRIMARY KEY,
     "prefix" VARCHAR(255) NOT NULL,
@@ -163,10 +164,10 @@ CREATE INDEX "OtxResult_indicatorType_idx" ON "OtxResult"("indicatorType");
 CREATE INDEX "OtxResult_indicator_idx" ON "OtxResult"("indicator");
 CREATE INDEX "OtxResult_type_idx" ON "OtxResult"("type");
 
--- Users table
+-- Users table (uses TEXT id, not UUID - matches seed.ts with 'admin-default')
 CREATE TABLE "users" (
-    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    "apiKey" VARCHAR(255) UNIQUE NOT NULL,
+    "id" VARCHAR(255) PRIMARY KEY,
+    "api_key" VARCHAR(255) UNIQUE NOT NULL,
     "role" VARCHAR(255) NOT NULL DEFAULT 'user',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -174,7 +175,7 @@ CREATE TABLE "users" (
 
 -- Tool Templates table
 CREATE TABLE "tool_templates" (
-    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    "id" VARCHAR(255) PRIMARY KEY,
     "name" VARCHAR(255) NOT NULL,
     "tool" VARCHAR(255) NOT NULL,
     "description" TEXT,
@@ -191,8 +192,8 @@ CREATE TABLE "tool_templates" (
 -- Tool Executions table
 CREATE TABLE "tool_executions" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    "template_id" VARCHAR(255) NOT NULL REFERENCES "tool_templates"("id"),
-    "user_id" VARCHAR(255) NOT NULL REFERENCES "users"("id"),
+    "template_id" VARCHAR(255) NOT NULL,
+    "user_id" VARCHAR(255) NOT NULL,
     "session_id" VARCHAR(255),
     "params" JSONB NOT NULL,
     "status" VARCHAR(255) NOT NULL DEFAULT 'pending',
@@ -201,18 +202,21 @@ CREATE TABLE "tool_executions" (
     "exit_code" INTEGER,
     "duration_ms" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "tool_executions_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "tool_templates"("id"),
+    CONSTRAINT "tool_executions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id")
 );
 
 -- Audit Logs table
 CREATE TABLE "audit_logs" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    "user_id" VARCHAR(255) NOT NULL REFERENCES "users"("id"),
+    "user_id" VARCHAR(255) NOT NULL,
     "action" VARCHAR(255) NOT NULL,
     "resource_type" VARCHAR(255) NOT NULL,
     "resource_id" VARCHAR(255),
     "details" JSONB,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "audit_logs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id")
 );
 
 -- Alerts table
@@ -234,11 +238,12 @@ CREATE TABLE "alerts" (
 -- Knowledge Feedback table
 CREATE TABLE "knowledge_feedback" (
     "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    "alert_id" VARCHAR(255) NOT NULL REFERENCES "alerts"("id"),
+    "alert_id" VARCHAR(255) NOT NULL,
     "session_id" VARCHAR(255),
     "ai_verdict" VARCHAR(255) NOT NULL,
     "correct_verdict" VARCHAR(255) NOT NULL,
     "error_reason" VARCHAR(255),
     "lesson" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "knowledge_feedback_alert_id_fkey" FOREIGN KEY ("alert_id") REFERENCES "alerts"("id")
 );
