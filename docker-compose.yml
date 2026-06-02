@@ -20,6 +20,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - NEXT_PUBLIC_API_URL=http://backend:4000
+      - BACKEND_URL=http://backend:4000
     depends_on:
       - backend
     networks:
