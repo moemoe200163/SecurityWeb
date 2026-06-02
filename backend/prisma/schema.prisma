@@ -174,12 +174,15 @@ model OtxResult {
 // ============== Week 1: New Models for Tool Platform ==============
 
 model User {
-  id         String   @id @default(uuid())
-  keyPrefix  String   @unique @map("key_prefix")  // First 11 chars ("sk-" + 8 hex) for DB lookup
-  hashedKey  String   @unique @map("hashed_key")  // SHA-256 of full key (64-char hex)
-  role       String   @default("user") // "user" | "admin"
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id           String    @id @default(uuid())
+  keyPrefix    String?   @unique @map("key_prefix")
+  hashedKey    String?   @unique @map("hashed_key")
+  keyCreatedAt DateTime? @map("key_created_at")
+  keyRevokedAt DateTime? @map("key_revoked_at")
+  keyExpiresAt DateTime? @map("key_expires_at")
+  role         String    @default("user")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   toolExecutions ToolExecution[]
   auditLogs      AuditLog[]
