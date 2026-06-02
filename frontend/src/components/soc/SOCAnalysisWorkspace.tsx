@@ -10,6 +10,7 @@ import type { SessionSummary } from '@/components/soc/AnalysisSidebar';
 import { VolcanoStepCard } from '@/components/soc/VolcanoStepCard';
 import { ThreatSummaryCard } from '@/components/soc/ThreatSummaryCard';
 import { AlertUpload } from '@/components/upload/AlertUpload';
+import { AlertSessionInfo } from './AlertSessionInfo';
 import { PageHero } from '@/components/layout/PageHero';
 import {
   Loader2,
@@ -65,6 +66,12 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
 
   const pollCleanupRef = useRef<(() => void) | null>(null);
   const [, setSidebarSession] = useState<SessionSummary | undefined>(undefined);
+  const [alertData, setAlertData] = useState<{
+    id: string;
+    title: string;
+    severity: string;
+    aiVerdict?: string | null;
+  } | null>(null);
 
   // Cleanup poll on unmount
   useEffect(() => {
@@ -137,6 +144,19 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
             content: m.content,
             timestamp: m.createdAt,
           })));
+        }
+
+        // Extract alert data from session input
+        if (session) {
+          const input = session.input as Record<string, unknown>;
+          if (input.alertId) {
+            setAlertData({
+              id: input.alertId as string,
+              title: input.alertTitle as string,
+              severity: input.alertSeverity as string,
+              aiVerdict: input.aiVerdict as string | null,
+            });
+          }
         }
 
         // Start polling for updates if session is in progress
@@ -241,6 +261,17 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
           content: m.content,
           timestamp: m.createdAt,
         })));
+      }
+
+      // Extract alert data from session input
+      const input = session.input as Record<string, unknown>;
+      if (input.alertId) {
+        setAlertData({
+          id: input.alertId as string,
+          title: input.alertTitle as string,
+          severity: input.alertSeverity as string,
+          aiVerdict: input.aiVerdict as string | null,
+        });
       }
     } catch (err) {
       console.error('Failed to load session:', err);
@@ -564,6 +595,16 @@ ${data.rawContent || data.alertId}
             />
           </div>
         </div>
+
+        {/* Alert Session Info */}
+        {alertData && (
+          <AlertSessionInfo
+            alertId={alertData.id}
+            title={alertData.title}
+            severity={alertData.severity}
+            aiVerdict={alertData.aiVerdict}
+          />
+        )}
 
         {/* Content Area */}
         <div className="flex-1 flex overflow-hidden">
