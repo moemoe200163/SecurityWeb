@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { api, getApiKey, setApiKey, clearApiKey } from '@/lib/api';
+import { api, ApiError, getApiKey, setApiKey, clearApiKey } from '@/lib/api';
+import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { CheckCircle, XCircle, Loader2, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
@@ -31,6 +32,7 @@ export default function SettingsPage() {
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
   const [saveResult, setSaveResult] = useState<string | null>(null);
+  const [authError, setAuthError] = useState(false);
   const [apiKey, setApiKeyState] = useState('');
   const [apiKeyStatus, setApiKeyStatus] = useState<'idle' | 'valid' | 'invalid'>('idle');
   const [testingApiKey, setTestingApiKey] = useState(false);
@@ -50,6 +52,10 @@ export default function SettingsPage() {
           hasOllamaEndpoint: data.hasOllamaEndpoint || false,
         });
       } catch (err) {
+        if (err instanceof ApiError && err.status === 401) {
+          setAuthError(true);
+          return;
+        }
         console.error('Failed to load settings:', err);
       } finally {
         setLoading(false);
@@ -144,6 +150,10 @@ export default function SettingsPage() {
     setApiKeyState('');
     setApiKeyStatus('idle');
   };
+
+  if (authError) {
+    return <ApiKeyRequired />;
+  }
 
   if (loading) {
     return (

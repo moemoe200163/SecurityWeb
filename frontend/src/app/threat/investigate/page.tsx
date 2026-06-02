@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { api, pollSession, type SessionDetail, type IpReputationResult } from '@/lib/api';
+import { api, ApiError, pollSession, type SessionDetail, type IpReputationResult } from '@/lib/api';
+import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { Loader2, Search, AlertCircle, CheckCircle2, XCircle, Shield, ShieldAlert, ShieldCheck, ShieldQuestion, Terminal } from 'lucide-react';
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer';
 import { cn } from '@/lib/utils';
@@ -17,6 +18,7 @@ function ThreatInvestigateContent() {
   const [session, setSession] = useState<SessionDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [authError, setAuthError] = useState(false);
   const [ipReputation, setIpReputation] = useState<IpReputationResult | null>(null);
   const [ipLoading, setIpLoading] = useState(false);
   const pollCleanupRef = useRef<(() => void) | null>(null);
@@ -47,6 +49,10 @@ function ThreatInvestigateContent() {
         else setType('ip');
       }
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setAuthError(true);
+        return;
+      }
       console.error('Failed to load session:', err);
       setError('載入セッション失敗');
     } finally {
@@ -113,6 +119,10 @@ function ThreatInvestigateContent() {
         }
       );
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setAuthError(true);
+        return;
+      }
       setError(err instanceof Error ? err.message : String(err));
       setLoading(false);
     }
@@ -181,6 +191,10 @@ function ThreatInvestigateContent() {
         return <span className="px-3 py-1 bg-[var(--muted-foreground)] text-white text-sm font-medium rounded-full">UNKNOWN</span>;
     }
   };
+
+  if (authError) {
+    return <ApiKeyRequired />;
+  }
 
   return (
     <div className="min-h-screen bg-[var(--background)]">

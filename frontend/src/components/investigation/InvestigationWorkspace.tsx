@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { api, type SessionDetail, type Evidence } from '@/lib/api';
+import { api, ApiError, type SessionDetail, type Evidence } from '@/lib/api';
+import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { PageHero } from '@/components/layout/PageHero';
 import { VolcanoStepCard } from '@/components/soc/VolcanoStepCard';
 import { AddToInvestigation } from '@/components/ui/AddToInvestigation';
@@ -89,6 +90,7 @@ interface InvestigationWorkspaceProps {
 export function InvestigationWorkspace({ sessionId }: InvestigationWorkspaceProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [authError, setAuthError] = useState(false);
   const [session, setSession] = useState<SessionDetail | null>(null);
   const [module, setModule] = useState('');
   const [evidence, setEvidence] = useState<Evidence[]>([]);
@@ -140,7 +142,11 @@ export function InvestigationWorkspace({ sessionId }: InvestigationWorkspaceProp
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to load');
+          if (err instanceof ApiError && err.status === 401) {
+            setAuthError(true);
+          } else {
+            setError(err instanceof Error ? err.message : 'Failed to load');
+          }
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -162,6 +168,10 @@ export function InvestigationWorkspace({ sessionId }: InvestigationWorkspaceProp
   const messages = session?.messages || [];
 
   // Render: loading --------------------------------------------------------
+  if (authError) {
+    return <ApiKeyRequired />;
+  }
+
   if (loading) {
     return (
       <div className="h-full flex items-center justify-center">
