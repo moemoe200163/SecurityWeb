@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireUser } from '../middleware/rbac.js';
+import { rateLimit } from '../middleware/rateLimit.js';
 import { WhitelistValidator } from '../services/WhitelistValidator.js';
 import { SandboxManager } from '../services/SandboxManager.js';
 import { prisma } from '../db/client.js';
@@ -157,7 +158,7 @@ export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
   // Execute tool via template
   fastify.post(
     '/execute',
-    { preHandler: [apiKeyAuth, requireUser] },
+    { preHandler: [apiKeyAuth, requireUser, rateLimit(10, 60_000)] },
     async (request, reply) => {
       const startTime = Date.now();
       let template_id: string | undefined;

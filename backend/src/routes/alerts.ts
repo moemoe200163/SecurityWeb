@@ -2,7 +2,9 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireUser } from '../middleware/rbac.js';
+import { rateLimit } from '../middleware/rateLimit.js';
 import { prisma } from '../db/client.js';
+import { sanitizeAuditDetails } from '../utils/sanitize.js';
 
 const importAlertSchema = z.object({
   source: z.string().min(1).max(50).default('import'),
@@ -89,7 +91,7 @@ export async function alertRoutes(fastify: FastifyInstance): Promise<void> {
   // Import single alert
   fastify.post(
     '/import',
-    { preHandler: [apiKeyAuth, requireUser] },
+    { preHandler: [apiKeyAuth, requireUser, rateLimit(20, 60_000)] },
     async (request, reply) => {
       try {
         const body = importAlertSchema.parse(request.body);
@@ -113,7 +115,7 @@ export async function alertRoutes(fastify: FastifyInstance): Promise<void> {
             action: 'import',
             resourceType: 'alert',
             resourceId: alert.id,
-            details: { source: body.source, severity: body.severity },
+            details: sanitizeAuditDetails({ source: body.source, severity: body.severity }),
           },
         });
 
@@ -163,7 +165,7 @@ export async function alertRoutes(fastify: FastifyInstance): Promise<void> {
             action: 'import',
             resourceType: 'alert',
             resourceId: 'bulk',
-            details: { count: alerts.length },
+            details: sanitizeAuditDetails({ count: alerts.length }),
           },
         });
 
@@ -208,7 +210,7 @@ export async function alertRoutes(fastify: FastifyInstance): Promise<void> {
             action: 'update',
             resourceType: 'alert',
             resourceId: id,
-            details: { status, human_verdict },
+            details: sanitizeAuditDetails({ status, human_verdict }),
           },
         });
 
@@ -270,7 +272,7 @@ export async function alertRoutes(fastify: FastifyInstance): Promise<void> {
             action: 'feedback',
             resourceType: 'alert',
             resourceId: id,
-            details: { ai_verdict, correct_verdict, has_error_reason: !!error_reason },
+            details: sanitizeAuditDetails({ ai_verdict, correct_verdict, has_error_reason: !!error_reason }),
           },
         });
 
@@ -336,7 +338,7 @@ export async function alertRoutes(fastify: FastifyInstance): Promise<void> {
             action: 'investigate',
             resourceType: 'alert',
             resourceId: id,
-            details: { type, sessionId: session.id },
+            details: sanitizeAuditDetails({ type, sessionId: session.id }),
           },
         });
 

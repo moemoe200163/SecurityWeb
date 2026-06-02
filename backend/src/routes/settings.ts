@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../db/client.js';
+import { rateLimit } from '../middleware/rateLimit.js';
 import { getAIService, invalidateCache } from '../services/AIServiceFactory.js';
 
 const updateAISettingsSchema = z.object({
@@ -126,7 +127,7 @@ export async function settingsRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // POST /api/settings/ai/test - Test AI connection
-  fastify.post('/ai/test', async (request, reply) => {
+  fastify.post('/ai/test', { preHandler: [rateLimit(5, 60_000)] }, async (request, reply) => {
     try {
       const body = z.object({
         provider: z.enum(['minimax', 'ollama']).optional(),
