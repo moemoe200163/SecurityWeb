@@ -259,6 +259,10 @@ export const api = {
       username?: string;
       customInput?: string;
       timeLimit?: string;
+      authorizationConfirmed?: boolean;
+      authorizationOwner?: string;
+      authorizationScope?: string;
+      authorizationExpiresAt?: string;
     }): Promise<SessionResponse> {
       return request<SessionResponse>('/api/pentest/assist', {
         method: 'POST',
@@ -278,7 +282,7 @@ export const api = {
       });
     },
     async downloadReport(sessionId: string): Promise<Blob> {
-      const response = await fetch(`/api/report/${sessionId}/pdf`);
+      const response = await fetch(`${API_BASE}/api/report/${sessionId}/pdf`);
       if (!response.ok) {
         throw new Error('Failed to download report');
       }

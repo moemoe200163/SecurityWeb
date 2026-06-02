@@ -75,6 +75,24 @@ export interface PentestAssistRequest {
   type: 'simulation' | 'live';
 }
 
+export interface TemplateStep {
+  title: string;
+  description: string;
+}
+
+export interface TemplateMetadata {
+  id: string;
+  name: string;
+  purpose: string;
+  riskLevel: 'low' | 'medium' | 'high';
+  estimatedDuration: string;
+  requiredInputs: string[];
+  optionalInputs: string[];
+  reportType: string;
+  steps: TemplateStep[];
+  isHighRisk: boolean;
+}
+
 // AI Service interface
 export interface AIService {
   startAnalysis(module: ModuleType, input: unknown): Promise<SessionData>;

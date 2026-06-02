@@ -63,6 +63,61 @@ const defaultSteps: Record<ModuleType, Step[]> = {
   ],
 };
 
+const templateWorkflowSteps: Record<string, Array<{ title: string; content: string }>> = {
+  network_scan: [
+    { title: '範圍確認', content: '正在確認掃描目標與授權範圍...' },
+    { title: '主機/端口發現', content: '正在掃描存活主機與開放端口...' },
+    { title: '服務指紋', content: '正在識別端口上運行的服務與版本...' },
+    { title: '漏洞對應', content: '正在將發現的服務版本對應到已知漏洞...' },
+    { title: '報告', content: '正在彙整發現並生成滲透測試報告...' },
+  ],
+  web_pentest: [
+    { title: 'URL 基線', content: '正在建立目標 URL 基線資訊...' },
+    { title: '爬取/端點盤點', content: '正在爬取網站並盤點所有端點...' },
+    { title: 'OWASP 檢查', content: '正在執行 OWASP Top 10 安全檢查...' },
+    { title: '證據整理', content: '正在整理漏洞利用的證據與截圖...' },
+    { title: '報告', content: '正在彙整發現並生成 Web 滲透測試報告...' },
+  ],
+  api_test: [
+    { title: '端點/規格盤點', content: '正在盤點所有 API 端點與規格...' },
+    { title: '認證檢查', content: '正在測試認證機制的安全性...' },
+    { title: 'Injection/Schema 測試', content: '正在測試注入漏洞與 Schema 驗證...' },
+    { title: '業務邏輯', content: '正在測試業務邏輯漏洞...' },
+    { title: '報告', content: '正在彙整發現並生成 API 安全測試報告...' },
+  ],
+  red_team: [
+    { title: '授權範圍', content: '正在確認攻擊授權範圍與規則...' },
+    { title: '偵察', content: '正在收集目標情報與暴露面...' },
+    { title: '攻擊路徑建模', content: '正在建模可行的攻擊路徑...' },
+    { title: '防禦控制驗證', content: '正在驗證防禦控制的有效性...' },
+    { title: '管理層報告', content: '正在生成管理層可讀的演練報告...' },
+  ],
+  brute_force: [
+    { title: '授權確認', content: '正在確認暴力破解測試的授權...' },
+    { title: '登入面盤點', content: '正在盤點所有登入入口...' },
+    { title: '密碼策略測試', content: '正在測試密碼強度與策略...' },
+    { title: '速率限制/鎖定證據', content: '正在驗證速率限制與帳戶鎖定機制...' },
+    { title: '加固報告', content: '正在生成安全加固建議報告...' },
+  ],
+  custom: [
+    { title: '需求輸入', content: '正在收集用戶的安全測試需求...' },
+    { title: '參數整理', content: '正在整理測試參數與範圍...' },
+    { title: '安全檢查清單', content: '正在建立對應的安全檢查清單...' },
+    { title: '證據收集', content: '正在執行測試並收集證據...' },
+    { title: '自訂報告', content: '正在生成自訂格式的測試報告...' },
+  ],
+};
+
+export function getTemplateSteps(templateId: string): Step[] {
+  const steps = templateWorkflowSteps[templateId] || templateWorkflowSteps.custom;
+  return steps.map((step, index) => ({
+    id: `${templateId}-${index + 1}`,
+    title: step.title,
+    status: 'pending' as const,
+    content: step.content,
+  }));
+}
+
 export const useStepStore = create<StepStore>()(
   persist(
     (set, get) => ({

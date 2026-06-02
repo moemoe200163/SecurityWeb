@@ -24,6 +24,18 @@ interface RiskAssessment {
   impact: string;
 }
 
+// Sanitize sensitive fields from session input for report output
+function sanitizeInput(input: PentestInput | undefined): Record<string, string> {
+  if (!input) return {};
+  const sensitiveFields = ['auth', 'cookies', 'headers', 'authorizationOwner', 'authorizationScope', 'authorizationExpiresAt'];
+  return Object.fromEntries(
+    Object.entries(input).map(([key, value]) => {
+      if (sensitiveFields.includes(key)) return [key, '[REDACTED]'];
+      return [key, value ?? ''];
+    })
+  );
+}
+
 export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/report/:sessionId/pdf - Download analysis report
   fastify.get<{ Params: { sessionId: string } }>('/:sessionId/pdf', async (request, reply) => {
@@ -49,7 +61,7 @@ export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
         session_id: session.id,
         created_at: session.createdAt,
         status: session.status,
-        input: input || {},
+        input: sanitizeInput(input),
         summary: {
           critical: vulnerabilities.filter(v => v.riskLevel === 'Critical').length,
           high: vulnerabilities.filter(v => v.riskLevel === 'High').length,
@@ -102,7 +114,7 @@ export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
         sessionId: session.id,
         createdAt: session.createdAt,
         status: session.status,
-        input,
+        input: sanitizeInput(input),
         steps: steps.map(s => ({ title: s.title, content: s.content, status: s.status })),
         vulnerabilities: vulnerabilities.map(v => ({
           name: v.name,
