@@ -20,6 +20,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { api, getApiKey, ApiError } from '@/lib/api';
 
 interface ToolTemplate {
@@ -88,6 +89,7 @@ export default function ToolsPage() {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isApiOnline, setIsApiOnline] = useState(true);
+  const [authError, setAuthError] = useState(false);
   const apiKey = getApiKey();
   // Surface the error in the DOM so the value is actually read.
   void error;
@@ -100,9 +102,13 @@ export default function ToolsPage() {
       setTemplates((data.templates as unknown as ToolTemplate[]) || []);
       setIsApiOnline(true);
     } catch (err) {
-      console.error('Failed to fetch templates:', err);
-      setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
-      setIsApiOnline(false);
+      if (err instanceof ApiError && err.status === 401) {
+        setAuthError(true);
+      } else {
+        console.error('Failed to fetch templates:', err);
+        setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
+        setIsApiOnline(false);
+      }
     } finally {
       setLoading(false);
     }
@@ -116,9 +122,13 @@ export default function ToolsPage() {
       setExecutions((data.executions as unknown as ToolExecution[]) || []);
       setIsApiOnline(true);
     } catch (err) {
-      console.error('Failed to fetch executions:', err);
-      setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
-      setIsApiOnline(false);
+      if (err instanceof ApiError && err.status === 401) {
+        setAuthError(true);
+      } else {
+        console.error('Failed to fetch executions:', err);
+        setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
+        setIsApiOnline(false);
+      }
     } finally {
       setLoading(false);
     }
@@ -195,6 +205,10 @@ export default function ToolsPage() {
     setResult(null);
     setView('execute');
   };
+
+  if (authError) {
+    return <ApiKeyRequired />;
+  }
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
