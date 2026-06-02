@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+
 /**
  * Light-mode class scanner - Phase 6: Regression Prevention
  * Scans for banned hardcoded light-mode classes that should use CSS variables instead.
@@ -9,9 +12,6 @@
  * - border-gray-200, border-gray-300 (only border-[var(--border)] allowed)
  * - Any hardcoded palette that doesn't use /10 opacity variants
  */
-
-const fs = require('fs');
-const path = require('path');
 
 const BANNED_PATTERNS = [
   // bg- with specific colors (light mode only)

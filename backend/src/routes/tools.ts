@@ -158,10 +158,12 @@ export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
     { preHandler: [apiKeyAuth, requireUser] },
     async (request, reply) => {
       const startTime = Date.now();
+      let template_id: string | undefined;
 
       try {
         const body = executeToolSchema.parse(request.body);
-        const { template_id, params, session_id } = body;
+        template_id = body.template_id;
+        const { params, session_id } = body;
 
         // Validate and build command from whitelist
         const validation = await validator.validateAndBuildCommand(template_id, params);
@@ -250,16 +252,18 @@ export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
         console.error('Tool execution error:', error);
 
         // Record failed execution
-        await prisma.toolExecution.create({
-          data: {
-            templateId: 'unknown',
-            userId: request.user!.id,
-            params: {},
-            status: 'error',
-            error: error instanceof Error ? error.message : 'Unknown error',
-            durationMs: Date.now() - startTime,
-          },
-        });
+        if (template_id && await prisma.toolTemplate.findUnique({ where: { id: template_id } })) {
+          await prisma.toolExecution.create({
+            data: {
+              templateId: template_id,
+              userId: request.user!.id,
+              params: {},
+              status: 'error',
+              error: error instanceof Error ? error.message : 'Unknown error',
+              durationMs: Date.now() - startTime,
+            },
+          });
+        }
 
         return reply.status(500).send({ error: 'Tool execution failed' });
       }
