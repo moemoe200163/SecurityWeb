@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Shield, Search, Network, Clock, FileText, Filter, RefreshCw, ChevronRight } from 'lucide-react';
+import { Shield, Search, Network, Clock, FileText, Filter, RefreshCw, ChevronRight, X } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { PageHero } from '@/components/layout/PageHero';
@@ -104,12 +104,14 @@ function FilterBar({
   selectedStatus,
   onModuleChange,
   onStatusChange,
+  onReset,
   moduleCounts,
 }: {
   selectedModule: 'all' | 'soc' | 'threat' | 'pentest';
   selectedStatus: 'all' | 'completed' | 'in_progress' | 'failed';
   onModuleChange: (m: 'all' | 'soc' | 'threat' | 'pentest') => void;
   onStatusChange: (s: 'all' | 'completed' | 'in_progress' | 'failed') => void;
+  onReset: () => void;
   moduleCounts: Record<string, number>;
 }) {
   const modules = [
@@ -170,6 +172,17 @@ function FilterBar({
           ))}
         </div>
       </div>
+
+      {/* Reset button */}
+      {(selectedModule !== 'all' || selectedStatus !== 'all') && (
+        <button
+          onClick={onReset}
+          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--accent)] transition-all ml-auto"
+        >
+          <X className="h-3 w-3" />
+          清空篩選
+        </button>
+      )}
     </div>
   );
 }
@@ -237,6 +250,10 @@ export default function HistoryPage() {
           selectedStatus={selectedStatus}
           onModuleChange={setSelectedModule}
           onStatusChange={setSelectedStatus}
+          onReset={() => {
+            setSelectedModule('all');
+            setSelectedStatus('all');
+          }}
           moduleCounts={moduleCounts}
         />
 
@@ -265,7 +282,7 @@ export default function HistoryPage() {
           <div className="flex items-center gap-2 font-mono text-xs text-[var(--muted-foreground)]">
             <span>最後更新:</span>
             <span className="text-[var(--terminal-green)]">
-              {lastRefresh.toLocaleTimeString('zh-TW')}
+              {lastRefresh?.toLocaleTimeString('zh-TW') || '--:--:--'}
             </span>
           </div>
         </div>

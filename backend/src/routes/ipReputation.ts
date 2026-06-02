@@ -386,8 +386,13 @@ export async function ipReputationRoutes(fastify: FastifyInstance): Promise<void
       const limit = Math.min(parseInt(query.limit) || 50, 100);
       const status = query.status;
       const search = query.search;
-      const sortBy = query.sortBy || 'updatedAt';
-      const sortOrder = query.sortOrder || 'desc';
+
+      // Validate sortBy against allowlist to prevent Prisma errors
+      const allowedSortFields = ['updatedAt', 'createdAt', 'ipAddress', 'status', 'threatLevel', 'confidenceScore', 'totalReports', 'lastReportedAt'];
+      const sortBy = allowedSortFields.includes(query.sortBy) ? query.sortBy : 'updatedAt';
+
+      // Validate sortOrder to be only 'asc' or 'desc'
+      const sortOrder = query.sortOrder === 'asc' ? 'asc' : 'desc';
 
       const where: any = {};
       if (status && status !== 'all') {

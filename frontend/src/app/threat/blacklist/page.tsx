@@ -232,6 +232,19 @@ export default function BlacklistPage() {
             <option value="malicious">惡意</option>
             <option value="suspicious">可疑</option>
           </select>
+          {(searchIp || filter !== 'all') && (
+            <button
+              onClick={() => {
+                setSearchIp('');
+                setFilter('all');
+                setCurrentPage(1);
+              }}
+              className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--accent)] transition-all"
+            >
+              <X className="h-4 w-4" />
+              清空
+            </button>
+          )}
         </div>
 
         {/* Blacklist Table */}

@@ -13,8 +13,8 @@ import {
   MessageSquare,
   Shield,
   FileText,
-  Send,
   X,
+  Send,
   Copy,
   WifiOff,
 } from 'lucide-react';
@@ -233,6 +233,20 @@ export default function AlertsPage() {
             <Filter className="h-4 w-4" />
             刷新
           </Button>
+          {(searchQuery || filters.status || filters.severity) && (
+            <Button
+              onClick={() => {
+                setSearchQuery('');
+                setFilters({ status: '', severity: '', source: '' });
+              }}
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-1 text-[var(--muted-foreground)]"
+            >
+              <X className="h-3 w-3" />
+              清空篩選
+            </Button>
+          )}
         </div>
 
         {/* API Offline Banner */}

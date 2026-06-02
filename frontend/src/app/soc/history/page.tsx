@@ -67,6 +67,7 @@ export default function HistoryPage() {
   const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const loadSessions = useCallback(async () => {
@@ -87,6 +88,7 @@ export default function HistoryPage() {
 
   // Initial load
   useEffect(() => {
+    setMounted(true);
     loadSessions();
   }, [loadSessions]);
 
@@ -216,7 +218,7 @@ export default function HistoryPage() {
                       </div>
                       <div className="flex items-center gap-2 mt-1 text-sm text-[var(--muted-foreground)]">
                         <Clock className="h-3 w-3" />
-                        <span>{formatDate(session.createdAt)}</span>
+                        <span>{mounted ? formatDate(session.createdAt) : '載入中...'}</span>
                         {session.steps && (
                           <>
                             <span>·</span>
