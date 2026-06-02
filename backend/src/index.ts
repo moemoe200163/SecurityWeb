@@ -13,6 +13,7 @@ import { settingsRoutes } from './routes/settings.js';
 import { toolRoutes } from './routes/tools.js';
 import { adminRoutes } from './routes/admin.js';
 import { adminKeysRoutes } from './routes/adminKeys.js';
+import { adminRetentionRoutes } from './routes/adminRetention.js';
 import { meRoutes } from './routes/me.js';
 import { alertRoutes } from './routes/alerts.js';
 import { evidenceRoutes } from './routes/evidence.js';
@@ -54,6 +55,9 @@ async function startServer() {
 
   // Admin API key management (separate file from admin.ts to keep concerns isolated)
   fastify.register(adminKeysRoutes, { prefix: '/api/admin' });
+
+  // Admin retention status/run/dry-run (separate file from admin.ts to keep concerns isolated)
+  fastify.register(adminRetentionRoutes, { prefix: '/api/admin' });
 
   // Self-service API key routes (any authenticated user)
   fastify.register(meRoutes, { prefix: '/api/me' });
