@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { CheckCircle, XCircle, RotateCw, Trash2, Copy } from 'lucide-react';
 import { api, setApiKey, clearApiKey } from '@/lib/api';
 
@@ -19,6 +19,7 @@ export function MyApiKeyPanel() {
   const [rotating, setRotating] = useState(false);
   const [newPlaintext, setNewPlaintext] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState(false);
+  const [copyError, setCopyError] = useState<string | null>(null);
 
   useEffect(() => {
     api.me.getApiKey()
@@ -41,6 +42,7 @@ export function MyApiKeyPanel() {
   };
 
   const handleRotate = async () => {
+    setCopyError(null);
     setRotating(true);
     try {
       const result = await api.me.rotateApiKey();
@@ -63,8 +65,7 @@ export function MyApiKeyPanel() {
   const handleConfirm = () => {
     if (newPlaintext && confirmed) {
       setApiKey(newPlaintext);
-      setNewPlaintext(null);
-      setConfirmed(false);
+      closeModal();
     }
   };
 
@@ -74,6 +75,70 @@ export function MyApiKeyPanel() {
       clearApiKey();
     }
   };
+
+  const closeModal = useCallback(() => {
+    setNewPlaintext(null);
+    setConfirmed(false);
+  }, []);
+
+  useEffect(() => {
+    if (!newPlaintext) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        // Hard block: cancel the Escape so browser doesn't close anything else either
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    document.addEventListener('keydown', handler, true);
+    return () => document.removeEventListener('keydown', handler, true);
+  }, [newPlaintext]);
+
+  // a11y: focus management refs
+  const copyButtonRef = useRef<HTMLButtonElement | null>(null);
+  const checkboxRef = useRef<HTMLInputElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const rotateButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const handleCopy = useCallback(async () => {
+    if (!newPlaintext) return;
+    try {
+      await navigator.clipboard.writeText(newPlaintext);
+      setCopyError(null);
+    } catch {
+      setCopyError('複製失敗，請手動選取並複製');
+    }
+  }, [newPlaintext, setCopyError]);
+
+  // a11y: trap Tab/Shift+Tab among the three focusable elements
+  const trapTabInDialog = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Tab') return;
+    const focusable = [copyButtonRef.current, checkboxRef.current, closeButtonRef.current].filter(
+      (el): el is HTMLButtonElement | HTMLInputElement => el !== null && !el.disabled,
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+    if (e.shiftKey && active === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && active === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }, []);
+
+  // a11y: focus the checkbox when modal opens, return focus to Rotate button on close
+  useEffect(() => {
+    if (newPlaintext) {
+      // Defer to next tick so the input is mounted
+      const t = setTimeout(() => checkboxRef.current?.focus(), 0);
+      return () => clearTimeout(t);
+    } else {
+      rotateButtonRef.current?.focus();
+    }
+  }, [newPlaintext]);
 
   if (loading) return <div className="text-sm text-muted-foreground">Loading...</div>;
 
@@ -106,6 +171,7 @@ export function MyApiKeyPanel() {
           {testing ? 'Testing...' : 'Test key'}
         </button>
         <button
+          ref={rotateButtonRef}
           onClick={handleRotate}
           disabled={rotating}
           className="px-3 py-1.5 rounded bg-[var(--terminal-green)] text-black hover:opacity-90 text-sm flex items-center gap-1"
@@ -132,43 +198,56 @@ export function MyApiKeyPanel() {
       )}
 
       {newPlaintext && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-[var(--card)] rounded-xl p-6 max-w-md w-full space-y-4">
-            <h4 className="font-bold text-lg">Save your new API key</h4>
-            <p className="text-sm text-muted-foreground">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="rotate-modal-title"
+          aria-describedby="rotate-modal-warning"
+          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+        >
+          <div
+            className="bg-[var(--card)] rounded-xl p-6 max-w-md w-full space-y-4"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={trapTabInDialog}
+          >
+            <h4 id="rotate-modal-title" className="font-bold text-lg">Save your new API key</h4>
+            <p id="rotate-modal-warning" className="text-sm text-muted-foreground">
               This is the only time you will see this key. Copy it now and store it securely.
             </p>
             <div className="flex items-center gap-2 p-2 rounded bg-black/40 font-mono text-sm break-all">
               <code className="flex-1">{newPlaintext}</code>
               <button
-                onClick={() => navigator.clipboard.writeText(newPlaintext)}
+                ref={copyButtonRef}
+                onClick={handleCopy}
                 className="p-1 hover:text-[var(--terminal-green)]"
-                aria-label="Copy"
+                aria-label="Copy API key"
               >
                 <Copy className="h-4 w-4" />
               </button>
             </div>
+            {copyError && (
+              <div role="alert" className="text-xs text-red-500">
+                {copyError}
+              </div>
+            )}
             <label className="flex items-center gap-2 text-sm">
               <input
+                ref={checkboxRef}
                 type="checkbox"
                 checked={confirmed}
                 onChange={(e) => setConfirmed(e.target.checked)}
+                aria-label="Confirm I have saved this key"
               />
               I have saved this key
             </label>
-            <div className="flex gap-2 justify-end">
+            <div className="flex justify-end">
               <button
-                onClick={() => setNewPlaintext(null)}
-                className="px-3 py-1.5 rounded border border-[var(--border)] text-sm"
-              >
-                Cancel
-              </button>
-              <button
+                ref={closeButtonRef}
                 onClick={handleConfirm}
                 disabled={!confirmed}
                 className="px-3 py-1.5 rounded bg-[var(--terminal-green)] text-black text-sm disabled:opacity-50"
               >
-                Activate new key
+                I&apos;ve saved — close
               </button>
             </div>
           </div>

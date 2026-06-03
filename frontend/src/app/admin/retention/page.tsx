@@ -1,19 +1,49 @@
-import { RetentionPanel } from '@/components/admin/RetentionPanel';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Database } from 'lucide-react';
 import Link from 'next/link';
+import { PageHero } from '@/components/layout/PageHero';
+import { RetentionPanel } from '@/components/admin/RetentionPanel';
+import { api } from '@/lib/api';
 
 export default function AdminRetentionPage() {
+  const [lastRunAt, setLastRunAt] = useState<string | null | undefined>(undefined);
+
+  useEffect(() => {
+    api.adminRetention
+      .status()
+      .then((res) => setLastRunAt(res.lastRunAt))
+      .catch(() => setLastRunAt(null));
+  }, []);
+
+  const commandValue =
+    lastRunAt === undefined
+      ? 'loading...'
+      : lastRunAt === null
+        ? 'never'
+        : new Date(lastRunAt).toLocaleString();
+
   return (
-    <main className="container mx-auto p-6 space-y-6">
-      <header>
-        <h1 className="text-2xl font-mono text-[var(--terminal-green)]">Admin · Retention</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Run and preview data retention cleanup.{' '}
-          <Link href="/admin/keys" className="underline hover:text-[var(--terminal-green)]">
-            Back to API keys
+    <main className="min-h-full animate-fade-in-up">
+      <PageHero
+        icon={<Database className="h-8 w-8 text-[var(--terminal-green)]" />}
+        title="Admin · Retention"
+        subtitle="DATA RETENTION MANAGEMENT"
+        command="retention status --last-run"
+        commandValue={commandValue}
+        actions={
+          <Link
+            href="/admin/keys"
+            className="text-sm font-mono text-[var(--terminal-green)] hover:underline"
+          >
+            ← Back to API keys
           </Link>
-        </p>
-      </header>
-      <RetentionPanel />
+        }
+      />
+      <div className="max-w-5xl mx-auto p-6">
+        <RetentionPanel />
+      </div>
     </main>
   );
 }
