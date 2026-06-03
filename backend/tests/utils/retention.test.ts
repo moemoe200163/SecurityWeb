@@ -1,4 +1,4 @@
-import { describe, it, expect, afterAll, afterEach } from 'vitest';
+import { describe, it, expect, afterAll } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { PrismaClient, Prisma } from '@prisma/client';
 import {
@@ -54,10 +54,6 @@ afterAll(async () => {
   await prisma.$disconnect();
 });
 
-afterEach(async () => {
-  // Per-test cleanup marker tracked via closure (see individual tests)
-});
-
 describe('runRetentionCleanup', () => {
   it('default mode is execute (backward compat)', async () => {
     const marker = randomUUID();
@@ -91,13 +87,17 @@ describe('runRetentionCleanup', () => {
   it('mode=execute deletes our seeded row', async () => {
     const marker = randomUUID();
     const id = await seedOldAuditLog(marker);
-    const before = await findByMarker(marker);
-    expect(before?.id).toBe(id);
+    try {
+      const before = await findByMarker(marker);
+      expect(before?.id).toBe(id);
 
-    const result = (await runRetentionCleanup({ auditLogDays: 90, mode: 'execute' })) as RetentionResult;
-    expect(result.auditLogsDeleted).toBeGreaterThanOrEqual(1);
+      const result = (await runRetentionCleanup({ auditLogDays: 90, mode: 'execute' })) as RetentionResult;
+      expect(result.auditLogsDeleted).toBeGreaterThanOrEqual(1);
 
-    const after = await findByMarker(marker);
-    expect(after).toBeNull();
+      const after = await findByMarker(marker);
+      expect(after).toBeNull();
+    } finally {
+      await deleteByMarker(marker);
+    }
   });
 });
