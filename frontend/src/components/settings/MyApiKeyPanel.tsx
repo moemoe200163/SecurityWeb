@@ -19,6 +19,7 @@ export function MyApiKeyPanel() {
   const [rotating, setRotating] = useState(false);
   const [newPlaintext, setNewPlaintext] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState(false);
+  const [copyError, setCopyError] = useState<string | null>(null);
 
   useEffect(() => {
     api.me.getApiKey()
@@ -92,9 +93,6 @@ export function MyApiKeyPanel() {
     document.addEventListener('keydown', handler, true);
     return () => document.removeEventListener('keydown', handler, true);
   }, [newPlaintext]);
-
-  // a11y: clipboard error feedback
-  const [copyError, setCopyError] = useState<string | null>(null);
 
   // a11y: focus management refs
   const copyButtonRef = useRef<HTMLButtonElement | null>(null);
