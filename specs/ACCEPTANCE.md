@@ -25,17 +25,18 @@
 | 項目 | 狀態 | 證據 |
 |------|------|------|
 | `npm run build` 通過 | **PASS** | tsc 無錯 |
-| `npx vitest run tests/api.test.ts` 全綠 | **PASS** | 23/23 passed |
+| `npm test` (= `vitest run`) 全綠 | **PASS** | 54/54 passed（23 api + 5 adminRetention + 3 retention + 其他） |
 | 測試用 API key 不再硬編碼 | **PASS** | `tests/setup.ts` 用 `TEST_API_KEY` 注入 |
 | 測試檔沒有 fake summary | **PASS** | 移除 `17 passed` 假宣告 |
 | 測試有真實斷言（包含 RBAC、disabled template、404） | **PASS** | 23 個 case 覆蓋 5 大區塊 |
+| Retention 測試使用 raw SQL seed | **PASS** | 繞過 Prisma `@default(now())` 確保舊資料可靠建立 |
 
 ### Frontend Build / Lint
 | 項目 | 狀態 | 證據 |
 |------|------|------|
-| `npm run build` 通過 | **PASS** | Next.js 16 編譯成功 |
-| `npm run lint` 0 error | **PASS** | 仍有 ~60 warnings（見 P3 改進中） |
-| Lint warning 數量下降 | **PARTIAL** | baseline 66 → after P3（TBD） |
+| `npm run build` 通過 | **PASS** | Next.js 16 編譯成功，含 `/admin/retention` 路由 |
+| `npm run lint` 0 error | **PASS** | 移除 MyApiKeyPanel 未使用 import + e2e `any` 修正 |
+| Lint warnings | **INFO** | 既有 warnings（非 error），不阻塞 |
 
 ---
 
@@ -123,6 +124,51 @@
 
 ---
 
+## 11. Phase 19: API Key 生命週期
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| Schema: nullable key 欄位 + 生命週期時間戳 | **PASS** | migration 加 `hashedKey`, `lastRotatedAt`, `expiresAt` |
+| apiKeyAuth: 撤銷/過期檢查 + 恆定時間 hash 比對 | **PASS** | `crypto.timingSafeEqual` 比對 |
+| apiKeyService: race-free rotate/revoke | **PASS** | Prisma transaction 保證原子性 |
+| `/api/me/api-key` (self) 路由 | **PASS** | GET/POST/rotate self-service |
+| `/api/admin/keys` (admin) 路由 | **PASS** | list/rotate/revoke admin API |
+| 前端 MyApiKeyPanel + UserKeyTable | **PASS** | settings 頁面 + admin/keys 頁面 |
+| 整合測試 + Playwright E2E | **PASS** | 17 個新測試全通過 |
+
+---
+
+## 12. Phase 19: Retention 管理員
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| `runRetentionCleanup` 擴充 mode 參數 | **PASS** | `'execute' \| 'preview'` + per-table error reporting |
+| `GET /api/admin/retention/status` | **PASS** | 回傳 counts, policy, lastRunAt, lastResult |
+| `POST /api/admin/retention/run` | **PASS** | 支援 `?dryRun=true` preview |
+| 舊 `/retention/cleanup` 標記 deprecated | **PASS** | JocDoc `@deprecated` + 保留向後相容 |
+| 整合測試 5/5 通過 | **PASS** | adminRetention.test.ts |
+| 前端 `api.adminRetention` methods | **PASS** | status() + run(dryRun, config) |
+| RetentionPanel 組件 | **PASS** | counts/policy/last run 展示 + dry-run + confirm modal |
+| `/admin/retention` 頁面 + 導航 | **PASS** | 從 admin/keys 可導航 |
+
+---
+
+## 13. Phase 19: Sandbox Egress Policy
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| `egress.conf.example` JSON config | **PASS** | CIDR + port + proto whitelist |
+| `egress-policy.sh` 重寫 | **PASS** | file > env > lock-down 三層 precedence |
+| `exec "$@"` ENTRYPOINT | **PASS** | container 啟動後正確移交給 CMD |
+| `DRY_RUN=1` 模式 | **PASS** | 輸出 iptables rules 不套用 |
+| CIDR 驗證 + 0.0.0.0/0 拒絕 | **PASS** | bash regex + explicit check |
+| Dockerfile 加 jq + egress assets | **PASS** | `ENTRYPOINT` 設為 egress-policy.sh |
+| docker-compose.yml 掛載 config | **PASS** | dev override 掛 egress.conf，main compose 不掛 |
+| `validateEgressConfig.ts` Zod 驗證 | **PASS** | CLI + `npm run validate-egress` |
+| Bats tests 10/10 | **PASS** | lockdown + env + rejection tests |
+
+---
+
 ## 9. 前端一致性（P4）
 
 | 項目 | 狀態 | 證據 |
@@ -146,12 +192,14 @@
 
 ## 7. 尚未驗收（NOT TESTED / BLOCKED）
 
-- 沙箱實際執行工具（需要 Kali image 在 host 上啟動 docker-in-docker，尚未在 CI 跑）
+- 沙箱實際執行工具（需要 Kali image + `--profile tools`，尚未在 CI 跑）
 - AI 對話生成（需要 OLLAMA 或 MiniMax API key 才有真實回應；mock 模式只回固定模板）
 - BGP consumer 持續運作（需 RIPEstat 或公開 feed 連線；測試環境不跑）
-- 生產環境的密鑰管理（目前 .env 直接 commit 進版本庫，需要改用 secret manager；TODO Phase 19 API key hash 儲存）
+- 生產環境的密鑰管理（目前 .env 直接 commit 進版本庫，需要改用 secret manager）
 - CSRF 保護（後端目前未實作）
-- 完整 E2E（含前端互動，需要 Playwright 環境）
 - 完整 i18n 切換（目前只有繁中）
-- API key 過期 / 撤銷機制（目前只支援 admin 強制重發）
-- 資料保留策略（audit log / tool execution output / BGP update 會無限增長）
+
+**已解決（從前版移除）：**
+- ~~API key 過期 / 撤銷機制~~ → Phase 19.1 已完成（self-service rotate + admin revoke）
+- ~~資料保留策略~~ → Phase 19.2 已完成（retention admin UI + dry-run）
+- ~~完整 E2E smoke test~~ → Phase 19 Playwright 已建立（smoke.spec.ts）

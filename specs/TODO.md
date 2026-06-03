@@ -136,23 +136,33 @@
 
 ## 下一階段
 
-### Phase 19: 上線治理 `[ ]`
-- [ ] API key 改 hash 儲存（DB 不保存明文 key）
-- [ ] 補資料保留策略（audit log / tool execution output / BGP update retention）
-- [ ] Sandbox egress policy 預設限制到授權 scope
-- [ ] 完整 E2E smoke test（Playwright）
+### Phase 19: 上線治理 `[x]`
+- [x] 19.1 API Key 生命週期：schema migration + apiKeyAuth 撤銷/過期檢查 +恒定時間 hash + self-service rotate/revoke + admin API + 前端 UI + 測試
+- [x] 19.2 Retention 管理員：mode 參數 + per-table error reporting + /api/admin/retention/{status,run} + adminRetention 前端 methods + RetentionPanel + /admin/retention 頁面 + 整合測試
+- [x] 19.3 Sandbox Egress Policy：egress.conf.example + egress-policy.sh 重寫 (file>env>lock-down) + DRY_RUN + Dockerfile jq + compose config + validateEgressConfig Zod 驗證 + bats 10/10
+- [x] P0 穩定化：lint fix + npm test 改 full suite + retention test raw SQL seed + .gitignore
 
-### Phase 20: 驗收與交付 `[ ]`
+### Phase 20: MVP 驗收與交付 `[ ]`
 - [ ] 端到端驗收每個使用者旅程（SOC / Threat / Pentest）
 - [ ] 文件化操作手冊（如何 seed、如何取得 admin key）
 - [ ] Docker profile 驗收文件
 - [ ] Demo dataset → 完整 AISOC 閉環展示
 
+### Phase 21: 前端治理頁一致化 `[ ]`
+- [ ] /admin/keys、/admin/retention 補上共用 PageHero 與一致的 Hero Bar
+- [ ] RetentionPanel 補 401/403/錯誤狀態 UI（不只 loading）
+- [ ] API key rotate modal 禁止直接 cancel，改為明確「我已保存」後才能關閉
+
+### Phase 22: 安全與 Docker 操作優化 `[ ]`
+- [ ] CI 中 `docker compose config` 避免輸出 secrets（mask env 或只 grep 特定 fields）
+- [ ] BGP consumer 維持 profile-gated，補 bulk insert + 低頻 log + retention 指標到 dashboard
+- [ ] Sandbox egress 文件化：default compose 不啟 tools profile，dev override 說明
+
 ---
 
 ## 已知風險 / 待辦細項
 - [ ] sandbox 對每個 template 的 timeout 與資源上限需逐一調校
-- [ ] Sandbox 網路策略：egress 目前是開放的，需收緊
-- [ ] API key 沒有過期 / 撤銷機制（目前只支援 admin 強制重發）
-- [ ] 沒有 audit_log 保留策略（會無限增長）
+- [ ] CSRF 保護（後端目前未實作）
+- [ ] 生產環境密鑰管理（.env 目前直接在版本庫，需改用 secret manager）
 - [ ] 沒有完整 i18n（前端文案以繁中為主，英文保留技術名詞）
+- [ ] AI 對話需要 OLLAMA 或 MiniMax API key（mock 模式只回固定模板）
