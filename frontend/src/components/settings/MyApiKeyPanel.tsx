@@ -41,6 +41,7 @@ export function MyApiKeyPanel() {
   };
 
   const handleRotate = async () => {
+    setCopyError(null);
     setRotating(true);
     try {
       const result = await api.me.rotateApiKey();
@@ -96,7 +97,6 @@ export function MyApiKeyPanel() {
   const [copyError, setCopyError] = useState<string | null>(null);
 
   // a11y: focus management refs
-  const dialogRef = useRef<HTMLDivElement | null>(null);
   const copyButtonRef = useRef<HTMLButtonElement | null>(null);
   const checkboxRef = useRef<HTMLInputElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -110,7 +110,7 @@ export function MyApiKeyPanel() {
     } catch {
       setCopyError('複製失敗，請手動選取並複製');
     }
-  }, [newPlaintext]);
+  }, [newPlaintext, setCopyError]);
 
   // a11y: trap Tab/Shift+Tab among the three focusable elements
   const trapTabInDialog = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -211,7 +211,6 @@ export function MyApiKeyPanel() {
             className="bg-[var(--card)] rounded-xl p-6 max-w-md w-full space-y-4"
             onClick={(e) => e.stopPropagation()}
             onKeyDown={trapTabInDialog}
-            ref={dialogRef}
           >
             <h4 id="rotate-modal-title" className="font-bold text-lg">Save your new API key</h4>
             <p id="rotate-modal-warning" className="text-sm text-muted-foreground">
