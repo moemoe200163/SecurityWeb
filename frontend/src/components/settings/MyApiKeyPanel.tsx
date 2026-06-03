@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { CheckCircle, XCircle, RotateCw, Trash2, Copy } from 'lucide-react';
 import { api, setApiKey, clearApiKey } from '@/lib/api';
 
@@ -92,6 +92,56 @@ export function MyApiKeyPanel() {
     return () => document.removeEventListener('keydown', handler, true);
   }, [newPlaintext]);
 
+  // a11y: clipboard error feedback
+  const [copyError, setCopyError] = useState<string | null>(null);
+
+  // a11y: focus management refs
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const copyButtonRef = useRef<HTMLButtonElement | null>(null);
+  const checkboxRef = useRef<HTMLInputElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const rotateButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const handleCopy = useCallback(async () => {
+    if (!newPlaintext) return;
+    try {
+      await navigator.clipboard.writeText(newPlaintext);
+      setCopyError(null);
+    } catch {
+      setCopyError('複製失敗，請手動選取並複製');
+    }
+  }, [newPlaintext]);
+
+  // a11y: trap Tab/Shift+Tab among the three focusable elements
+  const trapTabInDialog = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Tab') return;
+    const focusable = [copyButtonRef.current, checkboxRef.current, closeButtonRef.current].filter(
+      (el): el is HTMLButtonElement | HTMLInputElement => el !== null && !el.disabled,
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+    if (e.shiftKey && active === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && active === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }, []);
+
+  // a11y: focus the checkbox when modal opens, return focus to Rotate button on close
+  useEffect(() => {
+    if (newPlaintext) {
+      // Defer to next tick so the input is mounted
+      const t = setTimeout(() => checkboxRef.current?.focus(), 0);
+      return () => clearTimeout(t);
+    } else {
+      rotateButtonRef.current?.focus();
+    }
+  }, [newPlaintext]);
+
   if (loading) return <div className="text-sm text-muted-foreground">Loading...</div>;
 
   return (
@@ -123,6 +173,7 @@ export function MyApiKeyPanel() {
           {testing ? 'Testing...' : 'Test key'}
         </button>
         <button
+          ref={rotateButtonRef}
           onClick={handleRotate}
           disabled={rotating}
           className="px-3 py-1.5 rounded bg-[var(--terminal-green)] text-black hover:opacity-90 text-sm flex items-center gap-1"
@@ -153,28 +204,38 @@ export function MyApiKeyPanel() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="rotate-modal-title"
+          aria-describedby="rotate-modal-warning"
           className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
         >
           <div
             className="bg-[var(--card)] rounded-xl p-6 max-w-md w-full space-y-4"
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={trapTabInDialog}
+            ref={dialogRef}
           >
             <h4 id="rotate-modal-title" className="font-bold text-lg">Save your new API key</h4>
-            <p className="text-sm text-muted-foreground">
+            <p id="rotate-modal-warning" className="text-sm text-muted-foreground">
               This is the only time you will see this key. Copy it now and store it securely.
             </p>
             <div className="flex items-center gap-2 p-2 rounded bg-black/40 font-mono text-sm break-all">
               <code className="flex-1">{newPlaintext}</code>
               <button
-                onClick={() => navigator.clipboard.writeText(newPlaintext)}
+                ref={copyButtonRef}
+                onClick={handleCopy}
                 className="p-1 hover:text-[var(--terminal-green)]"
-                aria-label="Copy"
+                aria-label="Copy API key"
               >
                 <Copy className="h-4 w-4" />
               </button>
             </div>
+            {copyError && (
+              <div role="alert" className="text-xs text-red-500">
+                {copyError}
+              </div>
+            )}
             <label className="flex items-center gap-2 text-sm">
               <input
+                ref={checkboxRef}
                 type="checkbox"
                 checked={confirmed}
                 onChange={(e) => setConfirmed(e.target.checked)}
@@ -184,6 +245,7 @@ export function MyApiKeyPanel() {
             </label>
             <div className="flex justify-end">
               <button
+                ref={closeButtonRef}
                 onClick={handleConfirm}
                 disabled={!confirmed}
                 className="px-3 py-1.5 rounded bg-[var(--terminal-green)] text-black text-sm disabled:opacity-50"
