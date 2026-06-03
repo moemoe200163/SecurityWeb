@@ -27,6 +27,9 @@ test.describe('Admin · API Keys page', () => {
   });
 
   test('rotate modal cannot close without "I have delivered" confirmation', async ({ page }) => {
+    // UserKeyTable.handleRotate gates behind a native confirm() — auto-accept.
+    page.on('dialog', (d) => d.accept());
+
     await setAdminApiKey(page);
     await page.goto('/admin/keys');
 
