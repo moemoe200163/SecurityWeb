@@ -148,10 +148,12 @@
 - [ ] Docker profile 驗收文件
 - [ ] Demo dataset → 完整 AISOC 閉環展示
 
-### Phase 21: 前端治理頁一致化 `[ ]`
-- [ ] /admin/keys、/admin/retention 補上共用 PageHero 與一致的 Hero Bar
-- [ ] RetentionPanel 補 401/403/錯誤狀態 UI（不只 loading）
-- [ ] API key rotate modal 禁止直接 cancel，改為明確「我已保存」後才能關閉
+### Phase 21: 前端治理頁一致化 `[x]`
+- [x] /admin/keys、/admin/retention 補上共用 PageHero 與一致的 Hero Bar
+- [x] RetentionPanel 補 401/403/錯誤狀態 UI（不只 loading）
+- [x] API key rotate modal 禁止直接 cancel，改為明確「我已保存」後才能關閉
+- [x] P0 修：retention.test.ts 改用 unique marker，讓 `npm test` 與 `npx vitest run` 都穩定
+- [x] Playwright E2E：admin-keys.spec.ts + admin-retention.spec.ts 覆蓋 PageHero 與錯誤狀態
 
 ### Phase 22: 安全與 Docker 操作優化 `[ ]`
 - [ ] CI 中 `docker compose config` 避免輸出 secrets（mask env 或只 grep 特定 fields）
