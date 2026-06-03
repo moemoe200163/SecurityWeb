@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CheckCircle, XCircle, RotateCw, Trash2, Copy } from 'lucide-react';
 import { api, setApiKey, clearApiKey } from '@/lib/api';
 
@@ -63,8 +63,7 @@ export function MyApiKeyPanel() {
   const handleConfirm = () => {
     if (newPlaintext && confirmed) {
       setApiKey(newPlaintext);
-      setNewPlaintext(null);
-      setConfirmed(false);
+      closeModal();
     }
   };
 
@@ -74,6 +73,24 @@ export function MyApiKeyPanel() {
       clearApiKey();
     }
   };
+
+  const closeModal = useCallback(() => {
+    setNewPlaintext(null);
+    setConfirmed(false);
+  }, []);
+
+  useEffect(() => {
+    if (!newPlaintext) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        // Hard block: cancel the Escape so browser doesn't close anything else either
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    document.addEventListener('keydown', handler, true);
+    return () => document.removeEventListener('keydown', handler, true);
+  }, [newPlaintext]);
 
   if (loading) return <div className="text-sm text-muted-foreground">Loading...</div>;
 
@@ -132,9 +149,17 @@ export function MyApiKeyPanel() {
       )}
 
       {newPlaintext && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-[var(--card)] rounded-xl p-6 max-w-md w-full space-y-4">
-            <h4 className="font-bold text-lg">Save your new API key</h4>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="rotate-modal-title"
+          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+        >
+          <div
+            className="bg-[var(--card)] rounded-xl p-6 max-w-md w-full space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h4 id="rotate-modal-title" className="font-bold text-lg">Save your new API key</h4>
             <p className="text-sm text-muted-foreground">
               This is the only time you will see this key. Copy it now and store it securely.
             </p>
@@ -153,22 +178,17 @@ export function MyApiKeyPanel() {
                 type="checkbox"
                 checked={confirmed}
                 onChange={(e) => setConfirmed(e.target.checked)}
+                aria-label="Confirm I have saved this key"
               />
               I have saved this key
             </label>
-            <div className="flex gap-2 justify-end">
-              <button
-                onClick={() => setNewPlaintext(null)}
-                className="px-3 py-1.5 rounded border border-[var(--border)] text-sm"
-              >
-                Cancel
-              </button>
+            <div className="flex justify-end">
               <button
                 onClick={handleConfirm}
                 disabled={!confirmed}
                 className="px-3 py-1.5 rounded bg-[var(--terminal-green)] text-black text-sm disabled:opacity-50"
               >
-                Activate new key
+                I&apos;ve saved — close
               </button>
             </div>
           </div>
