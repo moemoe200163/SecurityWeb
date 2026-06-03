@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Play, Eye, AlertCircle } from 'lucide-react';
-import { api } from '@/lib/api';
+import { Play, Eye, AlertCircle, ShieldAlert, RefreshCw } from 'lucide-react';
+import { api, ApiError } from '@/lib/api';
+import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import Link from 'next/link';
 
 interface Status {
   counts: { auditLog: number; toolExecution: number; bgpUpdate: number };
@@ -17,20 +19,35 @@ interface Preview {
   bgpUpdatesWouldDelete: number;
 }
 
+type LoadState =
+  | { kind: 'loading' }
+  | { kind: 'ready' }
+  | { kind: 'error'; type: 'auth' | 'forbidden' | 'server'; message: string };
+
+function classifyError(e: unknown): { type: 'auth' | 'forbidden' | 'server'; message: string } {
+  if (e instanceof ApiError) {
+    if (e.status === 401) return { type: 'auth', message: '需要 API Key 才能繼續' };
+    if (e.status === 403) return { type: 'forbidden', message: '需要管理員權限' };
+    return { type: 'server', message: e.message };
+  }
+  return { type: 'server', message: '網路錯誤，請稍後重試' };
+}
+
 export function RetentionPanel() {
   const [status, setStatus] = useState<Status | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadState, setLoadState] = useState<LoadState>({ kind: 'loading' });
   const [running, setRunning] = useState(false);
   const [preview, setPreview] = useState<Preview | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [toast, setToast] = useState<{ kind: 'ok' | 'err'; msg: string } | null>(null);
 
   const load = async () => {
-    setLoading(true);
+    setLoadState({ kind: 'loading' });
     try {
       setStatus(await api.adminRetention.status());
-    } finally {
-      setLoading(false);
+      setLoadState({ kind: 'ready' });
+    } catch (e) {
+      setLoadState({ kind: 'error', ...classifyError(e) });
     }
   };
 
@@ -41,7 +58,8 @@ export function RetentionPanel() {
       const res = await api.adminRetention.run(true);
       if (res.mode === 'dry-run') setPreview(res.preview);
     } catch (e) {
-      setToast({ kind: 'err', msg: (e as Error).message });
+      const { message } = classifyError(e);
+      setToast({ kind: 'err', msg: message });
     }
   };
 
@@ -66,13 +84,61 @@ export function RetentionPanel() {
         await load();
       }
     } catch (e) {
-      setToast({ kind: 'err', msg: (e as Error).message });
+      const { message } = classifyError(e);
+      setToast({ kind: 'err', msg: message });
     } finally {
       setRunning(false);
     }
   };
 
-  if (loading || !status) return <div className="text-sm text-muted-foreground">Loading retention status...</div>;
+  if (loadState.kind === 'loading') {
+    return <div className="text-sm text-muted-foreground">Loading retention status...</div>;
+  }
+
+  if (loadState.kind === 'error' && loadState.type === 'auth') {
+    return <ApiKeyRequired />;
+  }
+
+  if (loadState.kind === 'error') {
+    return (
+      <div
+        role="alert"
+        className="rounded-xl border border-[var(--terminal-amber)]/30 bg-[var(--terminal-amber)]/5 p-6 space-y-3"
+      >
+        <div className="flex items-center gap-2 text-[var(--terminal-amber)]">
+          {loadState.type === 'forbidden' ? (
+            <ShieldAlert className="h-5 w-5" />
+          ) : (
+            <AlertCircle className="h-5 w-5" />
+          )}
+          <h3 className="font-mono text-sm">
+            {loadState.type === 'forbidden' ? '需要管理員權限' : '無法載入 retention 狀態'}
+          </h3>
+        </div>
+        <p className="text-sm text-muted-foreground">{loadState.message}</p>
+        <div className="flex gap-2">
+          {loadState.type === 'forbidden' ? (
+            <Link
+              href="/settings"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded border border-[var(--border)] hover:border-[var(--terminal-green)]/50 text-sm"
+            >
+              前往設定
+            </Link>
+          ) : (
+            <button
+              onClick={load}
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded bg-[var(--terminal-green)] text-black hover:opacity-90 text-sm"
+            >
+              <RefreshCw className="h-4 w-4" /> 重試
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // loadState.kind === 'ready' but status may still be null on first render
+  if (!status) return null;
 
   return (
     <div className="space-y-6 rounded-xl border border-[var(--border)] bg-[var(--card)] p-6">
