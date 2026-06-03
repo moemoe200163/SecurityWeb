@@ -26,6 +26,12 @@ engine = create_engine(DATABASE_URL)
 BATCH_SIZE = 100
 BATCH_TIMEOUT_SECONDS = 5
 
+# Log configuration (low-frequency logging)
+LOG_INTERVAL_SECONDS = 300  # 5 minutes
+_last_log_time = None
+_updates_since_last_log = 0
+_total_updates_flushed = 0
+
 # ASN -> Country cache (loaded once, refreshed periodically)
 _asn_country_cache = {}
 _cache_loaded_at = None
@@ -56,7 +62,7 @@ def _get_country_for_asn(origin_asn):
 
 async def _flush_buffer():
     """Flush the update buffer to database in a single transaction."""
-    global _update_buffer
+    global _update_buffer, _updates_since_last_log, _total_updates_flushed, _last_log_time
     if not _update_buffer:
         return 0
 
@@ -85,7 +91,16 @@ async def _flush_buffer():
                     print(f"DB insert error: {e}")
 
         count = len(updates_to_flush)
-        print(f"Flushed {count} updates at {datetime.now().isoformat()}")
+        _updates_since_last_log += count
+        _total_updates_flushed += count
+
+        # Low-frequency logging (every LOG_INTERVAL_SECONDS)
+        now = datetime.now()
+        if _last_log_time is None or (now - _last_log_time).total_seconds() >= LOG_INTERVAL_SECONDS:
+            print(f"[STATS] Flushed {_updates_since_last_log} updates in last {LOG_INTERVAL_SECONDS}s | Total: {_total_updates_flushed}")
+            _updates_since_last_log = 0
+            _last_log_time = now
+
         return count
     except Exception as e:
         print(f"Batch flush error: {e}")
@@ -175,7 +190,9 @@ async def run():
                             async with _buffer_lock:
                                 _update_buffer.extend(updates)
                                 should_flush = len(_update_buffer) >= BATCH_SIZE
-                            print(f"Buffered {len(updates)} updates, buffer size: {len(_update_buffer)}")
+                            # Debug log only at startup or on first batch
+                            if _total_updates_flushed == 0 and len(_update_buffer) <= BATCH_SIZE:
+                                print(f"Buffered {len(updates)} updates, buffer size: {len(_update_buffer)}")
                             if should_flush:
                                 await _flush_buffer()
 

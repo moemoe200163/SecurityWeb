@@ -527,4 +527,41 @@ export async function bgpRoutes(fastify: FastifyInstance): Promise<void> {
       return reply.status(500).send({ error: 'Internal server error' });
     }
   });
+
+  // GET /api/bgp/metrics - BGP consumer retention metrics
+  fastify.get('/metrics', async (request, reply) => {
+    try {
+      // Get total count, oldest timestamp, and latest timestamp
+      const [totalResult, oldestResult, latestResult] = await Promise.all([
+        prisma.bgpUpdate.aggregate({
+          _count: true,
+        }),
+        prisma.bgpUpdate.findFirst({
+          orderBy: { timestamp: 'asc' },
+          select: { timestamp: true },
+        }),
+        prisma.bgpUpdate.findFirst({
+          orderBy: { timestamp: 'desc' },
+          select: { timestamp: true },
+        }),
+      ]);
+
+      // Get count by type
+      const [announces, withdrawals] = await Promise.all([
+        prisma.bgpUpdate.count({ where: { type: 'A' } }),
+        prisma.bgpUpdate.count({ where: { type: 'W' } }),
+      ]);
+
+      return reply.send({
+        totalUpdates: totalResult._count,
+        announces,
+        withdrawals,
+        oldestTimestamp: oldestResult?.timestamp || null,
+        latestTimestamp: latestResult?.timestamp || null,
+      });
+    } catch (error) {
+      fastify.log.error(error);
+      return reply.status(500).send({ error: 'Internal server error' });
+    }
+  });
 }
