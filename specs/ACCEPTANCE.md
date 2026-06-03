@@ -37,6 +37,7 @@
 | `npm run build` 通過 | **PASS** | Next.js 16 編譯成功，含 `/admin/retention` 路由 |
 | `npm run lint` 0 error | **PASS** | 移除 MyApiKeyPanel 未使用 import + e2e `any` 修正 |
 | Lint warnings | **INFO** | 既有 warnings（非 error），不阻塞 |
+| Turbopack 在 worktree symlink 下 panic | **INFO** | `next dev` 預設 Turbopack 在 `.worktrees/<name>/frontend/node_modules` symlink 指到 project root 外時會 panic；驗收/開發請用 `next dev --webpack` 或正式 checkout 後跑 Turbopack。Next.js 16 + worktree symlink 互動的已知問題，非 Phase 21 缺陷（Phase 21 P0 follow-up）。 |
 
 ---
 
