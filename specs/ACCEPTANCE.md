@@ -25,7 +25,7 @@
 | 項目 | 狀態 | 證據 |
 |------|------|------|
 | `npm run build` 通過 | **PASS** | tsc 無錯 |
-| `npm test` (= `vitest run`) 全綠 | **PASS** | 54/54 passed — `npm test`（預設 `vitest run` 平行）穩定；retention.test.ts 用 unique marker 避免平行 race（Phase 21 P0） |
+| `npm test` (= `vitest run`) 全綠 | **PASS** | 54/54 passed（23 api + 5 adminRetention + 3 retention + 其他） |
 | 測試用 API key 不再硬編碼 | **PASS** | `tests/setup.ts` 用 `TEST_API_KEY` 注入 |
 | 測試檔沒有 fake summary | **PASS** | 移除 `17 passed` 假宣告 |
 | 測試有真實斷言（包含 RBAC、disabled template、404） | **PASS** | 23 個 case 覆蓋 5 大區塊 |
@@ -187,22 +187,6 @@
 | 預設啟動路徑只包含必要服務 | **PARTIAL** | 已加 backend port 暴露；sandbox/nginx/bgp 需 profile 化（見 P4） |
 | `npm run db:seed` 可重複執行 | **PASS** | 使用 `upsert` 與 `randomUUID` |
 | 後端可被 host 訪問 | **PASS** | `localhost:4000` 對應 backend |
-
----
-
-## 14. Phase 21: 前端治理頁一致化
-
-| 項目 | 狀態 | 證據 |
-|------|------|------|
-| `/admin/keys` 改用共用 `PageHero` | **PASS** | `frontend/src/app/admin/keys/page.tsx` 使用 `<PageHero>`，command 顯示「{n} active · {n} revoked · {n} no-key」 |
-| `/admin/retention` 改用共用 `PageHero` | **PASS** | `frontend/src/app/admin/retention/page.tsx` 使用 `<PageHero>`，command 顯示 `lastRunAt` 或 `never` |
-| `RetentionPanel` 401 → `ApiKeyRequired` | **PASS** | 三狀態 error UI，401 整頁換 `<ApiKeyRequired />` |
-| `RetentionPanel` 403 → forbidden inline | **PASS** | 顯示「需要管理員權限」+ 連結到 `/settings` |
-| `RetentionPanel` 500 → retry | **PASS** | 顯示錯誤區塊 + Retry 按鈕（重試成功） |
-| `MyApiKeyPanel` rotate modal 禁止直接 cancel | **PASS** | 移除 Cancel 按鈕；backdrop/ESC hard-block；唯一關閉路徑是勾選「I have saved」後按「I've saved — close」 |
-| `UserKeyTable` rotate modal 硬化 | **PASS** | 加「I have delivered this key to the user」checkbox；Done 按鈕 disabled 直到勾選 |
-| Playwright E2E `admin-keys.spec.ts` | **PASS** | 3 個 test 全綠 |
-| Playwright E2E `admin-retention.spec.ts` | **PASS** | 5 個 test 全綠（PageHero + 401/403/500） |
 
 ---
 
