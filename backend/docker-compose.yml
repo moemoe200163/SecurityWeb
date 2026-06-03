@@ -1,0 +1,208 @@
+# =============================================================================
+# SecurityWeb — Docker Compose
+# =============================================================================
+# Profiles:
+#   default   - frontend, backend, db (core app stack)
+#   dev       - dev-only port mappings (psql access, host port for backend);
+#               use `docker compose --profile dev up` together with `docker-compose.dev.yml`
+#   tools     - sandbox (Kali) for nmap/sqlmap/nikto etc.   HEAVY: seccomp=unconfined, NET_ADMIN
+#   bgp       - bgp-consumer (Python long-running BGP sync)
+#   edge      - nginx reverse proxy with WAF (prod edge)
+#
+# Heavy/privileged services MUST be profile-gated. Host port mappings SHOULD
+# come from docker-compose.dev.yml, not the main file.
+# =============================================================================
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:4000
+      - BACKEND_URL=http://backend:4000
+    depends_on:
+      - backend
+    networks:
+      - securityweb
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 3G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: runner
+    user: root
+    env_file:
+      - ./backend/.env
+    # Port 4000 is NOT published here on purpose. The backend is reachable
+    # from the host only via:
+    #   - dev override (docker-compose.dev.yml) for `pnpm test` and curl
+    #   - nginx edge profile in prod (port 80/443 -> backend:4000)
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql://securityweb:securityweb123@db:5432/securityweb}
+      - PORT=4000
+      - MINIMAX_API_KEY=${MINIMAX_API_KEY}
+      - MINIMAX_API_ENDPOINT=${MINIMAX_API_ENDPOINT:-https://api.minimax.chat/v1}
+      - MINIMAX_MODEL=${MINIMAX_MODEL:-MiniMax-M2.7}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - securityweb
+      - securityweb_sandbox
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 3G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    command: >
+      sh -c "
+        node ./node_modules/prisma/build/index.js migrate deploy &&
+        echo 'Starting backend...' &&
+        node dist/index.js
+      "
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  bgp-consumer:
+    build:
+      context: ./backend
+      dockerfile: scripts/Dockerfile-bgp-consumer
+    profiles:
+      - bgp
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql://securityweb:securityweb123@db:5432/securityweb}
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - securityweb
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  nginx:
+    build:
+      context: ./nginx/docker
+      dockerfile: Dockerfile
+    profiles:
+      - edge
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/waf:/etc/nginx/waf:ro
+    depends_on:
+      frontend:
+        condition: service_started
+      backend:
+        condition: service_started
+    networks:
+      - securityweb
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  db:
+    image: postgres:15-alpine
+    container_name: securityweb-db-1
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-securityweb}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB:-securityweb}
+    command: >
+      postgres
+      -c shared_buffers=128MB
+      -c max_connections=20
+      -c work_mem=4MB
+      -c maintenance_work_mem=64MB
+      -c effective_cache_size=512MB
+      -c max_wal_size=512MB
+      -c log_min_duration_statement=2000
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # Postgres 5432 is NOT published to the host by default. Reach the DB
+    # from the host only via the dev override (docker-compose.dev.yml).
+    # The backend connects to db:5432 over the internal network.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U securityweb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - securityweb
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 768M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  sandbox:
+    build:
+      context: ./sandbox
+      dockerfile: Dockerfile
+    container_name: securityweb-sandbox
+    profiles:
+      - tools
+    restart: unless-stopped
+    networks:
+      - securityweb_sandbox
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+    security_opt:
+      - seccomp=unconfined
+    cap_add:
+      - NET_ADMIN
+    tmpfs:
+      - /run:exec
+
+networks:
+  securityweb:
+    driver: bridge
+  securityweb_sandbox:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  pgdata:

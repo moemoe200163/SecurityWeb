@@ -244,6 +244,32 @@
 
 ---
 
+## 16. Phase 22-B: Compose Secrets-Safe Validation
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| `scripts/validate-compose-safe.sh` 存在 | **PASS** | 18 個檢查全通過 |
+| 不暴露完整 `docker compose config` 輸出 | **PASS** | 腳本只使用 `--services` 和 `--profiles` 子命令 |
+| 否認清單檢查（硬編碼密鑰） | **PASS** | 無硬編碼 `POSTGRES_PASSWORD`、`MINIMAX_API_KEY` 等 |
+| 服務結構驗證 | **PASS** | `frontend`、`backend`、`db` 存在；`sandbox`、`bgp-consumer`、`nginx` 不在預設列表 |
+| Profiles 驗證 | **PASS** | `tools`、`bgp`、`edge` profiles 存在 |
+| Sandbox 驗證 | **PASS** | 在 `tools` profile，有 `NET_ADMIN` 能力 |
+| BGP consumer 驗證 | **PASS** | 在 `bgp` profile |
+| 埠暴露檢查 | **PASS** | 主 compose 不暴露 backend/db 埠 |
+| Dev override 檢查 | **PASS** | dev override 暴露埠（預期行為） |
+| 環境變數引用 | **PASS** | `POSTGRES_PASSWORD`、`MINIMAX_API_KEY` 使用 `${VAR}` 語法 |
+
+**Phase 22-B 完整驗收記錄（2026-06-03）：**
+
+| 檢查 | 結果 | 證據 |
+|------|------|------|
+| `bash scripts/validate-compose-safe.sh` | PASS | 18/18 checks passed |
+| `docker compose config --services` | PASS | 只列服務名，不含 secrets |
+| `docker compose config --profiles` | PASS | 列出 bgp/edge/tools |
+| 不貼完整 `docker compose config` | PASS | 本文件無完整 config 輸出 |
+
+---
+
 ## 7. 尚未驗收（NOT TESTED / BLOCKED）
 
 - 沙箱實際執行工具（需要 Kali image + `--profile tools`，尚未在 CI 跑）

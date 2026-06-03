@@ -156,8 +156,8 @@
 - [x] Playwright E2E：admin-keys.spec.ts + admin-retention.spec.ts 覆蓋 PageHero 與錯誤狀態
 
 ### Phase 22: 安全與 Docker 操作優化 `[ ]`
-- [ ] CI 中 `docker compose config` 避免輸出 secrets（mask env 或只 grep 特定 fields）
-- [ ] BGP consumer 維持 profile-gated，補 bulk insert + 低頻 log + retention 指標到 dashboard
+- [x] **22-B** CI 中 `docker compose config` 避免輸出 secrets（見 `scripts/validate-compose-safe.sh`）
+- [ ] 22-C BGP consumer 維持 profile-gated，補 bulk insert + 低頻 log + retention 指標到 dashboard
 - [x] **22-A** Sandbox egress 文件化：default compose 不啟 tools profile，dev override 說明（見 `docs/sandbox-egress.md`）
 
 ---
