@@ -47,7 +47,7 @@ services:
     #   - dev override (docker-compose.dev.yml) for `pnpm test` and curl
     #   - nginx edge profile in prod (port 80/443 -> backend:4000)
     environment:
-      - DATABASE_URL=postgresql://securityweb:securityweb123@db:5432/securityweb
+      - DATABASE_URL=${DATABASE_URL:-postgresql://securityweb:securityweb123@db:5432/securityweb}
       - PORT=4000
       - MINIMAX_API_KEY=${MINIMAX_API_KEY}
       - MINIMAX_API_ENDPOINT=${MINIMAX_API_ENDPOINT:-https://api.minimax.chat/v1}
@@ -86,7 +86,7 @@ services:
     profiles:
       - bgp
     environment:
-      - DATABASE_URL=postgresql://securityweb:securityweb123@db:5432/securityweb
+      - DATABASE_URL=${DATABASE_URL:-postgresql://securityweb:securityweb123@db:5432/securityweb}
       - PYTHONUNBUFFERED=1
     depends_on:
       db:
@@ -137,9 +137,9 @@ services:
     container_name: securityweb-db-1
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=securityweb
-      - POSTGRES_PASSWORD=securityweb123
-      - POSTGRES_DB=securityweb
+      - POSTGRES_USER=${POSTGRES_USER:-securityweb}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB:-securityweb}
     command: >
       postgres
       -c shared_buffers=128MB
