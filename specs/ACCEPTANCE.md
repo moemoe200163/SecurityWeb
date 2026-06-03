@@ -220,6 +220,30 @@
 
 ---
 
+## 15. Phase 22-A: Sandbox Egress 操作文件化
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| `docs/sandbox-egress.md` 存在 | **PASS** | 涵蓋 profile 行為、egress precedence、config 格式、啟動範例、驗證命令、安全注意事項、Troubleshooting |
+| Profile 名稱與 compose 一致 | **PASS** | 文件列出 `tools` / `bgp` / `edge` 三個實際 profile（皆存在於 `docker-compose.yml`），並明確標註 `docker-compose.dev.yml` header 寫的 `--profile dev` 是 no-op（無 `dev` profile） |
+| Egress precedence 與 script 一致 | **PASS** | `file > env > lockdown default`，與 `sandbox/egress-policy.sh` 開頭註解一致 |
+| Config 格式與 example 一致 | **PASS** | JSON `allow[].cidr` / `ports` / `proto` + `allowIcmp`；ENV `cidr:port/proto,...`，與 `sandbox/egress.conf.example` 與 `validateEgressConfig.ts` 對齊 |
+| 驗證命令可執行 | **PASS** | `npm run validate-egress`、`bash sandbox/egress-tests/run_bats.sh`、`DRY_RUN=1 bash sandbox/egress-policy.sh` 三個都列在文件第 6 節 |
+| 拒絕 `0.0.0.0/0` 提示 | **PASS** | 文件第 4 節 + 第 7 節 + 第 8 節都有提到；`egress-policy.sh` 與 `validateEgressConfig.ts` 雙重把關 |
+| 不在文件/報告貼 `docker compose config` 全文 | **PASS** | `docs/sandbox-egress.md` 第 7 節明文規定只用 `grep` / `yq` 抓特定欄位；本驗收紀錄亦只列 profile / volume / 資源欄位 |
+| `specs/TODO.md` 同步 | **PASS** | Phase 22 第 3 項標為 `[x]`，加註 `22-A` 與 `docs/sandbox-egress.md` 連結 |
+
+**Phase 22-A 完整驗收記錄（2026-06-03）：**
+
+| 檢查 | 結果 | 證據 |
+|------|------|------|
+| 文件章節齊備 | PASS | 用途 / profile 行為 / precedence / config 格式 / 啟動範例 / 驗證命令 / 安全 / Troubleshooting / 相關文件 9 個段落 |
+| 與 Phase 19.3 spec 對齊 | PASS | profile gating、precedence、CIDR 拒絕規則全部與 `docs/superpowers/specs/2026-06-02-phase19.3-sandbox-egress-policy-design.md` 一致 |
+| 與 docker-compose 對齊 | PASS | profile 名稱、volume 掛載點（`/etc/sandbox/egress.conf`）、env 名稱（`EGRESS_CONF` / `EGRESS_ALLOW`）皆與 compose file 一致 |
+| 不擴大 scope | PASS | 本次僅新增文件 + 同步 TODO / ACCEPTANCE，未改 compose、egress script、validateEgressConfig；Phase 22-B (CI) 與 22-C (BGP) 保持未完成 |
+
+---
+
 ## 7. 尚未驗收（NOT TESTED / BLOCKED）
 
 - 沙箱實際執行工具（需要 Kali image + `--profile tools`，尚未在 CI 跑）

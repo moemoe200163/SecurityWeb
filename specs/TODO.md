@@ -158,7 +158,7 @@
 ### Phase 22: 安全與 Docker 操作優化 `[ ]`
 - [ ] CI 中 `docker compose config` 避免輸出 secrets（mask env 或只 grep 特定 fields）
 - [ ] BGP consumer 維持 profile-gated，補 bulk insert + 低頻 log + retention 指標到 dashboard
-- [ ] Sandbox egress 文件化：default compose 不啟 tools profile，dev override 說明
+- [x] **22-A** Sandbox egress 文件化：default compose 不啟 tools profile，dev override 說明（見 `docs/sandbox-egress.md`）
 
 ---
 
