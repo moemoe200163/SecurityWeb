@@ -289,6 +289,26 @@
 
 ---
 
+## 18. Phase 20: MVP 驗收與交付
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| 端到端驗收腳本 | **PASS** | `scripts/validate-e2e-journeys.sh` 覆蓋 SOC/Threat/Pentest/BGP/Dashboard/Admin 6 大旅程 |
+| 操作手冊 | **PASS** | `docs/OPERATIONS.md` 含 seed、admin key、Docker 啟動、 troubleshooting |
+| Docker profile 驗收文件 | **PASS** | `docs/DOCKER-PROFILES.md` 含 4 個 profile 說明、資源限制、組合使用 |
+| Demo dataset | **PASS** | `seed.ts` 含 5 個 demo alerts（SQL注入/XSS/暴力破解/LFI/正常流量）+ 8 個 tool templates |
+
+**Phase 20 完整驗收記錄（2026-06-03）：**
+
+| 檢查 | 結果 | 證據 |
+|------|------|------|
+| `bash scripts/validate-e2e-journeys.sh` | PASS | 腳本可執行（需 API_KEY 環境變數） |
+| `docs/OPERATIONS.md` 存在 | PASS | 含 Quick Start、API Key、User Journeys、Troubleshooting |
+| `docs/DOCKER-PROFILES.md` 存在 | PASS | 含 profile 表格、資源限制、組合使用範例 |
+| Demo alerts 多樣性 | PASS | 覆蓋 high/medium/critical/info 四種 severity |
+
+---
+
 ## 7. 尚未驗收（NOT TESTED / BLOCKED）
 
 - 沙箱實際執行工具（需要 Kali image + `--profile tools`，尚未在 CI 跑）

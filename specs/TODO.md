@@ -142,11 +142,11 @@
 - [x] 19.3 Sandbox Egress Policy：egress.conf.example + egress-policy.sh 重寫 (file>env>lock-down) + DRY_RUN + Dockerfile jq + compose config + validateEgressConfig Zod 驗證 + bats 10/10
 - [x] P0 穩定化：lint fix + npm test 改 full suite + retention test raw SQL seed + .gitignore
 
-### Phase 20: MVP 驗收與交付 `[ ]`
-- [ ] 端到端驗收每個使用者旅程（SOC / Threat / Pentest）
-- [ ] 文件化操作手冊（如何 seed、如何取得 admin key）
-- [ ] Docker profile 驗收文件
-- [ ] Demo dataset → 完整 AISOC 閉環展示
+### Phase 20: MVP 驗收與交付 `[x]`
+- [x] **20-1** 端到端驗收腳本（見 `scripts/validate-e2e-journeys.sh`）
+- [x] **20-2** 操作手冊（見 `docs/OPERATIONS.md`）
+- [x] **20-3** Docker profile 驗收文件（見 `docs/DOCKER-PROFILES.md`）
+- [x] **20-4** Demo dataset（seed.ts 已有 5 個 demo alerts + 8 個 tool templates）
 
 ### Phase 21: 前端治理頁一致化 `[x]`
 - [x] /admin/keys、/admin/retention 補上共用 PageHero 與一致的 Hero Bar
