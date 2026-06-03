@@ -270,6 +270,25 @@
 
 ---
 
+## 17. Phase 22-C: BGP Consumer Optimization
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| Bulk insert 已有 | **PASS** | `BATCH_SIZE=100`，批量插入 |
+| 低頻 log | **PASS** | `LOG_INTERVAL_SECONDS=300`（5 分鐘），不再每個 batch 打印 |
+| `/api/bgp/metrics` 端點 | **PASS** | 回傳 totalUpdates、announces、withdrawals、oldestTimestamp、latestTimestamp |
+| Profile-gated | **PASS** | bgp-consumer 仍在 `bgp` profile |
+
+**Phase 22-C 完整驗收記錄（2026-06-03）：**
+
+| 檢查 | 結果 | 證據 |
+|------|------|------|
+| `bgp-consumer.py` 低頻 log | PASS | 每 5 分鐘打印一次統計，而非每個 batch |
+| `GET /api/bgp/metrics` | PASS | 回傳 retention 指標（總筆數、最舊/最新時間戳） |
+| Backward compatible | PASS | 既有 API 不受影響 |
+
+---
+
 ## 7. 尚未驗收（NOT TESTED / BLOCKED）
 
 - 沙箱實際執行工具（需要 Kali image + `--profile tools`，尚未在 CI 跑）
