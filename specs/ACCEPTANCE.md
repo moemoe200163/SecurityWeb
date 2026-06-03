@@ -25,7 +25,7 @@
 | 項目 | 狀態 | 證據 |
 |------|------|------|
 | `npm run build` 通過 | **PASS** | tsc 無錯 |
-| `npm test` (= `vitest run`) 全綠 | **PASS** | 54/54 passed（23 api + 5 adminRetention + 3 retention + 其他） |
+| `npm test` (= `vitest run`) 全綠 | **PASS** | 54/54 passed — `npm test`（預設 `vitest run` 平行）穩定；retention.test.ts 用 unique marker 避免平行 race（Phase 21 P0） |
 | 測試用 API key 不再硬編碼 | **PASS** | `tests/setup.ts` 用 `TEST_API_KEY` 注入 |
 | 測試檔沒有 fake summary | **PASS** | 移除 `17 passed` 假宣告 |
 | 測試有真實斷言（包含 RBAC、disabled template、404） | **PASS** | 23 個 case 覆蓋 5 大區塊 |
@@ -188,6 +188,35 @@
 | 預設啟動路徑只包含必要服務 | **PARTIAL** | 已加 backend port 暴露；sandbox/nginx/bgp 需 profile 化（見 P4） |
 | `npm run db:seed` 可重複執行 | **PASS** | 使用 `upsert` 與 `randomUUID` |
 | 後端可被 host 訪問 | **PASS** | `localhost:4000` 對應 backend |
+
+---
+
+## 14. Phase 21: 前端治理頁一致化
+
+| 項目 | 狀態 | 證據 |
+|------|------|------|
+| `/admin/keys` 改用共用 `PageHero` | **PASS** | `frontend/src/app/admin/keys/page.tsx` 使用 `<PageHero>`，command 顯示「{n} active · {n} revoked · {n} no-key」 |
+| `/admin/retention` 改用共用 `PageHero` | **PASS** | `frontend/src/app/admin/retention/page.tsx` 使用 `<PageHero>`，command 顯示 `lastRunAt` 或 `never` |
+| `RetentionPanel` 401 → `ApiKeyRequired` | **PASS** | 三狀態 error UI，401 整頁換 `<ApiKeyRequired />` |
+| `RetentionPanel` 403 → forbidden inline | **PASS** | 顯示「需要管理員權限」+ 連結到 `/settings` |
+| `RetentionPanel` 500 → retry | **PASS** | 顯示錯誤區塊 + Retry 按鈕（重試成功） |
+| `MyApiKeyPanel` rotate modal 禁止直接 cancel | **PASS** | 移除 Cancel 按鈕；backdrop/ESC hard-block；唯一關閉路徑是勾選「I have saved」後按「I've saved — close」 |
+| `UserKeyTable` rotate modal 硬化 | **PASS** | 加「I have delivered this key to the user」checkbox；Done 按鈕 disabled 直到勾選 |
+| Playwright E2E `admin-keys.spec.ts` | **PASS** | 3 個 test 全綠（2026-06-03 run, 4.4s）：① PageHero shows key statistics in commandValue ② PageHero shows loading... before stats load ③ rotate modal cannot close without "I have delivered" confirmation |
+| Playwright E2E `admin-retention.spec.ts` | **PASS** | 5 個 test 全綠（2026-06-03 run, 5.7s）：① PageHero shows "never" when no retention has run ② PageHero shows formatted timestamp when retention has run ③ renders `<ApiKeyRequired />` when API key is missing ④ shows forbidden state when API returns 403 ⑤ shows retry button on 500 |
+
+**Phase 21 完整驗收記錄（2026-06-03）：**
+
+| 檢查 | 結果 | 證據 |
+|------|------|------|
+| Backend `npm test` | PASS | 54/54 passed，stable under default parallel run（unique marker 修法） |
+| Backend `npx tsc --noEmit` | PASS | 無錯 |
+| Frontend `npm run lint` | PASS | 0 error |
+| Frontend `npx next build --webpack` | PASS | Phase 21 前端編譯成功（`/admin/keys`、`/admin/retention` 路由含 PageHero 與 modal hardening） |
+| Frontend `next dev --webpack` | PASS | worktree 啟動於 port 3001，served Phase 21 code（title 確認：`安全智能體 AI 對話系統`） |
+| Frontend Turbopack | INFO | worktree symlink panic — Next.js 16 + worktree 互動已知問題，非 Phase 21 缺陷（見上方 caveat） |
+| Playwright E2E (8 specs) | PASS | 8/8 in 6.4s（見上方逐項 list）。執行：`BASE_URL=http://localhost:3001 npx playwright test e2e/admin-keys.spec.ts e2e/admin-retention.spec.ts` |
+| Final code review | APPROVE_WITH_CHANGES | 0 CRITICAL / 0 HIGH / 2 MEDIUM / 9 LOW；in-scope MEDIUM（`MyApiKeyPanel` useState 順序）已在 commit `6d91437` 處理 |
 
 ---
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { RotateCw, X, Copy } from 'lucide-react';
 import { api } from '@/lib/api';
 
@@ -17,6 +17,12 @@ export function UserKeyTable() {
   const [loading, setLoading] = useState(true);
   const [rotatingId, setRotatingId] = useState<string | null>(null);
   const [plaintextFor, setPlaintextFor] = useState<{ userId: string; plaintext: string } | null>(null);
+  const [confirmed, setConfirmed] = useState(false);
+
+  const closeModal = useCallback(() => {
+    setPlaintextFor(null);
+    setConfirmed(false);
+  }, []);
 
   const load = async () => {
     setLoading(true);
@@ -31,6 +37,18 @@ export function UserKeyTable() {
   useEffect(() => {
     load();
   }, []);
+
+  useEffect(() => {
+    if (!plaintextFor) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    document.addEventListener('keydown', handler, true);
+    return () => document.removeEventListener('keydown', handler, true);
+  }, [plaintextFor]);
 
   const handleRotate = async (userId: string) => {
     if (!confirm(`Rotate this user's API key? Their current key will be invalidated.`)) return;
@@ -118,11 +136,19 @@ export function UserKeyTable() {
       </div>
 
       {plaintextFor && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-[var(--card)] rounded-xl p-6 max-w-md w-full space-y-4">
-            <h4 className="font-bold text-lg">New key generated</h4>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="admin-rotate-modal-title"
+          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+        >
+          <div
+            className="bg-[var(--card)] rounded-xl p-6 max-w-md w-full space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h4 id="admin-rotate-modal-title" className="font-bold text-lg">New key generated</h4>
             <p className="text-sm text-muted-foreground">
-              Copy this key and give it to the user. It will not be shown again.
+              Copy this key and deliver it to the user. It will not be shown again.
             </p>
             <div className="flex items-center gap-2 p-2 rounded bg-black/40 font-mono text-sm break-all">
               <code className="flex-1">{plaintextFor.plaintext}</code>
@@ -134,10 +160,20 @@ export function UserKeyTable() {
                 <Copy className="h-4 w-4" />
               </button>
             </div>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={confirmed}
+                onChange={(e) => setConfirmed(e.target.checked)}
+                aria-label="Confirm key delivered to user"
+              />
+              I have delivered this key to the user
+            </label>
             <div className="flex justify-end">
               <button
-                onClick={() => setPlaintextFor(null)}
-                className="px-3 py-1.5 rounded border border-[var(--border)] text-sm"
+                onClick={closeModal}
+                disabled={!confirmed}
+                className="px-3 py-1.5 rounded bg-[var(--terminal-green)] text-black text-sm disabled:opacity-50"
               >
                 Done
               </button>

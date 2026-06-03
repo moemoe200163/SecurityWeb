@@ -47,9 +47,7 @@ interface RequestOptions {
 async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const { method = 'GET', body, requireAuth = false, signal } = options;
 
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
+  const headers: Record<string, string> = {};
 
   if (requireAuth) {
     const key = getApiKey();
@@ -66,6 +64,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
   };
 
   if (body !== undefined && body !== null) {
+    headers['Content-Type'] = 'application/json';
     config.body = JSON.stringify(body);
   }
 
