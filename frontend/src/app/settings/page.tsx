@@ -119,7 +119,11 @@ export default function SettingsPage() {
       setTestResult(result);
     } catch (err) {
       console.error('Failed to test connection:', err);
-      setTestResult({ success: false, message: '連線測試失敗' });
+      if (err instanceof ApiError && err.status === 429) {
+        setTestResult({ success: false, message: '請求過於頻繁，請稍後再試（每分鐘最多 5 次）' });
+      } else {
+        setTestResult({ success: false, message: '連線測試失敗' });
+      }
     } finally {
       setTesting(false);
     }

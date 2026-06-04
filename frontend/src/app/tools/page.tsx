@@ -137,10 +137,13 @@ export default function ToolsPage() {
     setApiKey(getApiKey());
   }, []);
 
+  // Fetch data only after apiKey is resolved from localStorage (avoids 401 flash)
   useEffect(() => {
+    if (!mountedRef.current || !apiKey) return;
     fetchTemplates();
     if (view === 'history') fetchExecutions();
-  }, [fetchExecutions, fetchTemplates, view]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiKey, fetchExecutions, fetchTemplates, view]);
 
   const handleParamChange = (key: string, value: string) => {
     setParams(prev => ({ ...prev, [key]: value }));
