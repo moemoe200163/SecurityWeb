@@ -435,6 +435,16 @@ export const api = {
     async stats(): Promise<BgpStats> {
       return request('/api/bgp/stats', { requireAuth: true });
     },
+    async lookup(resource: string): Promise<{ resource: string; type: string; announced: boolean; asns: { asn: number; holder: string; country?: string }[]; block: { resource: string; desc: string } | null }> {
+      const query = new URLSearchParams({ resource });
+      return request(`/api/bgp/lookup?${query}`, { requireAuth: true });
+    },
+    async whois(asn: string): Promise<{ asn: string; holder: string; country: string; block: string }> {
+      return request(`/api/bgp/whois/${encodeURIComponent(asn)}`, { requireAuth: true });
+    },
+    async prefixes(asn: string): Promise<{ prefixes: Array<{ prefix: string; type: 'ipv4' | 'ipv6' }> }> {
+      return request(`/api/bgp/prefixes/${encodeURIComponent(asn)}`, { requireAuth: true });
+    },
   },
 
   // URLhaus (protected)
