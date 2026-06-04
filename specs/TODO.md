@@ -160,11 +160,18 @@
 - [x] **22-C** BGP consumer 低頻 log + `/api/bgp/metrics` 端點（見 `backend/scripts/bgp-consumer.py`、`backend/src/routes/bgp.ts`）
 - [x] **22-A** Sandbox egress 文件化：default compose 不啟 tools profile，dev override 說明（見 `docs/sandbox-egress.md`）
 
+### Phase 23: CSRF 與密鑰管理強化 `[x]`
+- [x] CORS origin 白名單（`ALLOWED_ORIGINS` 環境變數）
+- [x] `originValidation` 中間件（POST/PUT/PATCH/DELETE Origin/Referer 驗證）
+- [x] Dockerfile 移除硬編碼 `DATABASE_URL` + 非 root 用戶
+- [x] `validateEnv()` 啟動時環境變數驗證
+- [x] `.env.example` 完整化（`POSTGRES_PASSWORD`、`ALLOWED_ORIGINS`、第三方 API key）
+
 ---
 
 ## 已知風險 / 待辦細項
 - [ ] sandbox 對每個 template 的 timeout 與資源上限需逐一調校
-- [ ] CSRF 保護（後端目前未實作）
-- [ ] 生產環境密鑰管理（.env 目前直接在版本庫，需改用 secret manager）
+- [x] CSRF 保護（CORS origin 白名單 + originValidation 中間件）
+- [x] 生產環境密鑰管理（validateEnv 啟動驗證 + Dockerfile 非 root + .env.example 完整化）
 - [ ] 沒有完整 i18n（前端文案以繁中為主，英文保留技術名詞）
 - [ ] AI 對話需要 OLLAMA 或 MiniMax API key（mock 模式只回固定模板）
