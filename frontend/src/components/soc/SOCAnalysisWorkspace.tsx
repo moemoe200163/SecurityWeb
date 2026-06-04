@@ -4,7 +4,8 @@ import { useEffect, useCallback, useState, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useStepStore } from '@/stores/stepStore';
-import { api, pollSession, type SessionDetail } from '@/lib/api';
+import { api, ApiError, pollSession, type SessionDetail } from '@/lib/api';
+import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import type { AlertData, ToolCall } from '@/lib/types';
 import type { SessionSummary } from '@/components/soc/AnalysisSidebar';
 import { VolcanoStepCard } from '@/components/soc/VolcanoStepCard';
@@ -64,6 +65,7 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
   void currentStepIndex; void setCurrentModule;
 
   const pollCleanupRef = useRef<(() => void) | null>(null);
+  const [authError, setAuthError] = useState(false);
   const [, setSidebarSession] = useState<SessionSummary | undefined>(undefined);
   const [alertData, setAlertData] = useState<{
     id: string;
@@ -197,11 +199,16 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
                   timestamp: m.createdAt,
                 })));
               }
-            }
+            },
+            { onAuthError: () => setAuthError(true) }
           );
         }
       } catch (err) {
         if (!cancelled) {
+          if (err instanceof ApiError && err.status === 401) {
+            setAuthError(true);
+            return;
+          }
           console.error('Failed to load session:', err);
         }
       }
@@ -273,6 +280,10 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
         });
       }
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setAuthError(true);
+        return;
+      }
       console.error('Failed to load session:', err);
       alert('載入歷史記錄失敗');
     }
@@ -339,7 +350,8 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
         'soc',
         (session) => {
           syncSessionToStore(session);
-        }
+        },
+        { onAuthError: () => setAuthError(true) }
       );
 
       // NOTE: Do NOT send an initial message here.
@@ -349,6 +361,11 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
       // overwriting steps written by updateStepsFromAIResponseTx.
       // The pollSession above will receive the AI's response automatically.
     } catch (error) {
+      if (error instanceof ApiError && error.status === 401) {
+        setAuthError(true);
+        stopExecution();
+        return;
+      }
       console.error('Analysis error:', error);
       stopExecution();
       alert('分析啟動失敗：' + (error as Error).message);
@@ -388,6 +405,12 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
         if (currentSessionId) {
           api.soc.getSession(currentSessionId).then((res) => {
             syncSessionToStore(res.session);
+          }).catch((err) => {
+            if (err instanceof ApiError && err.status === 401) {
+              setAuthError(true);
+            } else {
+              console.error('Refresh data failed:', err);
+            }
           });
         }
         break;
@@ -475,6 +498,8 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
           command="soc-investigate --progress"
           commandValue={`${completedSteps}/${totalSteps}`}
         />
+
+        {authError && <div className="px-6 py-4"><ApiKeyRequired /></div>}
 
         {/* Top Progress Bar */}
         <div className="bg-[var(--card)] border-y border-[var(--border)] px-6 py-4">
