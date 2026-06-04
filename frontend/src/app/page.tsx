@@ -360,7 +360,6 @@ export default function Dashboard() {
   }, [loadActivity]);
 
   const activityItems: ActivityItem[] = recentSessions.slice(0, 5).map((session) => {
-    void activityItems;
     const typeLabels = { soc: 'SOC 分析', threat: '威脅情報', pentest: '滲透測試' };
     const inputObj = session.input as Record<string, unknown>;
     const inputValue = inputObj.indicator as string ?? inputObj.value as string ?? inputObj.target as string ?? '';
