@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Search, Network, Shield, Clock, ChevronRight, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
-import { api, type SessionDetail } from '@/lib/api';
+import { api, ApiError, type SessionDetail } from '@/lib/api';
+import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { PageHero } from '@/components/layout/PageHero';
 
 const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
@@ -68,6 +69,7 @@ export default function HistoryPage() {
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [authError, setAuthError] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const loadSessions = useCallback(async () => {
@@ -78,6 +80,10 @@ export default function HistoryPage() {
       setSessions(data);
       setLastRefresh(new Date());
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setAuthError(true);
+        return;
+      }
       setError('載入歷史記錄失敗');
       console.error(err);
     } finally {
@@ -136,6 +142,8 @@ export default function HistoryPage() {
       {/* Content */}
       <div className="flex-1 overflow-auto px-6 pb-6">
         <div className="max-w-4xl mx-auto space-y-4">
+          {authError && <ApiKeyRequired />}
+
           {loading && (
             <>
               {[1, 2, 3].map((i) => (

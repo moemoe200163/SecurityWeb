@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { api, type IpReputationResult, type IpReputationStats, type PaginationInfo } from '@/lib/api';
+import { api, ApiError, type IpReputationResult, type IpReputationStats, type PaginationInfo } from '@/lib/api';
+import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { Loader2, Search, Shield, ShieldAlert, ShieldCheck, ShieldQuestion, RefreshCw, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
 
@@ -72,6 +73,7 @@ export default function BlacklistPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState<'updatedAt' | 'totalReports'>('updatedAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [authError, setAuthError] = useState(false);
   const limit = 50;
 
   const loadData = useCallback(async () => {
@@ -92,6 +94,10 @@ export default function BlacklistPage() {
       setPagination(blacklistRes.pagination);
       setStats(statsRes);
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setAuthError(true);
+        return;
+      }
       console.error('Failed to load blacklist:', err);
     } finally {
       setLoading(false);
@@ -174,6 +180,8 @@ export default function BlacklistPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto p-6">
+        {authError && <ApiKeyRequired />}
+
         {/* Stats Cards */}
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
