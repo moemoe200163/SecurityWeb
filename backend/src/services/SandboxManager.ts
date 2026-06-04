@@ -8,6 +8,7 @@ const SANDBOX_IMAGE = 'kalilinux/kali-rolling:latest';
 const SANDBOX_NETWORK = 'securityweb_sandbox';
 const SANDBOX_SUBNET = '172.20.0.0/16';
 const SANDBOX_CONTAINER_NAME = 'securityweb-sandbox';
+const CUSTOM_SANDBOX_IMAGE = 'securityweb-sandbox:latest';
 
 export class SandboxManager {
   private containerId: string | null = null;
@@ -99,8 +100,10 @@ export class SandboxManager {
       // No existing container to reuse
     }
 
-    // Start new container using the security-tools image
-    const securityToolsImage = 'securityweb-sandbox';
+    // Start new container — prefer the custom sandbox image (built via
+    // docker compose or `docker build` in backend/sandbox/), fall back
+    // to the raw Kali base image.
+    const securityToolsImage = await this.resolveImage();
     const cmd = [
       'docker', 'run', '--rm', '-d',
       '--network', fullNetworkName,
@@ -121,6 +124,24 @@ export class SandboxManager {
     } catch (error) {
       throw new Error(`Failed to start sandbox container: ${error}`);
     }
+  }
+
+  /**
+   * Pick the best available Docker image: custom sandbox (with tools
+   * pre-installed) first, then the raw Kali base image as fallback.
+   */
+  private async resolveImage(): Promise<string> {
+    for (const image of [CUSTOM_SANDBOX_IMAGE, SANDBOX_IMAGE]) {
+      try {
+        await execAsync(`docker image inspect ${image}`, { shell: '/bin/sh' });
+        return image;
+      } catch {
+        // image not found — try next
+      }
+    }
+    // Return base image name even if not locally available — docker run
+    // will attempt to pull it.
+    return SANDBOX_IMAGE;
   }
 
   getExecutor(): ToolExecutor {
