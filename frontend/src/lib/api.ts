@@ -478,6 +478,46 @@ export const api = {
     async testAI(data: { provider: string; ollamaEndpoint?: string }): Promise<{ success: boolean; message: string }> {
       return request('/api/settings/ai/test', { method: 'POST', body: data });
     },
+
+    // LLM Provider management
+    async listLLMProviders(): Promise<{
+      providers: Array<{
+        id: string;
+        displayName: string;
+        baseUrl: string;
+        model: string;
+        enabled: boolean;
+        hasKey: boolean;
+        keyPreview: string | null;
+      }>;
+      active: string;
+    }> {
+      return request('/api/settings/llm/providers', { requireAuth: true });
+    },
+    async updateLLMProvider(provider: string, data: {
+      baseUrl?: string;
+      model?: string;
+      apiKey?: string;
+      enabled?: boolean;
+    }): Promise<{ success: boolean; provider: Record<string, unknown> }> {
+      return request(`/api/settings/llm/providers/${provider}`, { method: 'PUT', body: data, requireAuth: true });
+    },
+    async testLLMProvider(provider: string): Promise<{
+      provider: string;
+      status: string;
+      ok: boolean;
+      latencyMs: number;
+      model: string;
+      baseUrl: string;
+      checkedAt: string;
+      message: string;
+      safeError: string | null;
+    }> {
+      return request(`/api/settings/llm/providers/${provider}/test`, { method: 'POST', requireAuth: true });
+    },
+    async selectLLMProvider(provider: string): Promise<{ success: boolean; active: string }> {
+      return request(`/api/settings/llm/providers/${provider}/select`, { method: 'POST', requireAuth: true });
+    },
   },
 
   // Health check

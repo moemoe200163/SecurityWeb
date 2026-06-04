@@ -175,7 +175,7 @@ export default function AlertsPage() {
   };
 
   if (authError) {
-    return <ApiKeyRequired />;
+    return <ApiKeyRequired message="API Key 缺失或無效，請先到設定頁重新設定" />;
   }
 
   return (

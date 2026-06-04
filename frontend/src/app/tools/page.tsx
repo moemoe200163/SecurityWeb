@@ -7,7 +7,6 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
-  AlertTriangle,
   Loader2,
   Copy,
   Check,
@@ -16,6 +15,7 @@ import {
   History,
   Zap,
   WifiOff,
+  AlertTriangle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
@@ -86,6 +86,7 @@ export default function ToolsPage() {
   const [isApiOnline, setIsApiOnline] = useState(true);
   const [authError, setAuthError] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [executionId, setExecutionId] = useState<string | null>(null);
   const mountedRef = useRef(false);
   const [apiKey, setApiKey] = useState('');
   // Surface the error in the DOM so the value is actually read.
@@ -95,12 +96,14 @@ export default function ToolsPage() {
     setLoading(true);
     setError(null);
     try {
-      const data = await api.tools.listTemplates(true);
+      const data = await api.tools.listTemplates();
       setTemplates((data.templates as unknown as ToolTemplate[]) || []);
       setIsApiOnline(true);
+      setAuthError(false);
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         setAuthError(true);
+        setIsApiOnline(true);
       } else {
         console.error('Failed to fetch templates:', err);
         setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
@@ -118,9 +121,11 @@ export default function ToolsPage() {
       const data = await api.tools.listExecutions({ limit: 50 });
       setExecutions((data.executions as unknown as ToolExecution[]) || []);
       setIsApiOnline(true);
+      setAuthError(false);
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         setAuthError(true);
+        setIsApiOnline(true);
       } else {
         console.error('Failed to fetch executions:', err);
         setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
@@ -131,18 +136,22 @@ export default function ToolsPage() {
     }
   }, []);
 
-  // Read apiKey from localStorage only after mount to avoid SSR hydration mismatch
+  // Read apiKey from localStorage only after mount to avoid SSR hydration mismatch.
   useEffect(() => {
     mountedRef.current = true;
     setApiKey(getApiKey());
   }, []);
 
-  // Fetch data only after apiKey is resolved from localStorage (avoids 401 flash)
+  // Fetch protected data only after the stored API key has been resolved.
   useEffect(() => {
-    if (!mountedRef.current || !apiKey) return;
+    if (!mountedRef.current) return;
+    if (!apiKey) {
+      setAuthError(true);
+      setLoading(false);
+      return;
+    }
     fetchTemplates();
     if (view === 'history') fetchExecutions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiKey, fetchExecutions, fetchTemplates, view]);
 
   const handleParamChange = (key: string, value: string) => {
@@ -167,8 +176,10 @@ export default function ToolsPage() {
         durationMs: data.duration_ms,
       });
 
-      // Generate a session ID for evidence collection
-      setSessionId(`tool-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
+      // Store execution ID for evidence collection
+      if (data.execution_id) {
+        setExecutionId(data.execution_id);
+      }
 
       // Refresh executions
       if (view === 'history') {
@@ -194,29 +205,39 @@ export default function ToolsPage() {
     if (!selectedTemplate) return '';
 
     const url = `${API_BASE}/api/tools/execute`;
-    const queryParams = Object.entries(params)
-      .filter(([, v]) => v)
-      .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
-      .join('&');
+    const body = { template_id: selectedTemplate.id, params };
 
-    const requestUrl = queryParams ? `${url}?${queryParams}` : url;
-
-    // The API key never leaves the client. Surfacing it in a copy-able curl
-    // command is convenient for debugging; users running the snippet
-    // locally accept that risk explicitly.
-    const apiKey = getApiKey();
-    return `curl -X POST "${requestUrl}" \\\n  -H "Content-Type: application/json" \\\n  -H "X-API-Key: ${apiKey}" \\\n  -d '${JSON.stringify({ template_id: selectedTemplate.id, params })}'`;
+    return `curl -X POST "${url}" \\\n  -H "Content-Type: application/json" \\\n  -H "X-API-Key: $SECURITYWEB_API_KEY" \\\n  -d '${JSON.stringify(body)}'`;
   };
 
   const selectTemplateForExecution = (template: ToolTemplate) => {
     setSelectedTemplate(template);
     setParams({});
     setResult(null);
+    setSessionId(null);
+    setExecutionId(null);
     setView('execute');
   };
 
+  // Derive required params from commandTemplate (params appearing in {param} syntax)
+  const getRequiredParams = (template: ToolTemplate): Set<string> => {
+    const matches = template.commandTemplate.match(/\{(\w+)\}/g) || [];
+    return new Set(matches.map((m) => m.slice(1, -1)));
+  };
+
+  // Format hints for common param names
+  const PARAM_HINTS: Record<string, { placeholder: string; pattern?: string; hint: string }> = {
+    target: { placeholder: '192.168.1.1 或 example.com', hint: 'IP 位址或域名' },
+    url: { placeholder: 'https://example.com', hint: '完整 URL（含協議）' },
+    email: { placeholder: 'user@example.com', hint: '電子郵件地址' },
+    service: { placeholder: 'ssh, ftp, http', hint: '服務名稱（逗號分隔）' },
+    ports: { placeholder: '22,80,443 或 1-1024', hint: '連接埠（逗號分隔或範圍）' },
+    host: { placeholder: '192.168.1.1', hint: '目標主機 IP 或域名' },
+    domain: { placeholder: 'example.com', hint: '目標域名' },
+  };
+
   if (authError) {
-    return <ApiKeyRequired />;
+    return <ApiKeyRequired message="API Key 缺失或無效，請先到設定頁重新設定" />;
   }
 
   return (
@@ -385,38 +406,51 @@ export default function ToolsPage() {
               <div className="bg-[var(--card)] rounded-xl border border-[var(--border)] p-4">
                 <h3 className="font-medium text-[var(--foreground)] mb-3">參數設定</h3>
                 <div className="space-y-3">
-                  {Object.entries(selectedTemplate.allowedParams || {}).map(([key, values]) => (
-                    <div key={key}>
-                      <label className="block text-sm text-[var(--foreground)] mb-1 font-mono">
-                        {key}
-                        {values.length > 0 && (
-                          <span className="text-[var(--muted-foreground)] text-xs ml-2">
-                            (可選值: {values.join(', ')})
-                          </span>
+                  {Object.entries(selectedTemplate.allowedParams || {}).map(([key, values]) => {
+                    const requiredParams = getRequiredParams(selectedTemplate);
+                    const isRequired = requiredParams.has(key);
+                    const hint = PARAM_HINTS[key];
+                    return (
+                      <div key={key}>
+                        <label className="block text-sm text-[var(--foreground)] mb-1 font-mono">
+                          {key}
+                          {isRequired && (
+                            <span className="text-red-500 ml-1">*</span>
+                          )}
+                          {values.length > 0 && (
+                            <span className="text-[var(--muted-foreground)] text-xs ml-2">
+                              (可選值: {values.join(', ')})
+                            </span>
+                          )}
+                          {hint && !values.length && (
+                            <span className="text-[var(--muted-foreground)] text-xs ml-2">
+                              {hint.hint}
+                            </span>
+                          )}
+                        </label>
+                        {values.length > 0 ? (
+                          <select
+                            value={params[key] || ''}
+                            onChange={(e) => handleParamChange(key, e.target.value)}
+                            className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--background)] text-[var(--foreground)] font-mono"
+                          >
+                            <option value="">請選擇</option>
+                            {values.map((v) => (
+                              <option key={v} value={v}>{v}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type="text"
+                            value={params[key] || ''}
+                            onChange={(e) => handleParamChange(key, e.target.value)}
+                            placeholder={hint?.placeholder || `輸入 ${key}`}
+                            className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--background)] text-[var(--foreground)] font-mono"
+                          />
                         )}
-                      </label>
-                      {values.length > 0 ? (
-                        <select
-                          value={params[key] || ''}
-                          onChange={(e) => handleParamChange(key, e.target.value)}
-                          className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--background)] text-[var(--foreground)] font-mono"
-                        >
-                          <option value="">請選擇</option>
-                          {values.map((v) => (
-                            <option key={v} value={v}>{v}</option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          type="text"
-                          value={params[key] || ''}
-                          onChange={(e) => handleParamChange(key, e.target.value)}
-                          placeholder={`輸入 ${key}`}
-                          className="w-full border border-[var(--border)] rounded-lg px-3 py-2 bg-[var(--background)] text-[var(--foreground)] font-mono"
-                        />
-                      )}
-                    </div>
-                  ))}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -474,10 +508,10 @@ export default function ToolsPage() {
               </div>
 
               {/* Evidence Collection */}
-              {result && sessionId && (
+              {result && executionId && (
                 <AddToInvestigation
-                  executionId={undefined}
-                  sessionId={sessionId}
+                  executionId={executionId}
+                  sessionId={sessionId || undefined}
                   type="tool"
                   data={{ output: result.output, templateId: selectedTemplate?.id }}
                 />
