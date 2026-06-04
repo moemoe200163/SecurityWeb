@@ -89,7 +89,11 @@ function ThreatInvestigateContent() {
         const rep = await api.ip.check(indicator.trim());
         setIpReputation(rep);
       } catch (err: unknown) {
-        // Check for rate limit error
+        if (err instanceof ApiError && err.status === 401) {
+          setAuthError(true);
+          setLoading(false);
+          return;
+        }
         const errorMessage = err instanceof Error ? err.message : String(err);
         if (errorMessage.includes('API使用上限') || errorMessage.includes('429')) {
           setError('API 使用上限，請聯絡管理員');
@@ -117,7 +121,8 @@ function ThreatInvestigateContent() {
           if (updatedSession.status === 'completed') {
             setLoading(false);
           }
-        }
+        },
+        { onAuthError: () => { setAuthError(true); setLoading(false); } }
       );
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
