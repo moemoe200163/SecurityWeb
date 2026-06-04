@@ -3,6 +3,8 @@
 import { useState, useCallback } from 'react';
 import { Loader2, Search, X, Copy, ExternalLink, Globe } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
+import { api, ApiError } from '@/lib/api';
+import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 
 // Country code to flag + name mapping
 const COUNTRY_DATA: Record<string, { flag: string; name: string }> = {
@@ -94,6 +96,7 @@ export default function BgpPage() {
   const [prefixes, setPrefixes] = useState<PrefixInfo[]>([]);
   const [prefixesLoading, setPrefixesLoading] = useState(false);
   const [prefixPage, setPrefixPage] = useState(1);
+  const [authError, setAuthError] = useState(false);
   const PREFIX_PAGE_SIZE = 20;
 
   const handleSearch = useCallback(async () => {
@@ -105,24 +108,17 @@ export default function BgpPage() {
     setError(null);
 
     try {
-      // Fetch stats and lookup in parallel
-      const [statsRes, lookupRes] = await Promise.all([
-        fetch('/api/bgp/stats'),
-        fetch(`/api/bgp/lookup?resource=${encodeURIComponent(query)}`)
+      const [statsData, lookupData] = await Promise.all([
+        api.bgp.stats(),
+        api.bgp.lookup(query),
       ]);
-
-      const statsData = await statsRes.json();
       setStats(statsData);
-
-      if (!lookupRes.ok) {
-        const err = await lookupRes.json();
-        setError(err.error || 'No BGP data found');
-        return;
-      }
-
-      const lookupData = await lookupRes.json();
       setResult(lookupData);
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setAuthError(true);
+        return;
+      }
       console.error('Failed to search:', err);
       setError('查詢失敗');
     } finally {
@@ -144,20 +140,17 @@ export default function BgpPage() {
     setWhoIsData(null);
     setPrefixes([]);
     try {
-      // 并行获取 WHOIS 和 prefixes
-      const [whoisRes, prefixesRes] = await Promise.all([
-        fetch(`/api/bgp/whois/${asn}`),
-        fetch(`/api/bgp/prefixes/${asn}`),
+      const [whoisData, prefixesData] = await Promise.all([
+        api.bgp.whois(asn),
+        api.bgp.prefixes(asn),
       ]);
-      if (whoisRes.ok) {
-        const data = await whoisRes.json();
-        setWhoIsData(data);
-      }
-      if (prefixesRes.ok) {
-        const data = await prefixesRes.json();
-        setPrefixes(data.prefixes || []);
-      }
+      setWhoIsData(whoisData);
+      setPrefixes(prefixesData.prefixes || []);
     } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
+        setAuthError(true);
+        return;
+      }
       console.error('Failed to fetch ASN data:', err);
     } finally {
       setWhoIsLoading(false);
@@ -210,6 +203,7 @@ export default function BgpPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-6">
+        {authError && <ApiKeyRequired />}
         {/* Search Box */}
         <div className="rounded-xl border shadow-sm p-6 mb-6" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
           <div className="flex flex-col md:flex-row gap-4">
