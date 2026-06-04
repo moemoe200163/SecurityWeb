@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { api, ApiError, pollSession, type SessionDetail, type IpReputationResult } from '@/lib/api';
+import { api, ApiError, isAuthError, pollSession, type SessionDetail, type IpReputationResult } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { Loader2, Search, AlertCircle, CheckCircle2, XCircle, Shield, ShieldAlert, ShieldCheck, ShieldQuestion, Terminal } from 'lucide-react';
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer';
@@ -50,7 +50,7 @@ function ThreatInvestigateContent() {
         else setType('ip');
       }
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
+      if (isAuthError(err)) {
         setAuthError(true);
         return;
       }
@@ -89,7 +89,7 @@ function ThreatInvestigateContent() {
         const rep = await api.ip.check(indicator.trim());
         setIpReputation(rep);
       } catch (err: unknown) {
-        if (err instanceof ApiError && err.status === 401) {
+        if (isAuthError(err)) {
           setAuthError(true);
           setLoading(false);
           return;
@@ -125,8 +125,9 @@ function ThreatInvestigateContent() {
         { onAuthError: () => { setAuthError(true); setLoading(false); } }
       );
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
+      if (isAuthError(err)) {
         setAuthError(true);
+        setLoading(false);
         return;
       }
       setError(err instanceof Error ? err.message : String(err));

@@ -4,7 +4,7 @@ import { useEffect, useCallback, useState, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useStepStore } from '@/stores/stepStore';
-import { api, ApiError, pollSession, type SessionDetail } from '@/lib/api';
+import { api, ApiError, isAuthError, pollSession, type SessionDetail } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import type { AlertData, ToolCall } from '@/lib/types';
 import type { SessionSummary } from '@/components/soc/AnalysisSidebar';
@@ -200,12 +200,12 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
                 })));
               }
             },
-            { onAuthError: () => setAuthError(true) }
+            { onAuthError: () => { setAuthError(true); stopExecution(); } }
           );
         }
       } catch (err) {
         if (!cancelled) {
-          if (err instanceof ApiError && err.status === 401) {
+          if (isAuthError(err)) {
             setAuthError(true);
             return;
           }
@@ -280,7 +280,7 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
         });
       }
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
+      if (isAuthError(err)) {
         setAuthError(true);
         return;
       }
@@ -361,7 +361,7 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
       // overwriting steps written by updateStepsFromAIResponseTx.
       // The pollSession above will receive the AI's response automatically.
     } catch (error) {
-      if (error instanceof ApiError && error.status === 401) {
+      if (isAuthError(error)) {
         setAuthError(true);
         stopExecution();
         return;
@@ -406,7 +406,7 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
           api.soc.getSession(currentSessionId).then((res) => {
             syncSessionToStore(res.session);
           }).catch((err) => {
-            if (err instanceof ApiError && err.status === 401) {
+            if (isAuthError(err)) {
               setAuthError(true);
             } else {
               console.error('Refresh data failed:', err);

@@ -24,7 +24,7 @@ import { PageHero } from '@/components/layout/PageHero';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { api, ApiError } from '@/lib/api';
+import { api, ApiError, isAuthError } from '@/lib/api';
 
 interface Alert {
   id: string;
@@ -113,7 +113,7 @@ export default function AlertsPage() {
       setAlerts((data.alerts as unknown as Alert[]) || []);
       setIsApiOnline(true);
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
+      if (isAuthError(err)) {
         setAuthError(true);
       } else {
         console.error('Failed to fetch alerts:', err);

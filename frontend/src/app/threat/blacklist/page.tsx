@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { api, ApiError, type IpReputationResult, type IpReputationStats, type PaginationInfo } from '@/lib/api';
+import { api, ApiError, isAuthError, type IpReputationResult, type IpReputationStats, type PaginationInfo } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { Loader2, Search, Shield, ShieldAlert, ShieldCheck, ShieldQuestion, RefreshCw, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
@@ -94,7 +94,7 @@ export default function BlacklistPage() {
       setPagination(blacklistRes.pagination);
       setStats(statsRes);
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
+      if (isAuthError(err)) {
         setAuthError(true);
         return;
       }

@@ -23,7 +23,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { AddToInvestigation } from '@/components/ui/AddToInvestigation';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { api, getApiKey, ApiError } from '@/lib/api';
+import { api, getApiKey, ApiError, isAuthError } from '@/lib/api';
 
 interface ToolTemplate {
   id: string;
@@ -101,7 +101,7 @@ export default function ToolsPage() {
       setIsApiOnline(true);
       setAuthError(false);
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
+      if (isAuthError(err)) {
         setAuthError(true);
         setIsApiOnline(true);
       } else {
@@ -123,7 +123,7 @@ export default function ToolsPage() {
       setIsApiOnline(true);
       setAuthError(false);
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
+      if (isAuthError(err)) {
         setAuthError(true);
         setIsApiOnline(true);
       } else {

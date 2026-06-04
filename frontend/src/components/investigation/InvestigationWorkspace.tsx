@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { api, ApiError, type SessionDetail, type Evidence } from '@/lib/api';
+import { api, ApiError, isAuthError, type SessionDetail, type Evidence } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { PageHero } from '@/components/layout/PageHero';
 import { VolcanoStepCard } from '@/components/soc/VolcanoStepCard';
@@ -142,7 +142,7 @@ export function InvestigationWorkspace({ sessionId }: InvestigationWorkspaceProp
         }
       } catch (err) {
         if (!cancelled) {
-          if (err instanceof ApiError && err.status === 401) {
+          if (isAuthError(err)) {
             setAuthError(true);
           } else {
             setError(err instanceof Error ? err.message : 'Failed to load');

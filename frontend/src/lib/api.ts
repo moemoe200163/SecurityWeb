@@ -858,3 +858,11 @@ export function pollSession(
     clearInterval(intervalId);
   };
 }
+
+/**
+ * Centralised auth-error check. Returns true when the error is an ApiError
+ * with HTTP 401 (unauthenticated) or 403 (forbidden) status.
+ */
+export function isAuthError(error: unknown): boolean {
+  return error instanceof ApiError && (error.status === 401 || error.status === 403);
+}

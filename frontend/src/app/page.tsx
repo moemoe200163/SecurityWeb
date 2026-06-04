@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Shield, Search, Network, AlertTriangle, TrendingUp, Clock, Activity, Terminal } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { api, ApiError, type SessionDetail } from '@/lib/api';
+import { api, ApiError, isAuthError, type SessionDetail } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { PageHero } from '@/components/layout/PageHero';
 
@@ -334,7 +334,7 @@ export default function Dashboard() {
         totalPentest: sessions.filter(s => s.module === 'pentest').length,
       });
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
+      if (isAuthError(err)) {
         setAuthError(true);
       } else {
         console.error('Failed to load activity:', err);

@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import { Loader2, Search, X, Copy, ExternalLink, Globe } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
-import { api, ApiError } from '@/lib/api';
+import { api, ApiError, isAuthError } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 
 // Country code to flag + name mapping
@@ -115,7 +115,7 @@ export default function BgpPage() {
       setStats(statsData);
       setResult(lookupData);
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
+      if (isAuthError(err)) {
         setAuthError(true);
         return;
       }
@@ -147,7 +147,7 @@ export default function BgpPage() {
       setWhoIsData(whoisData);
       setPrefixes(prefixesData.prefixes || []);
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
+      if (isAuthError(err)) {
         setAuthError(true);
         return;
       }

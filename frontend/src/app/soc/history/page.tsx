@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Search, Network, Shield, Clock, ChevronRight, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
-import { api, ApiError, type SessionDetail } from '@/lib/api';
+import { api, ApiError, isAuthError, type SessionDetail } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { PageHero } from '@/components/layout/PageHero';
 
@@ -80,7 +80,7 @@ export default function HistoryPage() {
       setSessions(data);
       setLastRefresh(new Date());
     } catch (err) {
-      if (err instanceof ApiError && err.status === 401) {
+      if (isAuthError(err)) {
         setAuthError(true);
         return;
       }
