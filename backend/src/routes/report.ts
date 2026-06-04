@@ -2,6 +2,8 @@ import type { FastifyInstance } from 'fastify';
 import { spawn } from 'child_process';
 import { miniMaxAdapter } from '../services/minimaxAdapter.js';
 import type { PentestInput, SessionData } from '../services/types.js';
+import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
+import { requireUser } from '../middleware/rbac.js';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
@@ -38,7 +40,7 @@ function sanitizeInput(input: PentestInput | undefined): Record<string, string> 
 
 export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/report/:sessionId/pdf - Download analysis report
-  fastify.get<{ Params: { sessionId: string } }>('/:sessionId/pdf', async (request, reply) => {
+  fastify.get<{ Params: { sessionId: string } }>('/:sessionId/pdf', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const { sessionId } = request.params;
 
@@ -95,7 +97,7 @@ export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/report/:sessionId/json - Get structured report data for frontend PDF generation
-  fastify.get<{ Params: { sessionId: string } }>('/:sessionId/json', async (request, reply) => {
+  fastify.get<{ Params: { sessionId: string } }>('/:sessionId/json', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const { sessionId } = request.params;
 

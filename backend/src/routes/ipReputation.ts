@@ -1,6 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../db/client.js';
+import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
+import { requireUser } from '../middleware/rbac.js';
 
 const ABUSEIPDB_API_KEY = process.env.ABUSEIPDB_API_KEY;
 const OTX_API_KEY = process.env.OTX_API_KEY;
@@ -164,7 +166,7 @@ function determineThreatLevel(
 
 export async function ipReputationRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/ip/check?ip=1.1.1.1 - Check IP reputation
-  fastify.get('/check', async (request, reply) => {
+  fastify.get('/check', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const { ip, forceRefresh } = querySchema.parse(request.query);
 
@@ -317,7 +319,7 @@ export async function ipReputationRoutes(fastify: FastifyInstance): Promise<void
   });
 
   // GET /api/ip/history - Get recent IP checks
-  fastify.get('/history', async (request, reply) => {
+  fastify.get('/history', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const history = await prisma.ipReputation.findMany({
         orderBy: { updatedAt: 'desc' },
@@ -355,7 +357,7 @@ export async function ipReputationRoutes(fastify: FastifyInstance): Promise<void
   });
 
   // GET /api/ip/stats - Get statistics
-  fastify.get('/stats', async (request, reply) => {
+  fastify.get('/stats', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const [total, malicious, suspicious, normal] = await Promise.all([
         prisma.ipReputation.count(),
@@ -379,7 +381,7 @@ export async function ipReputationRoutes(fastify: FastifyInstance): Promise<void
   });
 
   // GET /api/ip/blacklist - Get paginated blacklist
-  fastify.get('/blacklist', async (request, reply) => {
+  fastify.get('/blacklist', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const query = request.query as Record<string, string>;
       const page = parseInt(query.page) || 1;
@@ -446,7 +448,7 @@ export async function ipReputationRoutes(fastify: FastifyInstance): Promise<void
   });
 
   // GET /api/ip/quota - Get API usage quota
-  fastify.get('/quota', async (request, reply) => {
+  fastify.get('/quota', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const [abuseQuota, otxQuota] = await Promise.all([
         getRemainingQuota('AbuseIPDB'),

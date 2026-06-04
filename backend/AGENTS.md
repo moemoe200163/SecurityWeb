@@ -18,6 +18,41 @@
 | `/api/bgp` | BGP 監控 |
 | `/api/report` | 報告生成 |
 
+## 路由認證矩陣（P0.2 完成，2026-06-04）
+
+> P0.2 已完成：8 條裸奔路由全部補上 `apiKeyAuth + requireUser`，昂貴端點加 `rateLimit`。
+> `settings` 路由留待下一批（POST `/ai` 可改 AI provider，建議改 `requireAdmin`）。
+
+| 路由前綴 | 端點 | `apiKeyAuth` | `requireUser` | `requireAdmin` | `rateLimit` | 備註 |
+|---------|------|-------------|--------------|---------------|------------|------|
+| `/api/soc` | POST `/analyze` | ✅ | ✅ | — | 10/min | P0.2a |
+| `/api/soc` | POST `/sessions/:id/messages` | ✅ | ✅ | — | 30/min | P0.2a |
+| `/api/soc` | GET `/sessions`, `/sessions/:id`, `/sessions/:id/report` | ✅ | ✅ | — | — | P0.2a |
+| `/api/threat` | POST `/investigate` | ✅ | ✅ | — | 10/min | P0.2b |
+| `/api/threat` | POST `/sessions/:id/messages` | ✅ | ✅ | — | 30/min | P0.2b |
+| `/api/threat` | GET `/sessions`, `/sessions/:id` | ✅ | ✅ | — | — | P0.2b |
+| `/api/pentest` | POST `/assist` | ✅ | ✅ | — | 3/min | P0.2c（sandbox 昂貴） |
+| `/api/pentest` | POST `/sessions/:id/messages` | ✅ | ✅ | — | 30/min | P0.2c |
+| `/api/pentest` | GET `/templates`, `/sessions`, `/sessions/:id` | ✅ | ✅ | — | — | P0.2c |
+| `/api/bgp` | GET `/query` | ✅ | ✅ | — | 30/min | P0.2d |
+| `/api/bgp` | GET `/stats`, `/whois/:asn`, `/prefixes/:asn`, `/lookup`, `/metrics` | ✅ | ✅ | — | — | P0.2d |
+| `/api/urlhaus` | GET `/check`, `/recent` | ✅ | ✅ | — | — | P0.2d |
+| `/api/otx` | GET `/check`, `/pulse/:pulseId`, `/search` | ✅ | ✅ | — | — | P0.2d |
+| `/api/ip` | GET `/check`, `/history`, `/stats`, `/blacklist`, `/quota` | ✅ | ✅ | — | — | P0.2d |
+| `/api/report` | GET `/:sessionId/pdf`, `/:sessionId/json` | ✅ | ✅ | — | — | P0.2d |
+| `/api/settings` | GET `/ai`, POST `/ai`, POST `/ai/test` | ❌ | — | — | 部分（`/ai/test` 5/min） | **下一批**：POST `/ai` 可改 AI provider，建議改 `requireAdmin` |
+| `/api/alerts` | * | ✅ | ✅ | — | — | 已受保護 |
+| `/api/sessions` (evidence) | * | ✅ | ✅ | — | — | 已受保護 |
+| `/api/dashboard` | * | ✅ | ✅ | — | — | 已受保護 |
+| `/api/tools` | * | ✅ | ✅ | — | — | 已受保護 |
+| `/api/me` | * | ✅ | ✅ | — | — | 已受保護 |
+| `/api/admin` | * | ✅ | — | ✅ | — | 已受保護 |
+| `/api/admin` (keys) | * | ✅ | — | ✅ | — | 已受保護 |
+| `/api/admin` (retention) | * | ✅ | — | ✅ | — | 已受保護 |
+| `/health` | * | — | — | — | — | 公開健康檢查 |
+
+**現況總結**：P0.2 完成，16 條路由前綴中 **15 條已受保護**，僅 `settings` 留待下一批。測試覆蓋：`soc.test.ts` (6) + `threat.test.ts` (5) + `pentest.test.ts` (5) + `externalApis.test.ts` (11) = **27 條新測試**，全量 81/81 通過。
+
 ## 數據庫優化
 
 ### Phase 1: In-Memory Cache (已實作)

@@ -1,6 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../db/client.js';
+import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
+import { requireUser } from '../middleware/rbac.js';
 
 const URLHAUS_API_BASE_URL = 'https://urlhaus-api.abuse.ch/api/v1';
 
@@ -35,7 +37,7 @@ async function queryUrlhaus(domain: string): Promise<any> {
 
 export async function urlhausRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/urlhaus/check?domain=xxx - Check domain on URLhaus
-  fastify.get('/check', async (request, reply) => {
+  fastify.get('/check', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const { domain, forceRefresh } = querySchema.parse(request.query);
 
@@ -202,8 +204,8 @@ export async function urlhausRoutes(fastify: FastifyInstance): Promise<void> {
     }
   });
 
-  // GET /api/urlhaus/recent - Get recent malicious URLs (public endpoint)
-  fastify.get('/recent', async (request, reply) => {
+  // GET /api/urlhaus/recent - Get recent malicious URLs
+  fastify.get('/recent', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const limit = Math.min(parseInt((request.query as any).limit) || 10, 50);
 

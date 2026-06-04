@@ -3,6 +3,9 @@ import { prisma } from '../db/client.js';
 import dns from 'dns';
 import { promisify } from 'util';
 import https from 'https';
+import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
+import { requireUser } from '../middleware/rbac.js';
+import { rateLimit } from '../middleware/rateLimit.js';
 
 const dnsLookup = promisify(dns.lookup);
 
@@ -177,7 +180,7 @@ const WHOIS_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
 export async function bgpRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/bgp/query - 查詢 BGP 更新記錄
-  fastify.get('/query', async (request, reply) => {
+  fastify.get('/query', { preHandler: [apiKeyAuth, requireUser, rateLimit(30, 60_000)] }, async (request, reply) => {
     const query = request.query as Record<string, string>;
     const prefix = query.prefix;
     const asn = query.asn ? BigInt(query.asn) : undefined;
@@ -259,7 +262,7 @@ export async function bgpRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/bgp/stats - 取得統計資料
-  fastify.get('/stats', async (request, reply) => {
+  fastify.get('/stats', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
     const [total, announces, withdraws, uniquePrefixes, uniqueAsns] = await Promise.all([
@@ -288,7 +291,7 @@ export async function bgpRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/bgp/whois/:asn - 查詢 ASN WHOIS 資訊
-  fastify.get('/whois/:asn', async (request, reply) => {
+  fastify.get('/whois/:asn', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     const { asn } = request.params as { asn: string };
     const asnNumber = asn.replace(/^AS/i, '');
 
@@ -348,7 +351,7 @@ export async function bgpRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/bgp/prefixes/:asn - 查询 ASN 宣告的前缀
-  fastify.get('/prefixes/:asn', async (request, reply) => {
+  fastify.get('/prefixes/:asn', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     const { asn } = request.params as { asn: string };
     const asnNumber = asn.replace(/^AS/i, '');
     const asnBigInt = BigInt(asnNumber);
@@ -405,7 +408,7 @@ export async function bgpRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/bgp/lookup - 查詢任意 IP/前綴的 BGP 資訊 (使用 RIPEstat)
-  fastify.get('/lookup', async (request, reply) => {
+  fastify.get('/lookup', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     const query = request.query as Record<string, string>;
     const resource = query.resource || query.ip || query.prefix;
 
@@ -529,7 +532,7 @@ export async function bgpRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/bgp/metrics - BGP consumer retention metrics
-  fastify.get('/metrics', async (request, reply) => {
+  fastify.get('/metrics', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       // Get total count, oldest timestamp, and latest timestamp
       const [totalResult, oldestResult, latestResult] = await Promise.all([

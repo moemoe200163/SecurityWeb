@@ -3,6 +3,9 @@ import { z } from 'zod';
 import { prisma } from '../db/client.js';
 import { getAIService } from '../services/AIServiceFactory.js';
 import type { AIService } from '../services/types.js';
+import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
+import { requireUser } from '../middleware/rbac.js';
+import { rateLimit } from '../middleware/rateLimit.js';
 import PDFDocument from 'pdfkit';
 
 const analyzeSchema = z.object({
@@ -13,7 +16,7 @@ const analyzeSchema = z.object({
 
 export async function socRoutes(fastify: FastifyInstance): Promise<void> {
   // POST /api/soc/analyze - Start SOC analysis
-  fastify.post('/analyze', async (request, reply) => {
+  fastify.post('/analyze', { preHandler: [apiKeyAuth, requireUser, rateLimit(10, 60_000)] }, async (request, reply) => {
     try {
       const ai = await getAIService();
       const body = analyzeSchema.parse(request.body);
@@ -51,7 +54,7 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/soc/sessions - Get all sessions
-  fastify.get('/sessions', async (request, reply) => {
+  fastify.get('/sessions', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const ai = await getAIService();
       const sessions = await ai.getAllSessions();
@@ -63,7 +66,7 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/soc/sessions/:id - Get session by ID
-  fastify.get('/sessions/:id', async (request, reply) => {
+  fastify.get('/sessions/:id', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const ai = await getAIService();
       const { id } = request.params as { id: string };
@@ -81,7 +84,7 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // POST /api/soc/sessions/:id/messages - Send message to session
-  fastify.post('/sessions/:id/messages', async (request, reply) => {
+  fastify.post('/sessions/:id/messages', { preHandler: [apiKeyAuth, requireUser, rateLimit(30, 60_000)] }, async (request, reply) => {
     try {
       const ai = await getAIService();
       const { id } = request.params as { id: string };
@@ -110,7 +113,7 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/soc/sessions/:id/report - Generate PDF report for SOC session
-  fastify.get<{ Params: { id: string } }>('/sessions/:id/report', async (request, reply) => {
+  fastify.get<{ Params: { id: string } }>('/sessions/:id/report', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const ai = await getAIService();
       const { id } = request.params;

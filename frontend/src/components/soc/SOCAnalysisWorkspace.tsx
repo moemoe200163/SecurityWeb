@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useStepStore } from '@/stores/stepStore';
 import { api, pollSession, type SessionDetail } from '@/lib/api';
-import type { AlertData, Message, ToolCall } from '@/lib/types';
+import type { AlertData, ToolCall } from '@/lib/types';
 import type { SessionSummary } from '@/components/soc/AnalysisSidebar';
 import { VolcanoStepCard } from '@/components/soc/VolcanoStepCard';
 import { ThreatSummaryCard } from '@/components/soc/ThreatSummaryCard';
@@ -59,7 +59,6 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
     startExecution,
     stopExecution,
     setMessages,
-    addMessage,
     resetAll,
   } = useStepStore();
   void currentStepIndex; void setCurrentModule;
@@ -343,38 +342,12 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
         }
       );
 
-      // Auto-send initial message to trigger MiniMax analysis
-      const initialPrompt = `請分析以下安全告警數據，生成結構化威脅報告：
-
-${data.rawContent || data.alertId}
-
-【報告格式要求】
-1. 首先輸出威脅判定：⚠️ 風險等級 + 攻擊類型
-2. 六章報告：事件概要、IOC、ATT&CK、技術分析、業務影響、處置建議
-3. ⚠️ 標註待確認資訊（IP、帳戶）並列為最優先
-4. 禁止重複內容，章節間不複製貼上`;
-
-      setTimeout(async () => {
-        try {
-          const msg: Message = {
-            id: Date.now().toString(),
-            role: 'user',
-            content: initialPrompt,
-            timestamp: new Date().toISOString(),
-          };
-          addMessage(msg);
-
-          const msgResponse = await api.soc.sendMessage(response.sessionId, initialPrompt);
-          addMessage({
-            id: msgResponse.message.id,
-            role: 'assistant',
-            content: msgResponse.message.content,
-            timestamp: msgResponse.message.createdAt,
-          });
-        } catch (err) {
-          console.error('Initial message error:', err);
-        }
-      }, 1000);
+      // NOTE: Do NOT send an initial message here.
+      // Backend's POST /analyze already triggers triggerSOCAnalysis() which calls
+      // ai.sendMessage() internally. Sending a second message from the frontend
+      // would consume duplicate AI quota and race with the backend's response,
+      // overwriting steps written by updateStepsFromAIResponseTx.
+      // The pollSession above will receive the AI's response automatically.
     } catch (error) {
       console.error('Analysis error:', error);
       stopExecution();

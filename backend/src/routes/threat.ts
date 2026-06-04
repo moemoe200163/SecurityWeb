@@ -3,6 +3,9 @@ import { z } from 'zod';
 import { getAIService } from '../services/AIServiceFactory.js';
 import type { AIService } from '../services/types.js';
 import { prisma } from '../db/client.js';
+import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
+import { requireUser } from '../middleware/rbac.js';
+import { rateLimit } from '../middleware/rateLimit.js';
 
 const investigateSchema = z.object({
   type: z.enum(['ip', 'domain', 'hash']),
@@ -71,7 +74,7 @@ ${localDbInfo}
 
 export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
   // POST /api/threat/investigate - Start threat investigation
-  fastify.post('/investigate', async (request, reply) => {
+  fastify.post('/investigate', { preHandler: [apiKeyAuth, requireUser, rateLimit(10, 60_000)] }, async (request, reply) => {
     try {
       const ai = await getAIService();
       const body = investigateSchema.parse(request.body);
@@ -104,7 +107,7 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/threat/sessions - Get all sessions
-  fastify.get('/sessions', async (request, reply) => {
+  fastify.get('/sessions', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const ai = await getAIService();
       const sessions = await ai.getAllSessions();
@@ -117,7 +120,7 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/threat/sessions/:id - Get session by ID
-  fastify.get('/sessions/:id', async (request, reply) => {
+  fastify.get('/sessions/:id', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const ai = await getAIService();
       const { id } = request.params as { id: string };
@@ -135,7 +138,7 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // POST /api/threat/sessions/:id/messages - Send message to session
-  fastify.post('/sessions/:id/messages', async (request, reply) => {
+  fastify.post('/sessions/:id/messages', { preHandler: [apiKeyAuth, requireUser, rateLimit(30, 60_000)] }, async (request, reply) => {
     try {
       const ai = await getAIService();
       const { id } = request.params as { id: string };

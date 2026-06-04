@@ -2,6 +2,18 @@
 """
 BGP Consumer - RIPE RIS Live WebSocket to PostgreSQL
 串接 RIPE RIS Live WebSocket，即時寫入 BGP update 到 PostgreSQL
+
+寫入策略：buffered flush，**非** multi-row bulk insert
+--------------------------------------------------------
+- WebSocket 收到 update 後推進 `_update_buffer`（asyncio.Lock 保護）
+- 達到 `BATCH_SIZE` (100) 筆或 `BATCH_TIMEOUT_SECONDS` (5) 秒觸發 `_flush_buffer`
+- `_flush_buffer()` 在**單一 transaction** 內對每一筆依序執行
+  `INSERT INTO "BgpUpdate" ...`，**逐筆 INSERT**，未使用 `executemany` /
+  `execute_batch` / 多列 `INSERT ... VALUES (...), (...), ...`
+- 因此目前實作並非「bulk insert」，只是「在單一 transaction 內的 row-by-row flush」；
+  對 PG 來說網路 round-trip 與 WAL flush 次數仍隨 N 線性成長
+- 升級為真 multi-row bulk 的計畫見 P2 backlog（將單一 transaction 改寫為
+  `execute_batch` 或單一 multi-row INSERT，可降低 ~5-10× 寫入延遲）
 """
 
 import json
@@ -61,7 +73,13 @@ def _get_country_for_asn(origin_asn):
     return _asn_country_cache.get(origin_asn)
 
 async def _flush_buffer():
-    """Flush the update buffer to database in a single transaction."""
+    """Flush the update buffer to database in a single transaction.
+
+    Note: This is row-by-row INSERT inside one transaction (buffered flush),
+    NOT a multi-row bulk insert. Each iteration sends its own INSERT statement
+    to PostgreSQL. See module docstring for the rationale and the P2 backlog
+    item to upgrade to `execute_batch` / multi-row `VALUES (...)`.
+    """
     global _update_buffer, _updates_since_last_log, _total_updates_flushed, _last_log_time
     if not _update_buffer:
         return 0
@@ -76,6 +94,7 @@ async def _flush_buffer():
 
     try:
         with engine.begin() as conn:
+            # Row-by-row INSERT inside one transaction. Not bulk.
             for u in updates_to_flush:
                 try:
                     ts = u.get('timestamp')

@@ -293,7 +293,7 @@
 
 | 項目 | 狀態 | 證據 |
 |------|------|------|
-| 端到端驗收腳本 | **PASS** | `scripts/validate-e2e-journeys.sh` 覆蓋 SOC/Threat/Pentest/BGP/Dashboard/Admin 6 大旅程 |
+| 端到端驗收腳本 | **SMOKE READY** | `scripts/validate-e2e-journeys.sh` 語法與啟動流程已驗證（需 `API_KEY` 環境變數）；**未**以真實 API key 跑完 SOC/Threat/Pentest/BGP/Dashboard/Admin 6 大 journey 全部 happy path，完整 E2E 驗收仍待執行 |
 | 操作手冊 | **PASS** | `docs/OPERATIONS.md` 含 seed、admin key、Docker 啟動、 troubleshooting |
 | Docker profile 驗收文件 | **PASS** | `docs/DOCKER-PROFILES.md` 含 4 個 profile 說明、資源限制、組合使用 |
 | Demo dataset | **PASS** | `seed.ts` 含 5 個 demo alerts（SQL注入/XSS/暴力破解/LFI/正常流量）+ 8 個 tool templates |
@@ -302,7 +302,7 @@
 
 | 檢查 | 結果 | 證據 |
 |------|------|------|
-| `bash scripts/validate-e2e-journeys.sh` | PASS | 腳本可執行（需 API_KEY 環境變數） |
+| `bash scripts/validate-e2e-journeys.sh` | SMOKE READY | 腳本語法與啟動流程驗證通過（需 API_KEY 環境變數）；完整 journey 跑通需另行以真 API key 執行驗收 |
 | `docs/OPERATIONS.md` 存在 | PASS | 含 Quick Start、API Key、User Journeys、Troubleshooting |
 | `docs/DOCKER-PROFILES.md` 存在 | PASS | 含 profile 表格、資源限制、組合使用範例 |
 | Demo alerts 多樣性 | PASS | 覆蓋 high/medium/critical/info 四種 severity |

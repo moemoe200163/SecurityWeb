@@ -1,6 +1,8 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../db/client.js';
+import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
+import { requireUser } from '../middleware/rbac.js';
 
 const OTX_API_KEY = process.env.OTX_API_KEY;
 const OTX_BASE_URL = 'https://otx.alienvault.com/api/v1';
@@ -78,7 +80,7 @@ async function queryOTXDirect(indicator: string, type: string): Promise<any> {
 
 export async function otxRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/otx/check?indicator=xxx&type=domain - Direct OTX query
-  fastify.get('/check', async (request, reply) => {
+  fastify.get('/check', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const { indicator, type, forceRefresh } = querySchema.parse(request.query);
 
@@ -197,7 +199,7 @@ export async function otxRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/otx/pulse/:pulseId - Get specific pulse details
-  fastify.get('/pulse/:pulseId', async (request, reply) => {
+  fastify.get('/pulse/:pulseId', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const { pulseId } = request.params as { pulseId: string };
 
@@ -244,7 +246,7 @@ export async function otxRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/otx/search - Search for indicators
-  fastify.get('/search', async (request, reply) => {
+  fastify.get('/search', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const query = request.query as Record<string, string>;
       const keyword = query.keyword || '';
