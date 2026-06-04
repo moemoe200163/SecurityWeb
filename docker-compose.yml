@@ -39,7 +39,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
       target: runner
-    user: root
     env_file:
       - ./backend/.env
     # Port 4000 is NOT published here on purpose. The backend is reachable
@@ -49,6 +48,7 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL:-postgresql://securityweb:securityweb123@db:5432/securityweb}
       - PORT=4000
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000}
       - MINIMAX_API_KEY=${MINIMAX_API_KEY}
       - MINIMAX_API_ENDPOINT=${MINIMAX_API_ENDPOINT:-https://api.minimax.chat/v1}
       - MINIMAX_MODEL=${MINIMAX_MODEL:-MiniMax-M2.7}

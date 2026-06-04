@@ -50,6 +50,11 @@ COPY package.json ./
 EXPOSE 4000
 
 ENV PORT=4000
-ENV DATABASE_URL="postgresql://user:pass@db:5432/securityweb"
+
+# Create non-root user for running the application
+RUN groupadd -r appuser && useradd -r -g appuser -d /app -s /sbin/nologin appuser \
+    && chown -R appuser:appuser /app
+
+USER appuser
 
 CMD ["node", "dist/index.js"]

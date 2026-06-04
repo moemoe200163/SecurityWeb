@@ -1,6 +1,8 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { connectDatabase, prisma } from './db/client.js';
+import { validateEnv } from './config/env.js';
+import { originValidation } from './middleware/originValidation.js';
 import { socRoutes } from './routes/soc.js';
 import { threatRoutes } from './routes/threat.js';
 import { pentestRoutes } from './routes/pentest.js';
@@ -22,16 +24,26 @@ import { dashboardRoutes } from './routes/dashboard.js';
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 
 async function startServer() {
+  // Validate required environment variables before anything else
+  validateEnv();
+
   const fastify = Fastify({
     logger: true,
   });
 
-  // Register CORS
+  // Register CORS — restrict origins in production via ALLOWED_ORIGINS env var
+  const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
+    : ['http://localhost:3000', 'http://localhost:4000'];
+
   await fastify.register(cors, {
-    origin: '*',
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key'],
   });
+
+  // Origin validation defense-in-depth for state-changing requests
+  fastify.addHook('preHandler', originValidation);
 
   // Connect to database
   await connectDatabase();
