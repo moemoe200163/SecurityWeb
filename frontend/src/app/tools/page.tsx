@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Shield,
   Play,
@@ -86,7 +86,8 @@ export default function ToolsPage() {
   const [isApiOnline, setIsApiOnline] = useState(true);
   const [authError, setAuthError] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const apiKey = getApiKey();
+  const mountedRef = useRef(false);
+  const [apiKey, setApiKey] = useState('');
   // Surface the error in the DOM so the value is actually read.
   void error;
 
@@ -128,6 +129,12 @@ export default function ToolsPage() {
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  // Read apiKey from localStorage only after mount to avoid SSR hydration mismatch
+  useEffect(() => {
+    mountedRef.current = true;
+    setApiKey(getApiKey());
   }, []);
 
   useEffect(() => {
