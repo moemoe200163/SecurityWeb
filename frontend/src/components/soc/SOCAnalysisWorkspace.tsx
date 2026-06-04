@@ -4,7 +4,7 @@ import { useEffect, useCallback, useState, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useStepStore } from '@/stores/stepStore';
-import { api, ApiError, isAuthError, pollSession, type SessionDetail } from '@/lib/api';
+import { api, ApiError, isAuthError, isForbidden, pollSession, type SessionDetail } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import type { AlertData, ToolCall } from '@/lib/types';
 import type { SessionSummary } from '@/components/soc/AnalysisSidebar';
@@ -65,7 +65,7 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
   void currentStepIndex; void setCurrentModule;
 
   const pollCleanupRef = useRef<(() => void) | null>(null);
-  const [authError, setAuthError] = useState(false);
+  const [authError, setAuthError] = useState<number | false>(false);
   const [, setSidebarSession] = useState<SessionSummary | undefined>(undefined);
   const [alertData, setAlertData] = useState<{
     id: string;
@@ -200,13 +200,16 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
                 })));
               }
             },
-            { onAuthError: () => { setAuthError(true); stopExecution(); } }
+            { onAuthError: () => { setAuthError(401); stopExecution(); } }
           );
         }
       } catch (err) {
         if (!cancelled) {
-          if (isAuthError(err)) {
-            setAuthError(true);
+          if (isForbidden(err)) {
+            setAuthError(403);
+            return;
+          } else if (isAuthError(err)) {
+            setAuthError(401);
             return;
           }
           console.error('Failed to load session:', err);
@@ -280,8 +283,11 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
         });
       }
     } catch (err) {
-      if (isAuthError(err)) {
-        setAuthError(true);
+      if (isForbidden(err)) {
+        setAuthError(403);
+        return;
+      } else if (isAuthError(err)) {
+        setAuthError(401);
         return;
       }
       console.error('Failed to load session:', err);
@@ -351,7 +357,7 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
         (session) => {
           syncSessionToStore(session);
         },
-        { onAuthError: () => setAuthError(true) }
+        { onAuthError: () => setAuthError(401) }
       );
 
       // NOTE: Do NOT send an initial message here.
@@ -361,8 +367,11 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
       // overwriting steps written by updateStepsFromAIResponseTx.
       // The pollSession above will receive the AI's response automatically.
     } catch (error) {
-      if (isAuthError(error)) {
-        setAuthError(true);
+      if (isForbidden(error)) {
+        setAuthError(403);
+        stopExecution();
+      } else if (isAuthError(error)) {
+        setAuthError(401);
         stopExecution();
         return;
       }
@@ -406,8 +415,10 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
           api.soc.getSession(currentSessionId).then((res) => {
             syncSessionToStore(res.session);
           }).catch((err) => {
-            if (isAuthError(err)) {
-              setAuthError(true);
+            if (isForbidden(err)) {
+              setAuthError(403);
+            } else if (isAuthError(err)) {
+              setAuthError(401);
             } else {
               console.error('Refresh data failed:', err);
             }
@@ -499,7 +510,7 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
           commandValue={`${completedSteps}/${totalSteps}`}
         />
 
-        {authError && <div className="px-6 py-4"><ApiKeyRequired /></div>}
+        {authError !== false && <div className="px-6 py-4"><ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} /></div>}
 
         {/* Top Progress Bar */}
         <div className="bg-[var(--card)] border-y border-[var(--border)] px-6 py-4">

@@ -866,3 +866,10 @@ export function pollSession(
 export function isAuthError(error: unknown): boolean {
   return error instanceof ApiError && (error.status === 401 || error.status === 403);
 }
+
+/**
+ * Returns true when the error is a 403 Forbidden (key exists but lacks required role).
+ */
+export function isForbidden(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 403;
+}

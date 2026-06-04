@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import { Loader2, Search, X, Copy, ExternalLink, Globe } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
-import { api, ApiError, isAuthError } from '@/lib/api';
+import { api, ApiError, isAuthError, isForbidden } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 
 // Country code to flag + name mapping
@@ -96,7 +96,7 @@ export default function BgpPage() {
   const [prefixes, setPrefixes] = useState<PrefixInfo[]>([]);
   const [prefixesLoading, setPrefixesLoading] = useState(false);
   const [prefixPage, setPrefixPage] = useState(1);
-  const [authError, setAuthError] = useState(false);
+  const [authError, setAuthError] = useState<number | false>(false);
   const PREFIX_PAGE_SIZE = 20;
 
   const handleSearch = useCallback(async () => {
@@ -115,8 +115,11 @@ export default function BgpPage() {
       setStats(statsData);
       setResult(lookupData);
     } catch (err) {
-      if (isAuthError(err)) {
-        setAuthError(true);
+      if (isForbidden(err)) {
+        setAuthError(403);
+        return;
+      } else if (isAuthError(err)) {
+        setAuthError(401);
         return;
       }
       console.error('Failed to search:', err);
@@ -147,8 +150,11 @@ export default function BgpPage() {
       setWhoIsData(whoisData);
       setPrefixes(prefixesData.prefixes || []);
     } catch (err) {
-      if (isAuthError(err)) {
-        setAuthError(true);
+      if (isForbidden(err)) {
+        setAuthError(403);
+        return;
+      } else if (isAuthError(err)) {
+        setAuthError(401);
         return;
       }
       console.error('Failed to fetch ASN data:', err);
@@ -203,7 +209,7 @@ export default function BgpPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-6">
-        {authError && <ApiKeyRequired />}
+        {authError !== false && <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />}
         {/* Search Box */}
         <div className="rounded-xl border shadow-sm p-6 mb-6" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
           <div className="flex flex-col md:flex-row gap-4">

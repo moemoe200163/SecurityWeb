@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { api, ApiError, isAuthError, type SessionDetail, type Evidence } from '@/lib/api';
+import { api, ApiError, isAuthError, isForbidden, type SessionDetail, type Evidence } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { PageHero } from '@/components/layout/PageHero';
 import { VolcanoStepCard } from '@/components/soc/VolcanoStepCard';
@@ -90,7 +90,7 @@ interface InvestigationWorkspaceProps {
 export function InvestigationWorkspace({ sessionId }: InvestigationWorkspaceProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [authError, setAuthError] = useState(false);
+  const [authError, setAuthError] = useState<number | false>(false);
   const [session, setSession] = useState<SessionDetail | null>(null);
   const [module, setModule] = useState('');
   const [evidence, setEvidence] = useState<Evidence[]>([]);
@@ -142,8 +142,10 @@ export function InvestigationWorkspace({ sessionId }: InvestigationWorkspaceProp
         }
       } catch (err) {
         if (!cancelled) {
-          if (isAuthError(err)) {
-            setAuthError(true);
+          if (isForbidden(err)) {
+            setAuthError(403);
+          } else if (isAuthError(err)) {
+            setAuthError(401);
           } else {
             setError(err instanceof Error ? err.message : 'Failed to load');
           }
@@ -169,7 +171,7 @@ export function InvestigationWorkspace({ sessionId }: InvestigationWorkspaceProp
 
   // Render: loading --------------------------------------------------------
   if (authError) {
-    return <ApiKeyRequired />;
+    return <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />;
   }
 
   if (loading) {

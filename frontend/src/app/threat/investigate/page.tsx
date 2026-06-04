@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { api, ApiError, isAuthError, pollSession, type SessionDetail, type IpReputationResult } from '@/lib/api';
+import { api, ApiError, isAuthError, isForbidden, pollSession, type SessionDetail, type IpReputationResult } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { Loader2, Search, AlertCircle, CheckCircle2, XCircle, Shield, ShieldAlert, ShieldCheck, ShieldQuestion, Terminal } from 'lucide-react';
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer';
@@ -19,7 +19,7 @@ function ThreatInvestigateContent() {
   const [session, setSession] = useState<SessionDetail | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [authError, setAuthError] = useState(false);
+  const [authError, setAuthError] = useState<number | false>(false);
   const [ipReputation, setIpReputation] = useState<IpReputationResult | null>(null);
   const [ipLoading, setIpLoading] = useState(false);
   const pollCleanupRef = useRef<(() => void) | null>(null);
@@ -50,8 +50,11 @@ function ThreatInvestigateContent() {
         else setType('ip');
       }
     } catch (err) {
-      if (isAuthError(err)) {
-        setAuthError(true);
+      if (isForbidden(err)) {
+        setAuthError(403);
+        return;
+      } else if (isAuthError(err)) {
+        setAuthError(401);
         return;
       }
       console.error('Failed to load session:', err);
@@ -89,8 +92,12 @@ function ThreatInvestigateContent() {
         const rep = await api.ip.check(indicator.trim());
         setIpReputation(rep);
       } catch (err: unknown) {
-        if (isAuthError(err)) {
-          setAuthError(true);
+        if (isForbidden(err)) {
+          setAuthError(403);
+          setLoading(false);
+          return;
+        } else if (isAuthError(err)) {
+          setAuthError(401);
           setLoading(false);
           return;
         }
@@ -122,11 +129,15 @@ function ThreatInvestigateContent() {
             setLoading(false);
           }
         },
-        { onAuthError: () => { setAuthError(true); setLoading(false); } }
+        { onAuthError: () => { setAuthError(401); setLoading(false); } }
       );
     } catch (err) {
-      if (isAuthError(err)) {
-        setAuthError(true);
+      if (isForbidden(err)) {
+        setAuthError(403);
+        setLoading(false);
+        return;
+      } else if (isAuthError(err)) {
+        setAuthError(401);
         setLoading(false);
         return;
       }
@@ -200,7 +211,7 @@ function ThreatInvestigateContent() {
   };
 
   if (authError) {
-    return <ApiKeyRequired />;
+    return <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />;
   }
 
   return (

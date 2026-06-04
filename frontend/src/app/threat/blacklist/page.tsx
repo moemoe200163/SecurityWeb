@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { api, ApiError, isAuthError, type IpReputationResult, type IpReputationStats, type PaginationInfo } from '@/lib/api';
+import { api, ApiError, isAuthError, isForbidden, type IpReputationResult, type IpReputationStats, type PaginationInfo } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { Loader2, Search, Shield, ShieldAlert, ShieldCheck, ShieldQuestion, RefreshCw, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
@@ -73,7 +73,7 @@ export default function BlacklistPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState<'updatedAt' | 'totalReports'>('updatedAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [authError, setAuthError] = useState(false);
+  const [authError, setAuthError] = useState<number | false>(false);
   const limit = 50;
 
   const loadData = useCallback(async () => {
@@ -94,8 +94,10 @@ export default function BlacklistPage() {
       setPagination(blacklistRes.pagination);
       setStats(statsRes);
     } catch (err) {
-      if (isAuthError(err)) {
-        setAuthError(true);
+      if (isForbidden(err)) {
+        setAuthError(403);
+      } else if (isAuthError(err)) {
+        setAuthError(401);
         return;
       }
       console.error('Failed to load blacklist:', err);
@@ -180,7 +182,7 @@ export default function BlacklistPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto p-6">
-        {authError && <ApiKeyRequired />}
+        {authError !== false && <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />}
 
         {/* Stats Cards */}
         {stats && (

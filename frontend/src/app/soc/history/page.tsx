@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Search, Network, Shield, Clock, ChevronRight, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
-import { api, ApiError, isAuthError, type SessionDetail } from '@/lib/api';
+import { api, ApiError, isAuthError, isForbidden, type SessionDetail } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { PageHero } from '@/components/layout/PageHero';
 
@@ -69,7 +69,7 @@ export default function HistoryPage() {
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [authError, setAuthError] = useState(false);
+  const [authError, setAuthError] = useState<number | false>(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const loadSessions = useCallback(async () => {
@@ -80,8 +80,10 @@ export default function HistoryPage() {
       setSessions(data);
       setLastRefresh(new Date());
     } catch (err) {
-      if (isAuthError(err)) {
-        setAuthError(true);
+      if (isForbidden(err)) {
+        setAuthError(403);
+      } else if (isAuthError(err)) {
+        setAuthError(401);
         return;
       }
       setError('載入歷史記錄失敗');
@@ -142,7 +144,7 @@ export default function HistoryPage() {
       {/* Content */}
       <div className="flex-1 overflow-auto px-6 pb-6">
         <div className="max-w-4xl mx-auto space-y-4">
-          {authError && <ApiKeyRequired />}
+          {authError !== false && <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />}
 
           {loading && (
             <>

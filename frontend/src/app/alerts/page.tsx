@@ -24,7 +24,7 @@ import { PageHero } from '@/components/layout/PageHero';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { api, ApiError, isAuthError } from '@/lib/api';
+import { api, ApiError, isAuthError, isForbidden } from '@/lib/api';
 
 interface Alert {
   id: string;
@@ -97,7 +97,7 @@ export default function AlertsPage() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [isApiOnline, setIsApiOnline] = useState(true);
-  const [authError, setAuthError] = useState(false);
+  const [authError, setAuthError] = useState<number | false>(false);
   const [error, setError] = useState<string | null>(null);
   void error;
 
@@ -113,8 +113,10 @@ export default function AlertsPage() {
       setAlerts((data.alerts as unknown as Alert[]) || []);
       setIsApiOnline(true);
     } catch (err) {
-      if (isAuthError(err)) {
-        setAuthError(true);
+      if (isForbidden(err)) {
+        setAuthError(403);
+      } else if (isAuthError(err)) {
+        setAuthError(401);
       } else {
         console.error('Failed to fetch alerts:', err);
         setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
@@ -175,7 +177,7 @@ export default function AlertsPage() {
   };
 
   if (authError) {
-    return <ApiKeyRequired message="API Key 缺失或無效，請先到設定頁重新設定" />;
+    return <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />;
   }
 
   return (

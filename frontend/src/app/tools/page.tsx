@@ -23,7 +23,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { AddToInvestigation } from '@/components/ui/AddToInvestigation';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { api, getApiKey, ApiError, isAuthError } from '@/lib/api';
+import { api, getApiKey, ApiError, isAuthError, isForbidden } from '@/lib/api';
 
 interface ToolTemplate {
   id: string;
@@ -84,7 +84,7 @@ export default function ToolsPage() {
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isApiOnline, setIsApiOnline] = useState(true);
-  const [authError, setAuthError] = useState(false);
+  const [authError, setAuthError] = useState<number | false>(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [executionId, setExecutionId] = useState<string | null>(null);
   const mountedRef = useRef(false);
@@ -101,8 +101,11 @@ export default function ToolsPage() {
       setIsApiOnline(true);
       setAuthError(false);
     } catch (err) {
-      if (isAuthError(err)) {
-        setAuthError(true);
+      if (isForbidden(err)) {
+        setAuthError(403);
+        setIsApiOnline(true);
+      } else if (isAuthError(err)) {
+        setAuthError(401);
         setIsApiOnline(true);
       } else {
         console.error('Failed to fetch templates:', err);
@@ -123,8 +126,11 @@ export default function ToolsPage() {
       setIsApiOnline(true);
       setAuthError(false);
     } catch (err) {
-      if (isAuthError(err)) {
-        setAuthError(true);
+      if (isForbidden(err)) {
+        setAuthError(403);
+        setIsApiOnline(true);
+      } else if (isAuthError(err)) {
+        setAuthError(401);
         setIsApiOnline(true);
       } else {
         console.error('Failed to fetch executions:', err);
@@ -146,7 +152,7 @@ export default function ToolsPage() {
   useEffect(() => {
     if (!mountedRef.current) return;
     if (!apiKey) {
-      setAuthError(true);
+      setAuthError(401);
       setLoading(false);
       return;
     }
@@ -237,7 +243,7 @@ export default function ToolsPage() {
   };
 
   if (authError) {
-    return <ApiKeyRequired message="API Key 缺失或無效，請先到設定頁重新設定" />;
+    return <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />;
   }
 
   return (
