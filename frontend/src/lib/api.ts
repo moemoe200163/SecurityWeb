@@ -265,51 +265,55 @@ export interface Evidence {
 
 // API Functions
 export const api = {
-  // SOC
+  // SOC (protected)
   soc: {
     async analyze(input: { alertId?: string; rawContent?: string }): Promise<SessionResponse> {
       return request<SessionResponse>('/api/soc/analyze', {
         method: 'POST',
         body: input,
+        requireAuth: true,
       });
     },
     async getSessions(): Promise<{ sessions: SessionDetail[] }> {
-      return request('/api/soc/sessions');
+      return request('/api/soc/sessions', { requireAuth: true });
     },
     async getSession(id: string): Promise<{ session: SessionDetail }> {
-      return request(`/api/soc/sessions/${id}`);
+      return request(`/api/soc/sessions/${id}`, { requireAuth: true });
     },
     async sendMessage(sessionId: string, content: string): Promise<{ message: MessageDetail }> {
       return request(`/api/soc/sessions/${sessionId}/messages`, {
         method: 'POST',
         body: { content },
+        requireAuth: true,
       });
     },
   },
 
-  // Threat
+  // Threat (protected)
   threat: {
     async investigate(input: { type: 'ip' | 'domain' | 'hash'; value: string; type2?: 'simulation' | 'live' }): Promise<SessionResponse> {
       return request<SessionResponse>('/api/threat/investigate', {
         method: 'POST',
         body: input,
+        requireAuth: true,
       });
     },
     async getSessions(): Promise<{ sessions: SessionDetail[] }> {
-      return request('/api/threat/sessions');
+      return request('/api/threat/sessions', { requireAuth: true });
     },
     async getSession(id: string): Promise<{ session: SessionDetail }> {
-      return request(`/api/threat/sessions/${id}`);
+      return request(`/api/threat/sessions/${id}`, { requireAuth: true });
     },
     async sendMessage(sessionId: string, content: string): Promise<{ message: MessageDetail }> {
       return request(`/api/threat/sessions/${sessionId}/messages`, {
         method: 'POST',
         body: { content },
+        requireAuth: true,
       });
     },
   },
 
-  // Pentest
+  // Pentest (protected)
   pentest: {
     async assist(input: {
       template?: string;
@@ -336,24 +340,31 @@ export const api = {
       return request<SessionResponse>('/api/pentest/assist', {
         method: 'POST',
         body: input,
+        requireAuth: true,
       });
     },
     async getSessions(): Promise<{ sessions: SessionDetail[] }> {
-      return request('/api/pentest/sessions');
+      return request('/api/pentest/sessions', { requireAuth: true });
     },
     async getSession(id: string): Promise<{ session: SessionDetail }> {
-      return request(`/api/pentest/sessions/${id}`);
+      return request(`/api/pentest/sessions/${id}`, { requireAuth: true });
     },
     async sendMessage(sessionId: string, content: string): Promise<{ message: MessageDetail }> {
       return request(`/api/pentest/sessions/${sessionId}/messages`, {
         method: 'POST',
         body: { content },
+        requireAuth: true,
       });
     },
     async downloadReport(sessionId: string): Promise<Blob> {
-      const response = await fetch(`${API_BASE}/api/report/${sessionId}/pdf`);
+      const key = getApiKey();
+      if (!key) throw new ApiError('Missing API key.', 401);
+      const response = await fetch(`${API_BASE}/api/report/${sessionId}/pdf`, {
+        headers: { 'X-API-Key': key },
+      });
       if (!response.ok) {
-        throw new Error('Failed to download report');
+        const text = await response.text().catch(() => '');
+        throw new ApiError(text || 'Failed to download report', response.status);
       }
       return response.blob();
     },
@@ -368,22 +379,22 @@ export const api = {
       remediation: { shortTerm: string[]; longTerm: string[] };
       summary: { critical: number; high: number; medium: number; low: number; info: number };
     }> {
-      return request(`/api/report/${sessionId}/json`);
+      return request(`/api/report/${sessionId}/json`, { requireAuth: true });
     },
   },
 
-  // IP Reputation
+  // IP Reputation (protected)
   ip: {
     async check(ip: string, forceRefresh = false): Promise<IpReputationResult> {
       const params = new URLSearchParams({ ip });
       if (forceRefresh) params.set('forceRefresh', 'true');
-      return request<IpReputationResult>(`/api/ip/check?${params}`);
+      return request<IpReputationResult>(`/api/ip/check?${params}`, { requireAuth: true });
     },
     async history(): Promise<{ history: IpReputationResult[] }> {
-      return request('/api/ip/history');
+      return request('/api/ip/history', { requireAuth: true });
     },
     async stats(): Promise<IpReputationStats> {
-      return request('/api/ip/stats');
+      return request('/api/ip/stats', { requireAuth: true });
     },
     async blacklist(params: {
       page?: number;
@@ -400,11 +411,11 @@ export const api = {
       if (params.search) query.set('search', params.search);
       if (params.sortBy) query.set('sortBy', params.sortBy);
       if (params.sortOrder) query.set('sortOrder', params.sortOrder);
-      return request(`/api/ip/blacklist?${query}`);
+      return request(`/api/ip/blacklist?${query}`, { requireAuth: true });
     },
   },
 
-  // BGP
+  // BGP (protected)
   bgp: {
     async query(params: {
       prefix?: string;
@@ -419,37 +430,37 @@ export const api = {
       if (params.page) query.set('page', String(params.page));
       if (params.limit) query.set('limit', String(params.limit));
       if (params.start_time) query.set('start_time', params.start_time);
-      return request(`/api/bgp/query?${query}`);
+      return request(`/api/bgp/query?${query}`, { requireAuth: true });
     },
     async stats(): Promise<BgpStats> {
-      return request('/api/bgp/stats');
+      return request('/api/bgp/stats', { requireAuth: true });
     },
   },
 
-  // URLhaus
+  // URLhaus (protected)
   urlhaus: {
     async check(domain: string, forceRefresh = false): Promise<UrlHausResult> {
       const params = new URLSearchParams({ domain });
       if (forceRefresh) params.set('forceRefresh', 'true');
-      return request<UrlHausResult>(`/api/urlhaus/check?${params}`);
+      return request<UrlHausResult>(`/api/urlhaus/check?${params}`, { requireAuth: true });
     },
     async recent(limit = 10): Promise<{ urls: unknown[]; generated_at: string }> {
-      return request(`/api/urlhaus/recent?limit=${limit}`);
+      return request(`/api/urlhaus/recent?limit=${limit}`, { requireAuth: true });
     },
   },
 
-  // OTX (AlienVault)
+  // OTX / AlienVault (protected)
   otx: {
     async check(indicator: string, type: 'IPv4' | 'IPv6' | 'domain' | 'hostname' | 'file' | 'url' = 'domain', forceRefresh = false): Promise<OtxCheckResult> {
       const params = new URLSearchParams({ indicator, type });
       if (forceRefresh) params.set('forceRefresh', 'true');
-      return request<OtxCheckResult>(`/api/otx/check?${params}`);
+      return request<OtxCheckResult>(`/api/otx/check?${params}`, { requireAuth: true });
     },
     async pulse(pulseId: string): Promise<unknown> {
-      return request(`/api/otx/pulse/${pulseId}`);
+      return request(`/api/otx/pulse/${pulseId}`, { requireAuth: true });
     },
     async search(keyword: string): Promise<{ results: unknown[]; count: number }> {
-      return request(`/api/otx/search?keyword=${encodeURIComponent(keyword)}`);
+      return request(`/api/otx/search?keyword=${encodeURIComponent(keyword)}`, { requireAuth: true });
     },
   },
 
@@ -799,8 +810,10 @@ export function pollSession(
   sessionId: string,
   module: 'soc' | 'threat' | 'pentest',
   onUpdate: (session: SessionDetail) => void,
-  interval = 2000
+  options?: { interval?: number; onAuthError?: () => void }
 ): () => void {
+  const interval = options?.interval ?? 2000;
+  const onAuthError = options?.onAuthError;
   let stopped = false;
 
   const poll = async () => {
@@ -814,19 +827,22 @@ export function pollSession(
 
       onUpdate(response.session);
 
-      // Stop polling when completed
       if (response.session.status === 'completed') {
         stopped = true;
       }
     } catch (error) {
+      if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
+        stopped = true;
+        onAuthError?.();
+        return;
+      }
       console.error('Polling error:', error);
     }
   };
 
   const intervalId = setInterval(poll, interval);
-  poll(); // Initial call
+  poll();
 
-  // Return cleanup function
   return () => {
     stopped = true;
     clearInterval(intervalId);
