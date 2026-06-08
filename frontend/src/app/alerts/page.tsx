@@ -73,6 +73,7 @@ const statusLabels: Record<string, string> = {
   new: '新進',
   investigating: '調查中',
   resolved: '已處理',
+  failed_resolution: '解除失敗',
   ignored: '已忽略',
   false_positive: '誤報',
 };
@@ -215,6 +216,7 @@ export default function AlertsPage() {
             <option value="new">新進</option>
             <option value="investigating">調查中</option>
             <option value="resolved">已處理</option>
+            <option value="failed_resolution">解除失敗</option>
             <option value="ignored">已忽略</option>
             <option value="false_positive">誤報</option>
           </select>
@@ -334,7 +336,7 @@ export default function AlertsPage() {
                           {alert.severity.toUpperCase()}
                         </StatusBadge>
                         <StatusBadge
-                          variant={alert.status === 'new' ? 'info' : alert.status === 'investigating' ? 'warning' : alert.status === 'resolved' ? 'success' : 'muted'}
+                          variant={alert.status === 'new' ? 'info' : alert.status === 'investigating' ? 'warning' : alert.status === 'resolved' ? 'success' : alert.status === 'failed_resolution' ? 'danger' : 'muted'}
                         >
                           {statusLabels[alert.status] || alert.status}
                         </StatusBadge>
@@ -453,6 +455,33 @@ export default function AlertsPage() {
                   )}
                   {selectedAlert.status === 'investigating' && (
                     <>
+                      <Button
+                        size="sm"
+                        onClick={() => handleResolve(selectedAlert.id, 'resolved')}
+                        className="bg-green-500/10 border border-green-500/30 text-green-500 hover:bg-green-500/20"
+                      >
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        標記已處理
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleResolve(selectedAlert.id, 'ignored')}
+                      >
+                        標記已忽略
+                      </Button>
+                    </>
+                  )}
+                  {selectedAlert.status === 'failed_resolution' && (
+                    <>
+                      <Button
+                        size="sm"
+                        onClick={() => handleResolve(selectedAlert.id, 'investigating')}
+                        className="bg-blue-500/10 border border-blue-500/30 text-blue-500 hover:bg-blue-500/20"
+                      >
+                        <Eye className="h-3 w-3 mr-1" />
+                        重新調查
+                      </Button>
                       <Button
                         size="sm"
                         onClick={() => handleResolve(selectedAlert.id, 'resolved')}
