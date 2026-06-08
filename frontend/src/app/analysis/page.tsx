@@ -25,7 +25,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 // Types
 // ---------------------------------------------------------------------------
 
-type ViewStatus = 'loading' | 'error' | 'auth' | 'empty' | 'ready';
+type ViewStatus = 'loading' | 'error' | 'auth-missing' | 'auth-forbidden' | 'empty' | 'ready';
 
 interface DeltaIndicatorProps {
   delta: MetricDelta;
@@ -99,55 +99,6 @@ function KpiSkeleton() {
       <div className="space-y-1.5">
         <Skeleton className="h-3 w-28" />
         <Skeleton className="h-3 w-28" />
-      </div>
-    </div>
-  );
-}
-
-function YearComparisonSkeleton() {
-  return (
-    <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-5 space-y-4">
-      <Skeleton className="h-5 w-32" />
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-16" />
-          <Skeleton className="h-6 w-12" />
-          <Skeleton className="h-4 w-20" />
-        </div>
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-16" />
-          <Skeleton className="h-6 w-12" />
-          <Skeleton className="h-4 w-20" />
-        </div>
-      </div>
-      <div className="space-y-3 pt-2 border-t border-[var(--border)]">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="flex items-center justify-between">
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-20" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PeriodTableSkeleton() {
-  return (
-    <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] overflow-hidden">
-      <div className="px-5 py-4 border-b border-[var(--border)]">
-        <Skeleton className="h-5 w-32" />
-      </div>
-      <div className="divide-y divide-[var(--border)]">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="px-5 py-3 flex items-center justify-between">
-            <Skeleton className="h-4 w-20" />
-            <Skeleton className="h-4 w-12" />
-            <Skeleton className="h-4 w-12" />
-            <Skeleton className="h-4 w-12" />
-            <Skeleton className="h-4 w-12" />
-          </div>
-        ))}
       </div>
     </div>
   );
@@ -318,11 +269,11 @@ export default function AnalysisPage() {
       setStatus('ready');
     } catch (err) {
       if (isForbidden(err)) {
-        setStatus('auth');
+        setStatus('auth-forbidden');
         return;
       }
       if (isAuthError(err)) {
-        setStatus('auth');
+        setStatus('auth-missing');
         return;
       }
       setErrorMessage(
@@ -336,8 +287,11 @@ export default function AnalysisPage() {
     fetchData();
   }, [fetchData]);
 
-  // -- Auth error state --
-  if (status === 'auth') {
+  // -- Auth error states --
+  if (status === 'auth-forbidden') {
+    return <ApiKeyRequired variant="forbidden" />;
+  }
+  if (status === 'auth-missing') {
     return <ApiKeyRequired variant="missing" />;
   }
 

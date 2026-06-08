@@ -1,56 +1,15 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Shield, Search, Network, AlertTriangle, TrendingUp, Clock, Activity, Terminal, CheckCircle2, XCircle, BarChart3 } from 'lucide-react';
+import { Shield, Search, Network, AlertTriangle, Clock, Activity, Terminal, CheckCircle2, XCircle, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { api, ApiError, isAuthError, isForbidden, type SessionDetail } from '@/lib/api';
+import { api, isAuthError, isForbidden, type SessionDetail } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PageHero } from '@/components/layout/PageHero';
 import { AnalysisCard } from '@/components/dashboard/AnalysisCard';
 import type { AnalysisMetrics } from '@/lib/types/dashboard';
-
-interface StatCardProps {
-  label: string;
-  value: string | number;
-  icon: React.ReactNode;
-  trend?: string;
-  trendUp?: boolean;
-  color: string;
-}
-
-function StatCard({ label, value, icon, trend, trendUp, color }: StatCardProps) {
-  return (
-    <div className="relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] p-5 group hover:border-[var(--terminal-green)]/50 transition-all duration-300">
-      {/* Glow effect on hover */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-[var(--terminal-green)]/5 to-transparent" />
-
-      {/* Scan line effect */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,255,0,0.02)_50%)] bg-[length:100%_4px]" />
-      </div>
-
-      <div className="relative z-10">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wider">{label}</span>
-          <div className={cn('p-2 rounded-lg', color)}>
-            {icon}
-          </div>
-        </div>
-        <div className="flex items-end justify-between">
-          <span className="text-3xl font-bold font-mono text-[var(--foreground)]">{value}</span>
-          {trend && (
-            <div className={cn('flex items-center gap-1 text-xs font-mono', trendUp ? 'text-green-500' : 'text-red-500')}>
-              <TrendingUp className={cn('h-3 w-3', !trendUp && 'rotate-180')} />
-              {trend}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 interface ModuleCardProps {
   title: string;
@@ -391,20 +350,6 @@ export default function Dashboard() {
     loadStats();
   }, []);
 
-  const activityItems: ActivityItem[] = recentSessions.slice(0, 5).map((session) => {
-    const typeLabels = { soc: 'SOC 分析', threat: '威脅情報', pentest: '滲透測試' };
-    const inputObj = session.input as Record<string, unknown>;
-    const inputValue = inputObj.indicator as string ?? inputObj.value as string ?? inputObj.target as string ?? '';
-    return {
-      id: session.id,
-      type: session.module as 'soc' | 'threat' | 'pentest',
-      title: typeLabels[session.module as keyof typeof typeLabels] || session.module,
-      description: `目標: ${inputValue.slice(0, 30) || '未知'}`,
-      time: new Date(session.createdAt).toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
-      status: session.status === 'completed' ? 'completed' : 'in_progress',
-    };
-  });
-
   if (authError) {
     return <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />;
   }
@@ -513,40 +458,7 @@ export default function Dashboard() {
               重試
             </button>
           </div>
-        ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard
-              label="總分析會話"
-              value="30"
-              icon={<Activity className="h-5 w-5 text-[var(--soc)]" />}
-              trend="+12%"
-              trendUp
-              color="bg-[var(--soc)]/10"
-            />
-            <StatCard
-              label="威脅情報"
-              value="156"
-              icon={<Shield className="h-5 w-5 text-[var(--threat)]" />}
-              trend="+5"
-              trendUp
-              color="bg-[var(--threat)]/10"
-            />
-            <StatCard
-              label="滲透測試"
-              value="11"
-              icon={<Network className="h-5 w-5 text-[var(--pentest)]" />}
-              trend="+3"
-              trendUp
-              color="bg-[var(--pentest)]/10"
-            />
-            <StatCard
-              label="系統狀態"
-              value="正常"
-              icon={<AlertTriangle className="h-5 w-5 text-green-500" />}
-              color="bg-green-500/10"
-            />
-          </div>
-        )}
+        ) : null}
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

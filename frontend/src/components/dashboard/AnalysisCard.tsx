@@ -92,8 +92,8 @@ export function AnalysisCard({
           </span>
         </div>
         <div className="space-y-1.5">
-          <TrendPill delta={mom} label="vs \u4e0a\u6708" invert={invertTrend} />
-          <TrendPill delta={yoy} label="vs \u53bb\u5e74" invert={invertTrend} />
+          <TrendPill delta={mom} label={'vs 上月'} invert={invertTrend} />
+          <TrendPill delta={yoy} label={'vs 去年'} invert={invertTrend} />
         </div>
       </div>
     </div>
