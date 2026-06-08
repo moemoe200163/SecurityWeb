@@ -2,6 +2,8 @@
  * API Client - 連接後端 API
  */
 
+import type { DashboardStatsResponse } from '@/lib/types/dashboard';
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 const API_KEY_STORAGE = 'api_key';
 
@@ -674,7 +676,7 @@ export const api = {
 
   // Dashboard (protected: requires X-API-Key)
   dashboard: {
-    async stats(): Promise<{ metrics: Record<string, unknown>; recentExecutions?: unknown[]; recentAlerts?: unknown[] }> {
+    async stats(): Promise<DashboardStatsResponse> {
       return request('/api/dashboard/stats', { requireAuth: true });
     },
     async timeline(days = 7): Promise<{ timeline: Record<string, unknown> }> {

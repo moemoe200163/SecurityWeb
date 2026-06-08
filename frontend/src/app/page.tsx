@@ -1,12 +1,15 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Shield, Search, Network, AlertTriangle, TrendingUp, Clock, Activity, Terminal } from 'lucide-react';
+import { Shield, Search, Network, AlertTriangle, TrendingUp, Clock, Activity, Terminal, CheckCircle2, XCircle, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { api, ApiError, isAuthError, isForbidden, type SessionDetail } from '@/lib/api';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { Skeleton } from '@/components/ui/skeleton';
 import { PageHero } from '@/components/layout/PageHero';
+import { AnalysisCard } from '@/components/dashboard/AnalysisCard';
+import type { AnalysisMetrics } from '@/lib/types/dashboard';
 
 interface StatCardProps {
   label: string;
@@ -321,6 +324,9 @@ export default function Dashboard() {
   const [recentSessions, setRecentSessions] = useState<SessionDetail[]>([]);
   const [stats, setStats] = useState({ totalSessions: 0, totalThreats: 0, totalPentest: 0 });
   const [authError, setAuthError] = useState<number | false>(false);
+  const [analysisData, setAnalysisData] = useState<AnalysisMetrics | null>(null);
+  const [analysisLoading, setAnalysisLoading] = useState(true);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
   void stats;
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -361,6 +367,30 @@ export default function Dashboard() {
     };
   }, [loadActivity]);
 
+  // Load analysis metrics from dashboard stats
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        setAnalysisLoading(true);
+        const data = await api.dashboard.stats();
+        if (data.metrics.analysis) {
+          setAnalysisData(data.metrics.analysis);
+        }
+      } catch (err) {
+        if (isForbidden(err)) {
+          setAuthError(403);
+        } else if (isAuthError(err)) {
+          setAuthError(401);
+        } else {
+          setAnalysisError('Failed to load dashboard metrics');
+        }
+      } finally {
+        setAnalysisLoading(false);
+      }
+    };
+    loadStats();
+  }, []);
+
   const activityItems: ActivityItem[] = recentSessions.slice(0, 5).map((session) => {
     const typeLabels = { soc: 'SOC 分析', threat: '威脅情報', pentest: '滲透測試' };
     const inputObj = session.input as Record<string, unknown>;
@@ -393,38 +423,117 @@ export default function Dashboard() {
         <ThreatAlertBanner />
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            label="總分析會話"
-            value="30"
-            icon={<Activity className="h-5 w-5 text-[var(--soc)]" />}
-            trend="+12%"
-            trendUp
-            color="bg-[var(--soc)]/10"
-          />
-          <StatCard
-            label="威脅情報"
-            value="156"
-            icon={<Shield className="h-5 w-5 text-[var(--threat)]" />}
-            trend="+5"
-            trendUp
-            color="bg-[var(--threat)]/10"
-          />
-          <StatCard
-            label="滲透測試"
-            value="11"
-            icon={<Network className="h-5 w-5 text-[var(--pentest)]" />}
-            trend="+3"
-            trendUp
-            color="bg-[var(--pentest)]/10"
-          />
-          <StatCard
-            label="系統狀態"
-            value="正常"
-            icon={<AlertTriangle className="h-5 w-5 text-green-500" />}
-            color="bg-green-500/10"
-          />
-        </div>
+        {analysisLoading ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <Skeleton className="h-3 w-20" />
+                  <Skeleton className="h-8 w-8 rounded-lg" />
+                </div>
+                <Skeleton className="h-8 w-16 mb-3" />
+                <div className="space-y-1.5">
+                  <Skeleton className="h-3 w-28" />
+                  <Skeleton className="h-3 w-28" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : analysisData ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <AnalysisCard
+              label="本月事故"
+              value={analysisData.month.current.incidents}
+              icon={<AlertTriangle className="h-5 w-5 text-red-400" />}
+              accentColor="bg-red-500/10"
+              mom={analysisData.comparison.monthOverMonth.incidents}
+              yoy={analysisData.comparison.yearOverYear.incidents}
+              invertTrend
+            />
+            <AnalysisCard
+              label="成功解除"
+              value={analysisData.month.current.successfulResolutions}
+              icon={<CheckCircle2 className="h-5 w-5 text-emerald-400" />}
+              accentColor="bg-emerald-500/10"
+              mom={analysisData.comparison.monthOverMonth.successfulResolutions}
+              yoy={analysisData.comparison.yearOverYear.successfulResolutions}
+            />
+            <AnalysisCard
+              label="失敗解除"
+              value={analysisData.month.current.failedResolutions}
+              icon={<XCircle className="h-5 w-5 text-orange-400" />}
+              accentColor="bg-orange-500/10"
+              mom={analysisData.comparison.monthOverMonth.failedResolutions}
+              yoy={analysisData.comparison.yearOverYear.failedResolutions}
+              invertTrend
+            />
+            <AnalysisCard
+              label="解除率"
+              value={analysisData.month.current.resolutionRate}
+              icon={<BarChart3 className="h-5 w-5 text-blue-400" />}
+              accentColor="bg-blue-500/10"
+              mom={analysisData.comparison.monthOverMonth.resolutionRate}
+              yoy={analysisData.comparison.yearOverYear.resolutionRate}
+              valueSuffix="%"
+            />
+          </div>
+        ) : analysisError ? (
+          <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-5 text-center">
+            <p className="text-sm text-red-400 mb-3">{analysisError}</p>
+            <button
+              onClick={() => {
+                setAnalysisError(null);
+                setAnalysisLoading(true);
+                api.dashboard.stats()
+                  .then((data) => {
+                    if (data.metrics.analysis) setAnalysisData(data.metrics.analysis);
+                  })
+                  .catch((err) => {
+                    if (isForbidden(err)) setAuthError(403);
+                    else if (isAuthError(err)) setAuthError(401);
+                    else setAnalysisError('Failed to load dashboard metrics');
+                  })
+                  .finally(() => setAnalysisLoading(false));
+              }}
+              className="px-4 py-2 text-xs font-medium rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors"
+            >
+              重試
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard
+              label="總分析會話"
+              value="30"
+              icon={<Activity className="h-5 w-5 text-[var(--soc)]" />}
+              trend="+12%"
+              trendUp
+              color="bg-[var(--soc)]/10"
+            />
+            <StatCard
+              label="威脅情報"
+              value="156"
+              icon={<Shield className="h-5 w-5 text-[var(--threat)]" />}
+              trend="+5"
+              trendUp
+              color="bg-[var(--threat)]/10"
+            />
+            <StatCard
+              label="滲透測試"
+              value="11"
+              icon={<Network className="h-5 w-5 text-[var(--pentest)]" />}
+              trend="+3"
+              trendUp
+              color="bg-[var(--pentest)]/10"
+            />
+            <StatCard
+              label="系統狀態"
+              value="正常"
+              icon={<AlertTriangle className="h-5 w-5 text-green-500" />}
+              color="bg-green-500/10"
+            />
+          </div>
+        )}
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
