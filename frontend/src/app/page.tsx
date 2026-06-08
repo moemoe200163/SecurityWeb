@@ -440,6 +440,7 @@ export default function Dashboard() {
             ))}
           </div>
         ) : analysisData ? (
+          <>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <AnalysisCard
               label="本月事故"
@@ -477,6 +478,18 @@ export default function Dashboard() {
               valueSuffix="%"
             />
           </div>
+          <div className="flex justify-center">
+            <Link
+              href="/analysis"
+              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg border border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--terminal-green)] hover:border-[var(--terminal-green)]/50 transition-colors"
+            >
+              查看完整分析
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+          </>
         ) : analysisError ? (
           <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-5 text-center">
             <p className="text-sm text-red-400 mb-3">{analysisError}</p>

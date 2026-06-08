@@ -18,6 +18,7 @@ import {
   Monitor,
   FileText,
   AlertTriangle,
+  BarChart3,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ModuleType } from '@/lib/types';
@@ -42,6 +43,12 @@ const navigation: NavItem[] = [
     label: '首頁儀表板',
     href: '/',
     icon: <Home className="h-5 w-5" />,
+    module: 'soc',
+  },
+  {
+    label: '營運分析',
+    href: '/analysis',
+    icon: <BarChart3 className="h-5 w-5" />,
     module: 'soc',
   },
   {

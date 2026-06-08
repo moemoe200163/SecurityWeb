@@ -355,3 +355,50 @@ describe('buildPeriod', () => {
     expect(result.resolutionRate).toBe(43);
   });
 });
+
+// ---------------------------------------------------------------------------
+// rowToPeriod helper (mirrors logic in dashboard.ts after refactor)
+// ---------------------------------------------------------------------------
+
+describe('rowToPeriod', () => {
+  type Row = { incidents: bigint; successful_resolutions: bigint; failed_resolutions: bigint };
+
+  function rowToPeriod(row: Row): PeriodMetrics {
+    const incidents = Number(row.incidents);
+    const successfulResolutions = Number(row.successful_resolutions);
+    const failedResolutions = Number(row.failed_resolutions);
+    return {
+      incidents,
+      successfulResolutions,
+      failedResolutions,
+      resolutionRate: incidents > 0
+        ? Math.round((successfulResolutions / incidents) * 100)
+        : 0,
+    };
+  }
+
+  it('converts bigint row to PeriodMetrics correctly', () => {
+    const row: Row = { incidents: 50n, successful_resolutions: 30n, failed_resolutions: 5n };
+    const result = rowToPeriod(row);
+
+    expect(result.incidents).toBe(50);
+    expect(result.successfulResolutions).toBe(30);
+    expect(result.failedResolutions).toBe(5);
+    expect(result.resolutionRate).toBe(60);
+  });
+
+  it('returns 0 resolutionRate when incidents is 0', () => {
+    const row: Row = { incidents: 0n, successful_resolutions: 0n, failed_resolutions: 0n };
+    const result = rowToPeriod(row);
+
+    expect(result.incidents).toBe(0);
+    expect(result.resolutionRate).toBe(0);
+  });
+
+  it('rounds resolutionRate correctly from bigint', () => {
+    const row: Row = { incidents: 3n, successful_resolutions: 1n, failed_resolutions: 0n };
+    const result = rowToPeriod(row);
+
+    expect(result.resolutionRate).toBe(33);
+  });
+});
