@@ -167,6 +167,15 @@
 - [x] `validateEnv()` 啟動時環境變數驗證
 - [x] `.env.example` 完整化（`POSTGRES_PASSWORD`、`ALLOWED_ORIGINS`、第三方 API key）
 
+### Phase 24: Analysis 同比指標與 failed_resolution `[x]`
+- [x] Alert model 新增 `@@index([createdAt, status])` + `@@index([status])`
+- [x] `failed_resolution` 狀態加入 PATCH Zod enum
+- [x] Dashboard stats 新增 `metrics.analysis`（5 time buckets + 3 comparisons）
+- [x] AnalysisCard 雙趨勢元件（MoM + YoY）
+- [x] 首頁 Dashboard 改用真實 API 數據
+- [x] 告警中心 `failed_resolution` UI（badge / filter / action buttons）
+- [x] 22 個 analysis 單元測試全過
+
 ---
 
 ## 已知風險 / 待辦細項
