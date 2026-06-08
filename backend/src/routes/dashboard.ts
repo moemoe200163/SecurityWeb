@@ -118,66 +118,67 @@ export async function dashboardRoutes(fastify: FastifyInstance): Promise<void> {
           orderBy: { createdAt: 'desc' },
         });
 
-        // --- Analysis: time-bucketed incident counts ---
-        type RawBucket = {
-          bucket: string;
+        // --- Analysis: independent period counts (no mutual exclusion) ---
+        type PeriodRow = {
           incidents: bigint;
           successful_resolutions: bigint;
           failed_resolutions: bigint;
         };
 
-        const analysisRows = await prisma.$queryRaw<RawBucket[]>`
-          SELECT
-            CASE
-              WHEN "createdAt" >= date_trunc('month', NOW())
-                   AND "createdAt" < date_trunc('month', NOW()) + interval '1 month'
-              THEN 'current_month'
-              WHEN "createdAt" >= date_trunc('month', NOW()) - interval '1 month'
-                   AND "createdAt" < date_trunc('month', NOW())
-              THEN 'previous_month'
-              WHEN "createdAt" >= (date_trunc('month', NOW()) - interval '1 year')
-                   AND "createdAt" < (date_trunc('month', NOW()) - interval '1 year' + interval '1 month')
-              THEN 'same_month_last_year'
-              WHEN "createdAt" >= date_trunc('year', NOW())
-                   AND "createdAt" < date_trunc('year', NOW()) + interval '1 year'
-              THEN 'current_year'
-              WHEN "createdAt" >= (date_trunc('year', NOW()) - interval '1 year')
-                   AND "createdAt" < date_trunc('year', NOW())
-              THEN 'previous_year'
-            END AS bucket,
-            COUNT(*) FILTER (WHERE "status" NOT IN ('false_positive')) AS incidents,
-            COUNT(*) FILTER (WHERE "status" = 'resolved') AS successful_resolutions,
-            COUNT(*) FILTER (WHERE "status" = 'failed_resolution') AS failed_resolutions
-          FROM "alerts"
-          WHERE "createdAt" >= (date_trunc('year', NOW()) - interval '1 year')
-          GROUP BY bucket
-        `;
-
-        // Build lookup map from raw results
-        const bucketMap = new Map<string, { incidents: number; successfulResolutions: number; failedResolutions: number }>();
-        for (const row of analysisRows) {
-          bucketMap.set(row.bucket, {
-            incidents: Number(row.incidents),
-            successfulResolutions: Number(row.successful_resolutions),
-            failedResolutions: Number(row.failed_resolutions),
-          });
+        async function countPeriod(from: Date, to: Date): Promise<PeriodRow> {
+          const rows = await prisma.$queryRaw<PeriodRow[]>`
+            SELECT
+              COUNT(*) FILTER (WHERE "status" NOT IN ('false_positive')) AS incidents,
+              COUNT(*) FILTER (WHERE "status" = 'resolved') AS successful_resolutions,
+              COUNT(*) FILTER (WHERE "status" = 'failed_resolution') AS failed_resolutions
+            FROM "alerts"
+            WHERE "createdAt" >= ${from} AND "createdAt" < ${to}
+          `;
+          return rows[0] ?? { incidents: 0n, successful_resolutions: 0n, failed_resolutions: 0n };
         }
 
-        function buildPeriod(key: string): PeriodMetrics {
-          const data = bucketMap.get(key) ?? { incidents: 0, successfulResolutions: 0, failedResolutions: 0 };
+        const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const sameMonthLastYearStart = new Date(now.getFullYear() - 1, now.getMonth(), 1);
+        const sameMonthLastYearEnd = new Date(now.getFullYear() - 1, now.getMonth() + 1, 1);
+        const currentYearStart = new Date(now.getFullYear(), 0, 1);
+        const previousYearStart = new Date(now.getFullYear() - 1, 0, 1);
+        const previousYearEnd = new Date(now.getFullYear(), 0, 1);
+        const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+        const [
+          currentMonthRow,
+          previousMonthRow,
+          sameMonthLastYearRow,
+          currentYearRow,
+          previousYearRow,
+        ] = await Promise.all([
+          countPeriod(currentMonthStart, nextMonthStart),
+          countPeriod(previousMonthStart, currentMonthStart),
+          countPeriod(sameMonthLastYearStart, sameMonthLastYearEnd),
+          countPeriod(currentYearStart, nextMonthStart),
+          countPeriod(previousYearStart, previousYearEnd),
+        ]);
+
+        function rowToPeriod(row: PeriodRow): PeriodMetrics {
+          const incidents = Number(row.incidents);
+          const successfulResolutions = Number(row.successful_resolutions);
+          const failedResolutions = Number(row.failed_resolutions);
           return {
-            ...data,
-            resolutionRate: data.incidents > 0
-              ? Math.round((data.successfulResolutions / data.incidents) * 100)
+            incidents,
+            successfulResolutions,
+            failedResolutions,
+            resolutionRate: incidents > 0
+              ? Math.round((successfulResolutions / incidents) * 100)
               : 0,
           };
         }
 
-        const monthCurrent = buildPeriod('current_month');
-        const monthPrevious = buildPeriod('previous_month');
-        const monthSameLastYear = buildPeriod('same_month_last_year');
-        const yearCurrent = buildPeriod('current_year');
-        const yearPrevious = buildPeriod('previous_year');
+        const monthCurrent = rowToPeriod(currentMonthRow);
+        const monthPrevious = rowToPeriod(previousMonthRow);
+        const monthSameLastYear = rowToPeriod(sameMonthLastYearRow);
+        const yearCurrent = rowToPeriod(currentYearRow);
+        const yearPrevious = rowToPeriod(previousYearRow);
 
         const analysis = {
           month: {
