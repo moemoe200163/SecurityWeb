@@ -176,6 +176,13 @@
 - [x] 告警中心 `failed_resolution` UI（badge / filter / action buttons）
 - [x] 22 個 analysis 單元測試全過
 
+### Phase 25: 獨立分析頁面 `[x]`
+- [x] 修正後端 SQL bucket 邏輯（獨立 period 查詢，current_year 包含 current_month）
+- [x] 新增 `rowToPeriod` 單元測試（3 個）
+- [x] 建立 `/analysis` 頁面（KPI 卡 + 年度同比 + 五期對照表）
+- [x] Sidebar 新增「營運分析」入口
+- [x] 首頁新增「查看完整分析」連結
+
 ---
 
 ## 已知風險 / 待辦細項
