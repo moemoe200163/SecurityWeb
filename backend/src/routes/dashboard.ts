@@ -3,6 +3,34 @@ import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireUser } from '../middleware/rbac.js';
 import { prisma } from '../db/client.js';
 
+interface PeriodMetrics {
+  incidents: number;
+  successfulResolutions: number;
+  failedResolutions: number;
+  resolutionRate: number;
+}
+
+interface MetricDelta {
+  delta: number;
+  deltaPercent: number | null;
+}
+
+function computeComparison(
+  current: PeriodMetrics,
+  previous: PeriodMetrics,
+): Record<string, MetricDelta> {
+  const fields = ['incidents', 'successfulResolutions', 'failedResolutions', 'resolutionRate'] as const;
+  const result: Record<string, MetricDelta> = {};
+  for (const field of fields) {
+    const delta = current[field] - previous[field];
+    const deltaPercent = previous[field] !== 0
+      ? Math.round(((current[field] - previous[field]) / previous[field]) * 100)
+      : null;
+    result[field] = { delta, deltaPercent };
+  }
+  return result;
+}
+
 export async function dashboardRoutes(fastify: FastifyInstance): Promise<void> {
   // Dashboard stats / metrics
   fastify.get(
@@ -90,6 +118,84 @@ export async function dashboardRoutes(fastify: FastifyInstance): Promise<void> {
           orderBy: { createdAt: 'desc' },
         });
 
+        // --- Analysis: time-bucketed incident counts ---
+        type RawBucket = {
+          bucket: string;
+          incidents: bigint;
+          successful_resolutions: bigint;
+          failed_resolutions: bigint;
+        };
+
+        const analysisRows = await prisma.$queryRaw<RawBucket[]>`
+          SELECT
+            CASE
+              WHEN "createdAt" >= date_trunc('month', NOW())
+                   AND "createdAt" < date_trunc('month', NOW()) + interval '1 month'
+              THEN 'current_month'
+              WHEN "createdAt" >= date_trunc('month', NOW()) - interval '1 month'
+                   AND "createdAt" < date_trunc('month', NOW())
+              THEN 'previous_month'
+              WHEN "createdAt" >= (date_trunc('month', NOW()) - interval '1 year')
+                   AND "createdAt" < (date_trunc('month', NOW()) - interval '1 year' + interval '1 month')
+              THEN 'same_month_last_year'
+              WHEN "createdAt" >= date_trunc('year', NOW())
+                   AND "createdAt" < date_trunc('year', NOW()) + interval '1 year'
+              THEN 'current_year'
+              WHEN "createdAt" >= (date_trunc('year', NOW()) - interval '1 year')
+                   AND "createdAt" < date_trunc('year', NOW())
+              THEN 'previous_year'
+            END AS bucket,
+            COUNT(*) FILTER (WHERE "status" NOT IN ('false_positive')) AS incidents,
+            COUNT(*) FILTER (WHERE "status" = 'resolved') AS successful_resolutions,
+            COUNT(*) FILTER (WHERE "status" = 'failed_resolution') AS failed_resolutions
+          FROM "alerts"
+          WHERE "createdAt" >= (date_trunc('year', NOW()) - interval '1 year')
+          GROUP BY bucket
+        `;
+
+        // Build lookup map from raw results
+        const bucketMap = new Map<string, { incidents: number; successfulResolutions: number; failedResolutions: number }>();
+        for (const row of analysisRows) {
+          bucketMap.set(row.bucket, {
+            incidents: Number(row.incidents),
+            successfulResolutions: Number(row.successful_resolutions),
+            failedResolutions: Number(row.failed_resolutions),
+          });
+        }
+
+        function buildPeriod(key: string): PeriodMetrics {
+          const data = bucketMap.get(key) ?? { incidents: 0, successfulResolutions: 0, failedResolutions: 0 };
+          return {
+            ...data,
+            resolutionRate: data.incidents > 0
+              ? Math.round((data.successfulResolutions / data.incidents) * 100)
+              : 0,
+          };
+        }
+
+        const monthCurrent = buildPeriod('current_month');
+        const monthPrevious = buildPeriod('previous_month');
+        const monthSameLastYear = buildPeriod('same_month_last_year');
+        const yearCurrent = buildPeriod('current_year');
+        const yearPrevious = buildPeriod('previous_year');
+
+        const analysis = {
+          month: {
+            current: monthCurrent,
+            previous: monthPrevious,
+            sameMonthLastYear: monthSameLastYear,
+          },
+          year: {
+            current: yearCurrent,
+            previous: yearPrevious,
+          },
+          comparison: {
+            monthOverMonth: computeComparison(monthCurrent, monthPrevious),
+            yearOverYear: computeComparison(monthCurrent, monthSameLastYear),
+            yearToYear: computeComparison(yearCurrent, yearPrevious),
+          },
+        };
+
         return reply.send({
           metrics: {
             alerts: {
@@ -119,6 +225,7 @@ export async function dashboardRoutes(fastify: FastifyInstance): Promise<void> {
               correctedByHuman,
               correctionRate: humanCorrectionRate,
             },
+            analysis,
           },
           recentExecutions,
           recentAlerts,
