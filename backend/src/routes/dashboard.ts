@@ -166,6 +166,9 @@ export async function dashboardRoutes(fastify: FastifyInstance): Promise<void> {
           timeline[day].total++;
           if (alert.status === 'resolved') timeline[day].resolved++;
           if (alert.status === 'false_positive') timeline[day].falsePositive++;
+          if (alert.status === 'failed_resolution') {
+            (timeline[day] as Record<string, unknown>).failedResolution = ((timeline[day] as Record<string, unknown>).failedResolution as number || 0) + 1;
+          }
           if (!timeline[day].bySeverity[alert.severity]) {
             timeline[day].bySeverity[alert.severity] = 0;
           }

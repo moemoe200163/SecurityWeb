@@ -191,7 +191,7 @@ export async function alertRoutes(fastify: FastifyInstance): Promise<void> {
       try {
         const { id } = request.params as { id: string };
         const { status, human_verdict } = z.object({
-          status: z.enum(['new', 'investigating', 'resolved', 'ignored', 'false_positive']).optional(),
+          status: z.enum(['new', 'investigating', 'resolved', 'ignored', 'false_positive', 'failed_resolution']).optional(),
           human_verdict: z.string().optional(),
         }).parse(request.body);
 

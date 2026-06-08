@@ -264,13 +264,15 @@ model Alert {
   normalizedFields Json?    @map("normalized_fields")
   aiVerdict        String?  @map("ai_verdict")
   humanVerdict     String?  @map("human_verdict")
-  status           String   @default("new") // "new" | "investigating" | "resolved" | "ignored" | "false_positive"
+  status           String   @default("new") // "new" | "investigating" | "resolved" | "ignored" | "false_positive" | "failed_resolution"
   sessionId        String?  @map("session_id")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
   knowledgeFeedback KnowledgeFeedback[]
 
+  @@index([createdAt, status])
+  @@index([status])
   @@map("alerts")
 }
 
