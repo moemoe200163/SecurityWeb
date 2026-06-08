@@ -18,14 +18,14 @@ import { api, isAuthError, isForbidden } from '@/lib/api';
 import type { AnalysisMetrics, MetricPeriod, MetricDelta } from '@/lib/types/dashboard';
 import { PageHero } from '@/components/layout/PageHero';
 import { AnalysisCard } from '@/components/dashboard/AnalysisCard';
-import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { EMPTY_ANALYSIS_METRICS, AnalysisAuthNotice } from '@/components/dashboard/AnalysisAuthNotice';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-type ViewStatus = 'loading' | 'error' | 'auth-missing' | 'auth-forbidden' | 'empty' | 'ready';
+type ViewStatus = 'loading' | 'error' | 'empty' | 'ready';
 
 interface DeltaIndicatorProps {
   delta: MetricDelta;
@@ -254,10 +254,12 @@ export default function AnalysisPage() {
   const [status, setStatus] = useState<ViewStatus>('loading');
   const [analysis, setAnalysis] = useState<AnalysisMetrics | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [authNotice, setAuthNotice] = useState<'missing' | 'forbidden' | null>(null);
 
   const fetchData = useCallback(async () => {
     setStatus('loading');
     setErrorMessage('');
+    setAuthNotice(null);
     try {
       const response = await api.dashboard.stats();
       const metrics = response.metrics.analysis;
@@ -269,11 +271,15 @@ export default function AnalysisPage() {
       setStatus('ready');
     } catch (err) {
       if (isForbidden(err)) {
-        setStatus('auth-forbidden');
+        setAuthNotice('forbidden');
+        setAnalysis(EMPTY_ANALYSIS_METRICS);
+        setStatus('ready');
         return;
       }
       if (isAuthError(err)) {
-        setStatus('auth-missing');
+        setAuthNotice('missing');
+        setAnalysis(EMPTY_ANALYSIS_METRICS);
+        setStatus('ready');
         return;
       }
       setErrorMessage(
@@ -286,14 +292,6 @@ export default function AnalysisPage() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
-  // -- Auth error states --
-  if (status === 'auth-forbidden') {
-    return <ApiKeyRequired variant="forbidden" />;
-  }
-  if (status === 'auth-missing') {
-    return <ApiKeyRequired variant="missing" />;
-  }
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
@@ -314,6 +312,9 @@ export default function AnalysisPage() {
       />
 
       <div className="max-w-7xl mx-auto p-6 space-y-6">
+        {/* Auth notice (non-blocking) */}
+        {authNotice && <AnalysisAuthNotice variant={authNotice} />}
+
         {/* KPI Cards */}
         {status === 'loading' ? (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

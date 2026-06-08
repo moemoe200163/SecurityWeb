@@ -9,6 +9,7 @@ import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PageHero } from '@/components/layout/PageHero';
 import { AnalysisCard } from '@/components/dashboard/AnalysisCard';
+import { EMPTY_ANALYSIS_METRICS, AnalysisAuthNotice } from '@/components/dashboard/AnalysisAuthNotice';
 import type { AnalysisMetrics } from '@/lib/types/dashboard';
 
 interface ModuleCardProps {
@@ -286,6 +287,7 @@ export default function Dashboard() {
   const [analysisData, setAnalysisData] = useState<AnalysisMetrics | null>(null);
   const [analysisLoading, setAnalysisLoading] = useState(true);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [analysisAuthNotice, setAnalysisAuthNotice] = useState<'missing' | 'forbidden' | null>(null);
   void stats;
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -326,7 +328,7 @@ export default function Dashboard() {
     };
   }, [loadActivity]);
 
-  // Load analysis metrics from dashboard stats
+  // Load analysis metrics from dashboard stats (non-blocking)
   useEffect(() => {
     const loadStats = async () => {
       try {
@@ -337,9 +339,11 @@ export default function Dashboard() {
         }
       } catch (err) {
         if (isForbidden(err)) {
-          setAuthError(403);
+          setAnalysisAuthNotice('forbidden');
+          setAnalysisData(EMPTY_ANALYSIS_METRICS);
         } else if (isAuthError(err)) {
-          setAuthError(401);
+          setAnalysisAuthNotice('missing');
+          setAnalysisData(EMPTY_ANALYSIS_METRICS);
         } else {
           setAnalysisError('Failed to load dashboard metrics');
         }
@@ -366,6 +370,9 @@ export default function Dashboard() {
       <div className="max-w-7xl mx-auto p-6 space-y-6">
         {/* Threat Alert Banner */}
         <ThreatAlertBanner />
+
+        {/* Analysis auth notice (non-blocking) */}
+        {analysisAuthNotice && <AnalysisAuthNotice variant={analysisAuthNotice} />}
 
         {/* Stats Row */}
         {analysisLoading ? (
@@ -447,9 +454,15 @@ export default function Dashboard() {
                     if (data.metrics.analysis) setAnalysisData(data.metrics.analysis);
                   })
                   .catch((err) => {
-                    if (isForbidden(err)) setAuthError(403);
-                    else if (isAuthError(err)) setAuthError(401);
-                    else setAnalysisError('Failed to load dashboard metrics');
+                    if (isForbidden(err)) {
+                      setAnalysisAuthNotice('forbidden');
+                      setAnalysisData(EMPTY_ANALYSIS_METRICS);
+                    } else if (isAuthError(err)) {
+                      setAnalysisAuthNotice('missing');
+                      setAnalysisData(EMPTY_ANALYSIS_METRICS);
+                    } else {
+                      setAnalysisError('Failed to load dashboard metrics');
+                    }
                   })
                   .finally(() => setAnalysisLoading(false));
               }}
