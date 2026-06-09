@@ -717,27 +717,31 @@ export const api = {
   },
 
   // Get all sessions (combined from all modules, deduplicated by id)
+  // Auth errors (401/403) are propagated; non-auth errors fall back to empty per module.
   async getAllSessions(): Promise<SessionDetail[]> {
-    try {
-      const [soc, threat, pentest] = await Promise.all([
-        this.soc.getSessions().catch(() => ({ sessions: [] })),
-        this.threat.getSessions().catch(() => ({ sessions: [] })),
-        this.pentest.getSessions().catch(() => ({ sessions: [] })),
-      ]);
-      const seen = new Set<string>();
-      const unique: SessionDetail[] = [];
-      for (const s of [...soc.sessions, ...threat.sessions, ...pentest.sessions]) {
-        if (!seen.has(s.id)) {
-          seen.add(s.id);
-          unique.push(s);
-        }
+    const fetchModule = async (promise: Promise<{ sessions: SessionDetail[] }>) =>
+      promise.catch((err) => {
+        if (isAuthError(err)) throw err;
+        return { sessions: [] as SessionDetail[] };
+      });
+
+    const [soc, threat, pentest] = await Promise.all([
+      fetchModule(this.soc.getSessions()),
+      fetchModule(this.threat.getSessions()),
+      fetchModule(this.pentest.getSessions()),
+    ]);
+
+    const seen = new Set<string>();
+    const unique: SessionDetail[] = [];
+    for (const s of [...soc.sessions, ...threat.sessions, ...pentest.sessions]) {
+      if (!seen.has(s.id)) {
+        seen.add(s.id);
+        unique.push(s);
       }
-      return unique.sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-    } catch {
-      return [];
     }
+    return unique.sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
   },
 
   // API Key self-service (protected: requires X-API-Key)
