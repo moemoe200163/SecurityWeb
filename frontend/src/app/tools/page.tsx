@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Shield,
   Play,
@@ -20,10 +20,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { AuthNotice } from '@/components/ui/AuthNotice';
 import { AddToInvestigation } from '@/components/ui/AddToInvestigation';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { api, getApiKey, ApiError, isAuthError, isForbidden } from '@/lib/api';
+import { formatTaipeiDateTime, formatRelativeTime } from '@/lib/datetime';
 
 interface ToolTemplate {
   id: string;
@@ -82,19 +83,15 @@ export default function ToolsPage() {
   const [executing, setExecuting] = useState(false);
   const [result, setResult] = useState<{ success: boolean; output?: string; error?: string; durationMs?: number } | null>(null);
   const [copied, setCopied] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isApiOnline, setIsApiOnline] = useState(true);
   const [authError, setAuthError] = useState<number | false>(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [executionId, setExecutionId] = useState<string | null>(null);
   const mountedRef = useRef(false);
   const [apiKey, setApiKey] = useState('');
-  // Surface the error in the DOM so the value is actually read.
-  void error;
 
   const fetchTemplates = useCallback(async () => {
     setLoading(true);
-    setError(null);
     try {
       const data = await api.tools.listTemplates();
       setTemplates((data.templates as unknown as ToolTemplate[]) || []);
@@ -109,7 +106,6 @@ export default function ToolsPage() {
         setIsApiOnline(true);
       } else {
         console.error('Failed to fetch templates:', err);
-        setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
         setIsApiOnline(false);
       }
     } finally {
@@ -119,7 +115,6 @@ export default function ToolsPage() {
 
   const fetchExecutions = useCallback(async () => {
     setLoading(true);
-    setError(null);
     try {
       const data = await api.tools.listExecutions({ limit: 50 });
       setExecutions((data.executions as unknown as ToolExecution[]) || []);
@@ -134,7 +129,6 @@ export default function ToolsPage() {
         setIsApiOnline(true);
       } else {
         console.error('Failed to fetch executions:', err);
-        setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
         setIsApiOnline(false);
       }
     } finally {
@@ -159,6 +153,21 @@ export default function ToolsPage() {
     fetchTemplates();
     if (view === 'history') fetchExecutions();
   }, [apiKey, fetchExecutions, fetchTemplates, view]);
+
+  // Per-template stats computed from execution history
+  const templateStats = useMemo(() => {
+    const stats: Record<string, { total: number; success: number; lastRun: string | null }> = {};
+    for (const exec of executions) {
+      const tid = exec.templateId;
+      if (!stats[tid]) stats[tid] = { total: 0, success: 0, lastRun: null };
+      stats[tid].total++;
+      if (exec.status === 'success') stats[tid].success++;
+      if (!stats[tid].lastRun || exec.createdAt > stats[tid].lastRun) {
+        stats[tid].lastRun = exec.createdAt;
+      }
+    }
+    return stats;
+  }, [executions]);
 
   const handleParamChange = (key: string, value: string) => {
     setParams(prev => ({ ...prev, [key]: value }));
@@ -243,7 +252,7 @@ export default function ToolsPage() {
   };
 
   if (authError) {
-    return <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />;
+    return <AuthNotice variant={authError === 403 ? 'forbidden' : 'missing'} mode="blocking" />;
   }
 
   return (
@@ -350,6 +359,9 @@ export default function ToolsPage() {
                             >
                               {template.riskLevel.toUpperCase()}
                             </StatusBadge>
+                            {template.isApproved && (
+                              <StatusBadge variant="success">已審核</StatusBadge>
+                            )}
                             {!template.isEnabled && (
                               <StatusBadge variant="muted">已停用</StatusBadge>
                             )}
@@ -357,12 +369,24 @@ export default function ToolsPage() {
                           <p className="text-sm text-[var(--muted-foreground)] mb-3">
                             {template.description || '無描述'}
                           </p>
-                          <div className="flex items-center gap-2 text-xs font-mono text-[var(--muted-foreground)]">
+                          <div className="flex items-center gap-2 text-xs font-mono text-[var(--muted-foreground)] mb-2">
                             <Terminal className="h-3 w-3" />
                             <code className="bg-[var(--background)] px-2 py-1 rounded">
                               {template.commandTemplate}
                             </code>
                           </div>
+                          {/* Execution stats */}
+                          {templateStats[template.id] && (
+                            <div className="flex items-center gap-4 text-xs text-[var(--muted-foreground)]">
+                              <span>執行 {templateStats[template.id].total} 次</span>
+                              <span>成功率 {templateStats[template.id].total > 0
+                                ? Math.round((templateStats[template.id].success / templateStats[template.id].total) * 100)
+                                : 0}%</span>
+                              {templateStats[template.id].lastRun && (
+                                <span>最後執行 {formatRelativeTime(templateStats[template.id].lastRun!)}</span>
+                              )}
+                            </div>
+                          )}
                         </div>
                         <div className="flex gap-2">
                           <Button
@@ -597,7 +621,7 @@ export default function ToolsPage() {
                           <span className="font-mono">{exec.durationMs}ms</span>
                         )}
                         <span className="font-mono">
-                          {new Date(exec.createdAt).toLocaleString('zh-TW')}
+                          {formatTaipeiDateTime(exec.createdAt)}
                         </span>
                       </div>
                     </div>

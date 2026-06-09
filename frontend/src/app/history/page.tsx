@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { Shield, Search, Network, Clock, FileText, Filter, RefreshCw, ChevronRight, X } from 'lucide-react';
+import { Shield, Search, Network, Clock, FileText, Filter, RefreshCw, ChevronRight, ChevronDown, X } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { api, isAuthError, isForbidden } from '@/lib/api';
@@ -66,7 +66,15 @@ function sessionToRecord(session: SessionDetail): HistoryRecord {
   };
 }
 
-function HistoryCard({ record }: { record: HistoryRecord }) {
+function HistoryCard({
+  record,
+  isExpanded,
+  onToggle,
+}: {
+  record: HistoryRecord;
+  isExpanded: boolean;
+  onToggle: () => void;
+}) {
   const moduleConfig = {
     soc: {
       icon: <Shield className="h-4 w-4" />,
@@ -89,9 +97,14 @@ function HistoryCard({ record }: { record: HistoryRecord }) {
   const statusConfig = SESSION_STATUS[record.status];
 
   return (
-    <Link
-      href={config.href}
-      className="group block rounded-xl border border-[var(--border)] bg-[var(--card)] p-5 hover:border-[var(--terminal-green)]/50 hover:bg-[var(--terminal-green)]/5 transition-all duration-300 animate-fade-in-up"
+    <div
+      className={cn(
+        'rounded-xl border bg-[var(--card)] p-5 transition-all duration-300 animate-fade-in-up cursor-pointer',
+        isExpanded
+          ? 'border-[var(--terminal-green)]/50'
+          : 'border-[var(--border)] hover:border-[var(--terminal-green)]/50 hover:bg-[var(--terminal-green)]/5',
+      )}
+      onClick={onToggle}
     >
       <div className="flex items-start gap-4">
         {/* Module icon */}
@@ -102,7 +115,7 @@ function HistoryCard({ record }: { record: HistoryRecord }) {
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-base font-semibold text-[var(--foreground)] group-hover:text-[var(--terminal-green)] transition-colors">
+            <h3 className="text-base font-semibold text-[var(--foreground)]">
               {record.title}
             </h3>
             <div className={cn('flex items-center gap-1.5', statusConfig.color)}>
@@ -139,16 +152,51 @@ function HistoryCard({ record }: { record: HistoryRecord }) {
           </div>
         </div>
 
-        {/* Time and arrow */}
+        {/* Time and expand indicator */}
         <div className="flex flex-col items-end gap-2">
           <div className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)]" title={formatTaipeiDateTime(record.timestamp)}>
             <Clock className="h-3 w-3" />
             <span className="font-mono">{record.timeAgo}</span>
           </div>
-          <ChevronRight className="h-4 w-4 text-[var(--muted-foreground)] group-hover:text-[var(--terminal-green)] group-hover:translate-x-1 transition-all" />
+          <ChevronDown className={cn(
+            'h-4 w-4 text-[var(--muted-foreground)] transition-transform duration-200',
+            isExpanded && 'rotate-180 text-[var(--terminal-green)]',
+          )} />
         </div>
       </div>
-    </Link>
+
+      {/* Expanded detail */}
+      {isExpanded && (
+        <div className="mt-4 pt-4 border-t border-[var(--border)]" onClick={(e) => e.stopPropagation()}>
+          <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+            <div>
+              <span className="text-[var(--muted-foreground)] text-xs">模組</span>
+              <p className="font-mono text-[var(--foreground)]">{record.title}</p>
+            </div>
+            <div>
+              <span className="text-[var(--muted-foreground)] text-xs">目標</span>
+              <p className="font-mono text-[var(--foreground)] truncate">{record.target}</p>
+            </div>
+            <div>
+              <span className="text-[var(--muted-foreground)] text-xs">Session ID</span>
+              <p className="font-mono text-[var(--foreground)]">{record.id}</p>
+            </div>
+            <div>
+              <span className="text-[var(--muted-foreground)] text-xs">進度</span>
+              <p className="font-mono text-[var(--foreground)]">{record.steps.completed} / {record.steps.total} 步驟完成</p>
+            </div>
+          </div>
+          <Link
+            href={config.href}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--terminal-green)]/10 border border-[var(--terminal-green)]/30 text-[var(--terminal-green)] text-sm font-medium hover:bg-[var(--terminal-green)]/20 transition-colors"
+            onClick={(e) => e.stopPropagation()}
+          >
+            前往工作區
+            <ChevronRight className="h-4 w-4" />
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -245,6 +293,7 @@ export default function HistoryPage() {
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'completed' | 'in_progress' | 'failed'>('all');
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const [authNotice, setAuthNotice] = useState<'missing' | 'forbidden' | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const fetchRecords = useCallback(async () => {
     setLoading(true);
@@ -341,7 +390,11 @@ export default function HistoryPage() {
           <div className="space-y-3">
             {filteredRecords.map((record, index) => (
               <div key={record.id} style={{ animationDelay: `${index * 30}ms` }}>
-                <HistoryCard record={record} />
+                <HistoryCard
+                  record={record}
+                  isExpanded={expandedId === record.id}
+                  onToggle={() => setExpandedId(expandedId === record.id ? null : record.id)}
+                />
               </div>
             ))}
           </div>

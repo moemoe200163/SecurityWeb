@@ -22,9 +22,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/layout/PageHero';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { AuthNotice } from '@/components/ui/AuthNotice';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { api, ApiError, isAuthError, isForbidden } from '@/lib/api';
+import { api, isAuthError, isForbidden } from '@/lib/api';
+import { formatTaipeiDateTime, formatRelativeTime } from '@/lib/datetime';
+import { ALERT_STATUS } from '@/lib/status';
 
 interface Alert {
   id: string;
@@ -69,15 +71,6 @@ interface ReportData {
   recommendations?: string[];
 }
 
-const statusLabels: Record<string, string> = {
-  new: '新進',
-  investigating: '調查中',
-  resolved: '已處理',
-  failed_resolution: '解除失敗',
-  ignored: '已忽略',
-  false_positive: '誤報',
-};
-
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 void API_BASE;
 
@@ -99,12 +92,9 @@ export default function AlertsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [isApiOnline, setIsApiOnline] = useState(true);
   const [authError, setAuthError] = useState<number | false>(false);
-  const [error, setError] = useState<string | null>(null);
-  void error;
 
   const fetchAlerts = useCallback(async () => {
     setLoading(true);
-    setError(null);
     try {
       const data = await api.alerts.list({
         status: filters.status || undefined,
@@ -120,7 +110,6 @@ export default function AlertsPage() {
         setAuthError(401);
       } else {
         console.error('Failed to fetch alerts:', err);
-        setError(err instanceof ApiError ? err.message : '無法連接到後端 API');
         setIsApiOnline(false);
       }
     } finally {
@@ -174,11 +163,11 @@ export default function AlertsPage() {
 
   const formatDateTime = (value?: string): string => {
     if (!value) return '-';
-    return new Date(value).toLocaleString('zh-TW');
+    return formatTaipeiDateTime(value);
   };
 
   if (authError) {
-    return <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />;
+    return <AuthNotice variant={authError === 403 ? 'forbidden' : 'missing'} mode="blocking" />;
   }
 
   return (
@@ -203,8 +192,11 @@ export default function AlertsPage() {
                 placeholder="搜尋告警..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-[var(--border)] rounded-lg bg-[var(--card)] text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+                className="w-full pl-10 pr-16 py-2 border border-[var(--border)] rounded-lg bg-[var(--card)] text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
               />
+              <kbd className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-[var(--muted-foreground)] bg-[var(--background)] border border-[var(--border)] rounded px-1.5 py-0.5 pointer-events-none">
+                ⌘K
+              </kbd>
             </div>
           </div>
           <select
@@ -338,11 +330,13 @@ export default function AlertsPage() {
                         <StatusBadge
                           variant={alert.status === 'new' ? 'info' : alert.status === 'investigating' ? 'warning' : alert.status === 'resolved' ? 'success' : alert.status === 'failed_resolution' ? 'danger' : 'muted'}
                         >
-                          {statusLabels[alert.status] || alert.status}
+                          {ALERT_STATUS[alert.status as keyof typeof ALERT_STATUS]?.label || alert.status}
                         </StatusBadge>
                       </div>
                       <span className="text-xs text-[var(--muted-foreground)] font-mono">
-                        {new Date(alert.createdAt).toLocaleString('zh-TW')}
+                        {formatTaipeiDateTime(alert.createdAt)}
+                        <span className="text-[var(--border)] mx-1">·</span>
+                        {formatRelativeTime(alert.createdAt)}
                       </span>
                     </div>
                     <h3 className="font-medium text-[var(--foreground)] mb-1 truncate">{alert.title}</h3>
@@ -396,7 +390,7 @@ export default function AlertsPage() {
                     </div>
                     <div>
                       <label className="text-xs text-[var(--muted-foreground)] font-mono">狀態</label>
-                      <p className="text-[var(--foreground)]">{statusLabels[selectedAlert.status] || selectedAlert.status}</p>
+                      <p className="text-[var(--foreground)]">{ALERT_STATUS[selectedAlert.status as keyof typeof ALERT_STATUS]?.label || selectedAlert.status}</p>
                     </div>
                   </div>
 
@@ -407,7 +401,7 @@ export default function AlertsPage() {
                     </div>
                     <div>
                       <label className="text-xs text-[var(--muted-foreground)] font-mono">時間</label>
-                      <p className="text-[var(--foreground)]">{new Date(selectedAlert.createdAt).toLocaleString('zh-TW')}</p>
+                      <p className="text-[var(--foreground)]">{formatTaipeiDateTime(selectedAlert.createdAt)}</p>
                     </div>
                   </div>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import type { MetricDelta } from '@/lib/types/dashboard';
@@ -14,6 +15,7 @@ interface AnalysisCardProps {
   yoy: MetricDelta;
   invertTrend?: boolean;
   valueSuffix?: string;
+  href?: string;
   className?: string;
 }
 
@@ -68,14 +70,13 @@ export function AnalysisCard({
   yoy,
   invertTrend = false,
   valueSuffix,
+  href,
   className,
 }: AnalysisCardProps) {
   const displayValue = typeof value === 'number' ? value.toLocaleString() : value;
-  return (
-    <div className={cn(
-      'relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] p-5 group hover:border-[var(--terminal-green)]/50 transition-all duration-300',
-      className,
-    )}>
+
+  const content = (
+    <>
       {/* Scan line effect */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,255,0,0.02)_50%)] bg-[length:100%_4px]" />
@@ -96,6 +97,22 @@ export function AnalysisCard({
           <TrendPill delta={yoy} label={'vs 去年'} invert={invertTrend} />
         </div>
       </div>
-    </div>
+    </>
   );
+
+  const wrapperClass = cn(
+    'relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] p-5 group hover:border-[var(--terminal-green)]/50 transition-all duration-300',
+    href && 'cursor-pointer hover:bg-[var(--terminal-green)]/5',
+    className,
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className={wrapperClass}>
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={wrapperClass}>{content}</div>;
 }

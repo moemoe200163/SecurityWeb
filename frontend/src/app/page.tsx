@@ -5,7 +5,9 @@ import { Shield, Search, Network, AlertTriangle, Clock, Activity, Terminal, Chec
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { api, isAuthError, isForbidden, type SessionDetail } from '@/lib/api';
-import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { AuthNotice } from '@/components/ui/AuthNotice';
+import { formatRelativeTime } from '@/lib/datetime';
+import { type SessionStatus } from '@/lib/status';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PageHero } from '@/components/layout/PageHero';
 import { AnalysisCard } from '@/components/dashboard/AnalysisCard';
@@ -71,55 +73,43 @@ interface ActivityItem {
   title: string;
   description: string;
   time: string;
-  status: 'completed' | 'in_progress' | 'failed';
+  status: SessionStatus;
 }
 
 const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
-const recentActivity: ActivityItem[] = [
-  {
-    id: '1',
-    type: 'pentest',
-    title: '滲透測試完成',
-    description: '目標: 192.168.1.1',
-    time: '5 分鐘前',
-    status: 'completed',
-  },
-  {
-    id: '2',
-    type: 'threat',
-    title: '威脅情報更新',
-    description: 'IP 8.8.8.8 標記為良性',
-    time: '15 分鐘前',
-    status: 'completed',
-  },
-  {
-    id: '3',
-    type: 'soc',
-    title: 'SOC 分析完成',
-    description: '新攻擊鏈分析',
-    time: '30 分鐘前',
-    status: 'completed',
-  },
-  {
-    id: '4',
-    type: 'pentest',
-    title: '漏洞掃描中',
-    description: '目標: demo.testfire.net',
-    time: '1 小時前',
-    status: 'in_progress',
-  },
-  {
-    id: '5',
-    type: 'threat',
-    title: 'BGP 路由異常',
-    description: 'AS15169 路由變更',
-    time: '2 小時前',
-    status: 'completed',
-  },
-];
+const MODULE_LABELS: Record<string, string> = {
+  soc: 'SOC 告警分析',
+  threat: '威脅情報調查',
+  pentest: '滲透測試輔助',
+};
 
-function ActivityFeed() {
+function sessionToActivity(session: SessionDetail): ActivityItem {
+  const input = session.input as Record<string, unknown> | undefined;
+  const target =
+    (input?.indicator as string) ||
+    (input?.value as string) ||
+    (input?.target as string) ||
+    (input?.url as string) ||
+    (input?.endpoint as string) ||
+    (input?.alertTitle as string) ||
+    '';
+
+  let status: SessionStatus = 'in_progress';
+  if (session.status === 'completed') status = 'completed';
+  else if (session.status === 'failed') status = 'failed';
+
+  return {
+    id: session.id,
+    type: session.module as ActivityItem['type'],
+    title: MODULE_LABELS[session.module] || session.module,
+    description: target || `Session ${session.id.slice(0, 8)}`,
+    time: formatRelativeTime(session.createdAt),
+    status,
+  };
+}
+
+function ActivityFeed({ sessions }: { sessions: SessionDetail[] }) {
   const typeColors = {
     soc: 'text-[var(--soc)] bg-[var(--soc)]/10',
     threat: 'text-[var(--threat)] bg-[var(--threat)]/10',
@@ -132,6 +122,8 @@ function ActivityFeed() {
     failed: <div className="w-2 h-2 rounded-full bg-red-500" />,
   };
 
+  const items = sessions.map(sessionToActivity);
+
   return (
     <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] overflow-hidden">
       {/* Header */}
@@ -140,14 +132,18 @@ function ActivityFeed() {
           <Activity className="h-4 w-4 text-[var(--terminal-green)]" />
           <h3 className="text-sm font-medium text-[var(--foreground)]">最近活動</h3>
         </div>
-        <Link href="/soc/history" className="text-xs text-[var(--muted-foreground)] hover:text-[var(--terminal-green)] transition-colors">
+        <Link href="/history" className="text-xs text-[var(--muted-foreground)] hover:text-[var(--terminal-green)] transition-colors">
           查看全部 →
         </Link>
       </div>
 
       {/* Activity list */}
       <div className="divide-y divide-[var(--border)]">
-        {recentActivity.map((item, index) => (
+        {items.length === 0 ? (
+          <div className="px-5 py-8 text-center text-sm text-[var(--muted-foreground)]">
+            暫無活動記錄
+          </div>
+        ) : items.map((item, index) => (
           <div
             key={item.id}
             className="px-5 py-3 hover:bg-[var(--accent)] transition-colors cursor-pointer animate-fade-in-up"
@@ -282,24 +278,23 @@ function ThreatAlertBanner() {
 export default function Dashboard() {
   const [currentTime, setCurrentTime] = useState<string>('');
   const [recentSessions, setRecentSessions] = useState<SessionDetail[]>([]);
-  const [stats, setStats] = useState({ totalSessions: 0, totalThreats: 0, totalPentest: 0 });
+  const [moduleCounts, setModuleCounts] = useState<Record<string, number>>({});
   const [authError, setAuthError] = useState<number | false>(false);
   const [analysisData, setAnalysisData] = useState<AnalysisMetrics | null>(null);
   const [analysisLoading, setAnalysisLoading] = useState(true);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [analysisAuthNotice, setAnalysisAuthNotice] = useState<'missing' | 'forbidden' | null>(null);
-  void stats;
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const loadActivity = useCallback(async () => {
     try {
       const sessions = await api.getAllSessions();
       setRecentSessions(sessions.slice(0, 5));
-      setStats({
-        totalSessions: sessions.filter(s => s.module === 'soc').length,
-        totalThreats: sessions.filter(s => s.module === 'threat').length,
-        totalPentest: sessions.filter(s => s.module === 'pentest').length,
-      });
+      const counts: Record<string, number> = {};
+      for (const s of sessions) {
+        counts[s.module] = (counts[s.module] || 0) + 1;
+      }
+      setModuleCounts(counts);
     } catch (err) {
       if (isForbidden(err)) {
         setAuthError(403);
@@ -355,7 +350,7 @@ export default function Dashboard() {
   }, []);
 
   if (authError) {
-    return <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />;
+    return <AuthNotice variant={authError === 403 ? 'forbidden' : 'missing'} mode="blocking" />;
   }
 
   return (
@@ -402,6 +397,7 @@ export default function Dashboard() {
               mom={analysisData.comparison.monthOverMonth.incidents}
               yoy={analysisData.comparison.yearOverYear.incidents}
               invertTrend
+              href="/alerts"
             />
             <AnalysisCard
               label="成功解除"
@@ -410,6 +406,7 @@ export default function Dashboard() {
               accentColor="bg-emerald-500/10"
               mom={analysisData.comparison.monthOverMonth.successfulResolutions}
               yoy={analysisData.comparison.yearOverYear.successfulResolutions}
+              href="/alerts?status=resolved"
             />
             <AnalysisCard
               label="失敗解除"
@@ -419,6 +416,7 @@ export default function Dashboard() {
               mom={analysisData.comparison.monthOverMonth.failedResolutions}
               yoy={analysisData.comparison.yearOverYear.failedResolutions}
               invertTrend
+              href="/alerts?status=failed_resolution"
             />
             <AnalysisCard
               label="解除率"
@@ -428,6 +426,7 @@ export default function Dashboard() {
               mom={analysisData.comparison.monthOverMonth.resolutionRate}
               yoy={analysisData.comparison.yearOverYear.resolutionRate}
               valueSuffix="%"
+              href="/analysis"
             />
           </div>
           <div className="flex justify-center">
@@ -489,7 +488,7 @@ export default function Dashboard() {
                 href="/soc/analyze"
                 icon={<Shield className="h-6 w-6 text-[var(--soc)]" />}
                 color="bg-[var(--soc)]/10"
-                stats="30 會話"
+                stats={`${moduleCounts.soc || 0} 會話`}
                 delay={0}
               />
               <ModuleCard
@@ -498,7 +497,7 @@ export default function Dashboard() {
                 href="/threat/investigate"
                 icon={<Search className="h-6 w-6 text-[var(--threat)]" />}
                 color="bg-[var(--threat)]/10"
-                stats="156 記錄"
+                stats={`${moduleCounts.threat || 0} 記錄`}
                 delay={100}
               />
               <ModuleCard
@@ -507,13 +506,13 @@ export default function Dashboard() {
                 href="/pentest/assist"
                 icon={<Network className="h-6 w-6 text-[var(--pentest)]" />}
                 color="bg-[var(--pentest)]/10"
-                stats="11 任務"
+                stats={`${moduleCounts.pentest || 0} 任務`}
                 delay={200}
               />
             </div>
 
             {/* Activity Feed */}
-            <ActivityFeed />
+            <ActivityFeed sessions={recentSessions} />
           </div>
 
           {/* Right Sidebar - 1/3 width */}

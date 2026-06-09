@@ -357,6 +357,7 @@ export default function AnalysisPage() {
                 mom={analysis.comparison.monthOverMonth.incidents}
                 yoy={analysis.comparison.yearOverYear.incidents}
                 invertTrend
+                href="/alerts"
               />
               <AnalysisCard
                 label="成功解除"
@@ -365,6 +366,7 @@ export default function AnalysisPage() {
                 accentColor="bg-emerald-500/10"
                 mom={analysis.comparison.monthOverMonth.successfulResolutions}
                 yoy={analysis.comparison.yearOverYear.successfulResolutions}
+                href="/alerts?status=resolved"
               />
               <AnalysisCard
                 label="失敗解除"
@@ -374,6 +376,7 @@ export default function AnalysisPage() {
                 mom={analysis.comparison.monthOverMonth.failedResolutions}
                 yoy={analysis.comparison.yearOverYear.failedResolutions}
                 invertTrend
+                href="/alerts?status=failed_resolution"
               />
               <AnalysisCard
                 label="解除率"
@@ -383,6 +386,7 @@ export default function AnalysisPage() {
                 mom={analysis.comparison.monthOverMonth.resolutionRate}
                 yoy={analysis.comparison.yearOverYear.resolutionRate}
                 valueSuffix="%"
+                href="/alerts"
               />
             </div>
 

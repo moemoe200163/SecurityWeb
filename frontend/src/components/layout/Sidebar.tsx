@@ -70,6 +70,12 @@ const navigation: NavItem[] = [
     module: 'soc',
   },
   {
+    label: '報告中心',
+    href: '/analysis',
+    icon: <BarChart3 className="h-5 w-5" />,
+    module: 'soc',
+  },
+  {
     label: 'SOC 告警分析',
     href: '/soc/analyze',
     icon: <Shield className="h-5 w-5" />,
