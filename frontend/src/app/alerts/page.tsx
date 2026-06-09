@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -74,13 +74,18 @@ interface ReportData {
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 void API_BASE;
 
-export default function AlertsPage() {
+function AlertsContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
-  const [filters, setFilters] = useState({ status: '', severity: '', source: '' });
-  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState({
+    status: searchParams.get('status') || '',
+    severity: searchParams.get('severity') || '',
+    source: searchParams.get('source') || '',
+  });
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportData, setReportData] = useState<ReportData | null>(null);
@@ -92,6 +97,17 @@ export default function AlertsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [isApiOnline, setIsApiOnline] = useState(true);
   const [authError, setAuthError] = useState<number | false>(false);
+
+  // Sync filters to URL for deep linking
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (filters.status) params.set('status', filters.status);
+    if (filters.severity) params.set('severity', filters.severity);
+    if (filters.source) params.set('source', filters.source);
+    if (searchQuery) params.set('search', searchQuery);
+    const qs = params.toString();
+    router.replace(`/alerts${qs ? `?${qs}` : ''}`, { scroll: false });
+  }, [filters, searchQuery, router]);
 
   const fetchAlerts = useCallback(async () => {
     setLoading(true);
@@ -734,5 +750,17 @@ export default function AlertsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AlertsPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-[var(--terminal-green)] border-t-transparent" />
+      </div>
+    }>
+      <AlertsContent />
+    </Suspense>
   );
 }

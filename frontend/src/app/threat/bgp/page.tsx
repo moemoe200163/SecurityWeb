@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { Loader2, Search, X, Copy, ExternalLink, Globe } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
 import { api, ApiError, isAuthError, isForbidden } from '@/lib/api';
-import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { AuthNotice } from '@/components/ui/AuthNotice';
 
 // Country code to flag + name mapping
 const COUNTRY_DATA: Record<string, { flag: string; name: string }> = {
@@ -209,7 +209,7 @@ export default function BgpPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-6">
-        {authError !== false && <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />}
+        {authError !== false && <AuthNotice variant={authError === 403 ? 'forbidden' : 'missing'} mode="blocking" />}
         {/* Search Box */}
         <div className="rounded-xl border shadow-sm p-6 mb-6" style={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)' }}>
           <div className="flex flex-col md:flex-row gap-4">

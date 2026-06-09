@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { PageHero } from '@/components/layout/PageHero';
 import { RetentionPanel } from '@/components/admin/RetentionPanel';
 import { api } from '@/lib/api';
+import { formatTaipeiDateTime } from '@/lib/datetime';
 
 export default function AdminRetentionPage() {
   const [lastRunAt, setLastRunAt] = useState<string | null | undefined>(undefined);
@@ -22,7 +23,7 @@ export default function AdminRetentionPage() {
       ? 'loading...'
       : lastRunAt === null
         ? 'never'
-        : new Date(lastRunAt).toLocaleString();
+        : formatTaipeiDateTime(lastRunAt);
 
   return (
     <main className="min-h-full animate-fade-in-up">

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Play, Eye, AlertCircle, ShieldAlert, RefreshCw } from 'lucide-react';
 import { api, ApiError } from '@/lib/api';
-import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { AuthNotice } from '@/components/ui/AuthNotice';
 import Link from 'next/link';
 
 interface Status {
@@ -96,7 +96,7 @@ export function RetentionPanel() {
   }
 
   if (loadState.kind === 'error' && loadState.type === 'auth') {
-    return <ApiKeyRequired />;
+    return <AuthNotice mode="blocking" />;
   }
 
   if (loadState.kind === 'error') {

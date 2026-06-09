@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { api, ApiError, isAuthError, isForbidden, pollSession, type SessionDetail, type IpReputationResult } from '@/lib/api';
-import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { AuthNotice } from '@/components/ui/AuthNotice';
 import { Loader2, Search, AlertCircle, CheckCircle2, XCircle, Shield, ShieldAlert, ShieldCheck, ShieldQuestion, Terminal } from 'lucide-react';
 import MarkdownRenderer from '@/components/ui/MarkdownRenderer';
 import { cn } from '@/lib/utils';
@@ -211,7 +211,7 @@ function ThreatInvestigateContent() {
   };
 
   if (authError) {
-    return <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />;
+    return <AuthNotice variant={authError === 403 ? 'forbidden' : 'missing'} mode="blocking" />;
   }
 
   return (

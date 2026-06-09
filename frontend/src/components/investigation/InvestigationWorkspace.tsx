@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api, ApiError, isAuthError, isForbidden, type SessionDetail, type Evidence } from '@/lib/api';
-import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { AuthNotice } from '@/components/ui/AuthNotice';
 import { PageHero } from '@/components/layout/PageHero';
 import { VolcanoStepCard } from '@/components/soc/VolcanoStepCard';
 import { AddToInvestigation } from '@/components/ui/AddToInvestigation';
@@ -171,7 +171,7 @@ export function InvestigationWorkspace({ sessionId }: InvestigationWorkspaceProp
 
   // Render: loading --------------------------------------------------------
   if (authError) {
-    return <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />;
+    return <AuthNotice variant={authError === 403 ? 'forbidden' : 'missing'} mode="blocking" />;
   }
 
   if (loading) {

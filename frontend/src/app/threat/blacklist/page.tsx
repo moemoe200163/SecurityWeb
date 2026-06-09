@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { api, ApiError, isAuthError, isForbidden, type IpReputationResult, type IpReputationStats, type PaginationInfo } from '@/lib/api';
-import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { AuthNotice } from '@/components/ui/AuthNotice';
 import { Loader2, Search, Shield, ShieldAlert, ShieldCheck, ShieldQuestion, RefreshCw, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { PageHero } from '@/components/layout/PageHero';
+import { formatTaipeiDateTime } from '@/lib/datetime';
 
 // Country code to flag + name mapping
 const COUNTRY_DATA: Record<string, { flag: string; name: string }> = {
@@ -182,7 +183,7 @@ export default function BlacklistPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto p-6">
-        {authError !== false && <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />}
+        {authError !== false && <AuthNotice variant={authError === 403 ? 'forbidden' : 'missing'} mode="blocking" />}
 
         {/* Stats Cards */}
         {stats && (
@@ -301,7 +302,7 @@ export default function BlacklistPage() {
                         <td className="px-6 py-4 text-sm text-[var(--foreground)] truncate max-w-xs">{item.isp || '-'}</td>
                         <td className="px-6 py-4 text-sm text-[var(--foreground)]">{item.totalReports?.toLocaleString() ?? '-'}</td>
                         <td className="px-6 py-4 text-sm text-[var(--muted-foreground)]">
-                          {new Date(item.updatedAt).toLocaleString('zh-TW')}
+                          {formatTaipeiDateTime(item.updatedAt)}
                         </td>
                       </tr>
                     ))}
@@ -408,7 +409,7 @@ export default function BlacklistPage() {
 
               <div className="pt-4 border-t border-[var(--border)]">
                 <p className="text-sm text-[var(--muted-foreground)]">更新時間</p>
-                <p className="text-sm text-[var(--foreground)]">{new Date(selectedIp.updatedAt).toLocaleString('zh-TW')}</p>
+                <p className="text-sm text-[var(--foreground)]">{formatTaipeiDateTime(selectedIp.updatedAt)}</p>
               </div>
             </div>
           </div>

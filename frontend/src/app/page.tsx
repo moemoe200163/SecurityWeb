@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { api, isAuthError, isForbidden, type SessionDetail } from '@/lib/api';
 import { AuthNotice } from '@/components/ui/AuthNotice';
-import { formatRelativeTime } from '@/lib/datetime';
+import { formatTaipeiDateTime, formatRelativeTime } from '@/lib/datetime';
 import { type SessionStatus } from '@/lib/status';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PageHero } from '@/components/layout/PageHero';
@@ -307,9 +307,9 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    setCurrentTime(new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }));
+    setCurrentTime(formatTaipeiDateTime(new Date().toISOString()));
     const interval = setInterval(() => {
-      setCurrentTime(new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }));
+      setCurrentTime(formatTaipeiDateTime(new Date().toISOString()));
     }, 1000);
     return () => clearInterval(interval);
   }, []);
