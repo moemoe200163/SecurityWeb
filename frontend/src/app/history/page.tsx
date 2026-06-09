@@ -1,10 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Shield, Search, Network, Clock, FileText, Filter, RefreshCw, ChevronRight, X } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { Shield, Search, Network, Clock, FileText, Filter, RefreshCw, ChevronRight, X, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { api, isAuthError, isForbidden } from '@/lib/api';
+import type { SessionDetail } from '@/lib/api';
+import { formatTaipeiDateTime, formatRelativeTime } from '@/lib/datetime';
 import { PageHero } from '@/components/layout/PageHero';
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 interface HistoryRecord {
   id: string;
@@ -15,6 +22,45 @@ interface HistoryRecord {
   steps: { completed: number; total: number };
   timestamp: string;
   timeAgo: string;
+}
+
+// ---------------------------------------------------------------------------
+// Data mapping
+// ---------------------------------------------------------------------------
+
+const MODULE_LABELS: Record<string, string> = {
+  soc: 'SOC 告警分析',
+  threat: '威脅情報調查',
+  pentest: '滲透測試輔助',
+};
+
+function sessionToRecord(session: SessionDetail): HistoryRecord {
+  const input = session.input as Record<string, unknown> | undefined;
+  const target =
+    (input?.indicator as string) ||
+    (input?.value as string) ||
+    (input?.target as string) ||
+    (input?.url as string) ||
+    (input?.endpoint as string) ||
+    '未知目標';
+
+  const completedSteps = session.steps.filter((s) => s.status === 'success').length;
+  const totalSteps = session.steps.length || 1;
+
+  let status: HistoryRecord['status'] = 'in_progress';
+  if (session.status === 'completed') status = 'completed';
+  else if (session.status === 'failed') status = 'failed';
+
+  return {
+    id: session.id,
+    module: session.module as HistoryRecord['module'],
+    title: MODULE_LABELS[session.module] || session.module,
+    target,
+    status,
+    steps: { completed: completedSteps, total: totalSteps },
+    timestamp: session.createdAt,
+    timeAgo: formatRelativeTime(session.createdAt),
+  };
 }
 
 function HistoryCard({ record }: { record: HistoryRecord }) {
@@ -72,6 +118,14 @@ function HistoryCard({ record }: { record: HistoryRecord }) {
             <span className="font-mono text-xs">ID: {record.id.slice(0, 8)}</span>
           </div>
 
+          {/* Timestamp */}
+          <div className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)] mb-2">
+            <Clock className="h-3 w-3" />
+            <span className="font-mono">{formatTaipeiDateTime(record.timestamp)}</span>
+            <span className="text-[var(--border)]">·</span>
+            <span>{record.timeAgo}</span>
+          </div>
+
           {/* Progress bar */}
           <div className="flex items-center gap-3">
             <div className="flex-1 h-1.5 bg-[var(--accent)] rounded-full overflow-hidden">
@@ -88,7 +142,7 @@ function HistoryCard({ record }: { record: HistoryRecord }) {
 
         {/* Time and arrow */}
         <div className="flex flex-col items-end gap-2">
-          <div className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)]">
+          <div className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)]" title={formatTaipeiDateTime(record.timestamp)}>
             <Clock className="h-3 w-3" />
             <span className="font-mono">{record.timeAgo}</span>
           </div>
@@ -193,24 +247,30 @@ export default function HistoryPage() {
   const [selectedModule, setSelectedModule] = useState<'all' | 'soc' | 'threat' | 'pentest'>('all');
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'completed' | 'in_progress' | 'failed'>('all');
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+  const [authNotice, setAuthNotice] = useState<'missing' | 'forbidden' | null>(null);
+
+  const fetchRecords = useCallback(async () => {
+    setLoading(true);
+    setAuthNotice(null);
+    try {
+      const sessions = await api.getAllSessions();
+      setRecords(sessions.map(sessionToRecord));
+    } catch (err) {
+      if (isForbidden(err)) {
+        setAuthNotice('forbidden');
+        setRecords([]);
+      } else if (isAuthError(err)) {
+        setAuthNotice('missing');
+        setRecords([]);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    // Simulated data - in production would fetch from API
-    const mockRecords: HistoryRecord[] = [
-      { id: 'b07c92ab-69fe-423c-b52f-e1bed6580223', module: 'pentest', title: '滲透測試輔助', target: '192.168.1.1', status: 'completed', steps: { completed: 5, total: 5 }, timestamp: '2026-05-11T07:00:00Z', timeAgo: '5 小時前' },
-      { id: '621985e8-675d-412d-b80f-30a97adfff65', module: 'threat', title: '威脅情報調查', target: '8.8.8.8', status: 'completed', steps: { completed: 5, total: 5 }, timestamp: '2026-05-11T06:45:00Z', timeAgo: '5 小時前' },
-      { id: '322ef100-f745-4d0b-a8a3-4e9d0c2712df', module: 'soc', title: 'SOC 告警分析', target: '攻擊鏈分析', status: 'completed', steps: { completed: 5, total: 5 }, timestamp: '2026-05-11T06:30:00Z', timeAgo: '5 小時前' },
-      { id: '57911fb4-aa4b-4020-bb23-bbc6b9840a03', module: 'pentest', title: '滲透測試輔助', target: '192.168.20.199', status: 'completed', steps: { completed: 5, total: 5 }, timestamp: '2026-05-11T05:00:00Z', timeAgo: '7 小時前' },
-      { id: 'c92174fb-a3df-4346-aab9-729765035c2c', module: 'pentest', title: '滲透測試輔助', target: '192.168.20.199', status: 'completed', steps: { completed: 5, total: 5 }, timestamp: '2026-05-11T04:00:00Z', timeAgo: '8 小時前' },
-      { id: 'ab3e1e66-4b0b-4190-94e6-4bcc6ba02e3b', module: 'pentest', title: '滲透測試輔助', target: 'https://demo.testfire.net', status: 'completed', steps: { completed: 5, total: 5 }, timestamp: '2026-05-10T22:00:00Z', timeAgo: '14 小時前' },
-      { id: '21f7440e-5030-47f6-af21-4fd2ec3c27b5', module: 'pentest', title: '滲透測試輔助', target: '192.168.20.199', status: 'completed', steps: { completed: 5, total: 5 }, timestamp: '2026-05-10T20:00:00Z', timeAgo: '16 小時前' },
-      { id: '661f9b71-57aa-4c8a-a673-5ef232107d94', module: 'soc', title: 'SOC 告警分析', target: 'CRLF注入攻擊', status: 'completed', steps: { completed: 5, total: 5 }, timestamp: '2026-05-10T18:00:00Z', timeAgo: '18 小時前' },
-      { id: '2d1c4edf-7dfa-4764-a369-0c25dd277dc1', module: 'threat', title: '威脅情報調查', target: '8.8.8.8', status: 'completed', steps: { completed: 5, total: 5 }, timestamp: '2026-05-09T12:00:00Z', timeAgo: '1 天前' },
-      { id: 'a498e339-1f4d-4d08-8549-5670ed4abec4', module: 'threat', title: '威脅情報調查', target: '1.1.1.1', status: 'completed', steps: { completed: 5, total: 5 }, timestamp: '2026-05-09T10:00:00Z', timeAgo: '2 天前' },
-    ];
-    setRecords(mockRecords);
-    setLoading(false);
-  }, [lastRefresh]);
+    fetchRecords();
+  }, [fetchRecords, lastRefresh]);
 
   const moduleCounts = records.reduce((acc, r) => {
     acc[r.module] = (acc[r.module] || 0) + 1;
@@ -257,6 +317,20 @@ export default function HistoryPage() {
           moduleCounts={moduleCounts}
         />
 
+        {/* Auth notice (non-blocking) */}
+        {authNotice && (
+          <div className="rounded-xl border border-[var(--terminal-amber)]/30 bg-[var(--terminal-amber)]/5 p-4">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="h-4 w-4 text-[var(--terminal-amber)] shrink-0" />
+              <p className="text-sm text-[var(--muted-foreground)] flex-1">
+                {authNotice === 'forbidden'
+                  ? '權限不足或 API Key role 不符合，目前顯示空記錄'
+                  : '尚未連接 SecurityWeb Access Key，目前顯示空記錄'}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Records list */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
@@ -281,8 +355,8 @@ export default function HistoryPage() {
         <div className="flex items-center justify-center py-4">
           <div className="flex items-center gap-2 font-mono text-xs text-[var(--muted-foreground)]">
             <span>最後更新:</span>
-            <span className="text-[var(--terminal-green)]">
-              {lastRefresh?.toLocaleTimeString('zh-TW') || '--:--:--'}
+            <span className="text-[var(--terminal-green)]" suppressHydrationWarning>
+              {lastRefresh ? formatTaipeiDateTime(lastRefresh.toISOString()) : '--:--:--'}
             </span>
           </div>
         </div>

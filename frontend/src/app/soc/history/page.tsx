@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Search, Network, Shield, Clock, ChevronRight, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { api, ApiError, isAuthError, isForbidden, type SessionDetail } from '@/lib/api';
+import { formatRelativeTime, formatTaipeiDateTime } from '@/lib/datetime';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { PageHero } from '@/components/layout/PageHero';
 
@@ -38,29 +39,6 @@ const moduleColors: Record<string, string> = {
   threat: 'bg-[--color-threat]/10 text-[--color-threat]',
   pentest: 'bg-[--color-pentest]/10 text-[--color-pentest]',
 };
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
-
-  if (minutes < 1) return '剛剛';
-  if (minutes < 60) return `${minutes} 分鐘前`;
-  if (hours < 24) return `${hours} 小時前`;
-  if (days < 7) return `${days} 天前`;
-
-  return date.toLocaleDateString('zh-TW', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
 
 export default function HistoryPage() {
   const [sessions, setSessions] = useState<SessionDetail[]>([]);
@@ -136,7 +114,7 @@ export default function HistoryPage() {
       <div className="px-6">
         {lastRefresh && (
           <div className="max-w-4xl mx-auto py-3 text-xs font-mono text-[var(--muted-foreground)]">
-            上次更新: {lastRefresh.toLocaleTimeString('zh-TW')}
+            上次更新: {formatTaipeiDateTime(lastRefresh.toISOString())}
           </div>
         )}
       </div>
@@ -228,7 +206,9 @@ export default function HistoryPage() {
                       </div>
                       <div className="flex items-center gap-2 mt-1 text-sm text-[var(--muted-foreground)]">
                         <Clock className="h-3 w-3" />
-                        <span>{mounted ? formatDate(session.createdAt) : '載入中...'}</span>
+                        <span className="font-mono text-xs">{mounted ? formatTaipeiDateTime(session.createdAt) : '載入中...'}</span>
+                        <span className="text-[var(--border)]">·</span>
+                        <span className="text-xs">{mounted ? formatRelativeTime(session.createdAt) : ''}</span>
                         {session.steps && (
                           <>
                             <span>·</span>

@@ -716,7 +716,7 @@ export const api = {
     },
   },
 
-  // Get all sessions (combined from all modules)
+  // Get all sessions (combined from all modules, deduplicated by id)
   async getAllSessions(): Promise<SessionDetail[]> {
     try {
       const [soc, threat, pentest] = await Promise.all([
@@ -724,7 +724,15 @@ export const api = {
         this.threat.getSessions().catch(() => ({ sessions: [] })),
         this.pentest.getSessions().catch(() => ({ sessions: [] })),
       ]);
-      return [...soc.sessions, ...threat.sessions, ...pentest.sessions].sort(
+      const seen = new Set<string>();
+      const unique: SessionDetail[] = [];
+      for (const s of [...soc.sessions, ...threat.sessions, ...pentest.sessions]) {
+        if (!seen.has(s.id)) {
+          seen.add(s.id);
+          unique.push(s);
+        }
+      }
+      return unique.sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     } catch {
