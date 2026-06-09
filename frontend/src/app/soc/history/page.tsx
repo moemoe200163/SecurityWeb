@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Search, Network, Shield, Clock, ChevronRight, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
-import { api, ApiError, isAuthError, isForbidden, type SessionDetail } from '@/lib/api';
+import { api, isAuthError, isForbidden, type SessionDetail } from '@/lib/api';
 import { formatRelativeTime, formatTaipeiDateTime } from '@/lib/datetime';
 import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
 import { PageHero } from '@/components/layout/PageHero';

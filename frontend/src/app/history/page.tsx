@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { api, isAuthError, isForbidden } from '@/lib/api';
 import type { SessionDetail } from '@/lib/api';
 import { formatTaipeiDateTime, formatRelativeTime } from '@/lib/datetime';
+import { SESSION_STATUS, type SessionStatus } from '@/lib/status';
 import { PageHero } from '@/components/layout/PageHero';
 
 // ---------------------------------------------------------------------------
@@ -18,7 +19,7 @@ interface HistoryRecord {
   module: 'soc' | 'threat' | 'pentest';
   title: string;
   target: string;
-  status: 'completed' | 'in_progress' | 'failed';
+  status: SessionStatus;
   steps: { completed: number; total: number };
   timestamp: string;
   timeAgo: string;
@@ -42,6 +43,7 @@ function sessionToRecord(session: SessionDetail): HistoryRecord {
     (input?.target as string) ||
     (input?.url as string) ||
     (input?.endpoint as string) ||
+    (input?.alertTitle as string) ||
     '未知目標';
 
   const completedSteps = session.steps.filter((s) => s.status === 'success').length;
@@ -83,11 +85,7 @@ function HistoryCard({ record }: { record: HistoryRecord }) {
   };
 
   const config = moduleConfig[record.module];
-  const statusConfig = {
-    completed: { label: '已完成', color: 'text-green-500', dot: 'bg-green-500' },
-    in_progress: { label: '執行中', color: 'text-yellow-500', dot: 'bg-yellow-500 animate-pulse' },
-    failed: { label: '失敗', color: 'text-red-500', dot: 'bg-red-500' },
-  };
+  const statusConfig = SESSION_STATUS[record.status];
 
   return (
     <Link
@@ -106,9 +104,9 @@ function HistoryCard({ record }: { record: HistoryRecord }) {
             <h3 className="text-base font-semibold text-[var(--foreground)] group-hover:text-[var(--terminal-green)] transition-colors">
               {record.title}
             </h3>
-            <div className={cn('flex items-center gap-1.5', statusConfig[record.status].color)}>
-              <div className={cn('w-2 h-2 rounded-full', statusConfig[record.status].dot)} />
-              <span className="text-xs font-medium">{statusConfig[record.status].label}</span>
+            <div className={cn('flex items-center gap-1.5', statusConfig.color)}>
+              <div className={cn('w-2 h-2 rounded-full', statusConfig.dot)} />
+              <span className="text-xs font-medium">{statusConfig.label}</span>
             </div>
           </div>
 
@@ -177,9 +175,7 @@ function FilterBar({
 
   const statuses = [
     { key: 'all', label: '全部狀態' },
-    { key: 'completed', label: '已完成' },
-    { key: 'in_progress', label: '執行中' },
-    { key: 'failed', label: '失敗' },
+    ...Object.entries(SESSION_STATUS).map(([key, meta]) => ({ key, label: meta.label })),
   ];
 
   return (
@@ -271,6 +267,16 @@ export default function HistoryPage() {
   useEffect(() => {
     fetchRecords();
   }, [fetchRecords, lastRefresh]);
+
+  // Auto-refresh relative time every 60 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRecords((prev) =>
+        prev.map((r) => ({ ...r, timeAgo: formatRelativeTime(r.timestamp) })),
+      );
+    }, 60_000);
+    return () => clearInterval(interval);
+  }, []);
 
   const moduleCounts = records.reduce((acc, r) => {
     acc[r.module] = (acc[r.module] || 0) + 1;

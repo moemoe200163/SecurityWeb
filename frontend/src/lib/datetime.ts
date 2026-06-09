@@ -5,7 +5,7 @@
 const TAIPEI_TZ = 'Asia/Taipei';
 
 /**
- * Format an ISO string to absolute Taipei time: `2026/06/09 10:35`
+ * Format an ISO string to absolute Taipei time: `2026/06/09 10:35:42`
  */
 export function formatTaipeiDateTime(iso: string): string {
   const d = new Date(iso);
@@ -16,6 +16,7 @@ export function formatTaipeiDateTime(iso: string): string {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
+    second: '2-digit',
     hour12: false,
   });
 }
