@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useStepStore } from '@/stores/stepStore';
 import { api, ApiError, isAuthError, isForbidden, pollSession, type SessionDetail } from '@/lib/api';
-import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { AuthNotice } from '@/components/ui/AuthNotice';
 import type { AlertData, ToolCall } from '@/lib/types';
 import type { SessionSummary } from '@/components/soc/AnalysisSidebar';
 import { VolcanoStepCard } from '@/components/soc/VolcanoStepCard';
@@ -510,7 +510,7 @@ export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceP
           commandValue={`${completedSteps}/${totalSteps}`}
         />
 
-        {authError !== false && <div className="px-6 py-4"><ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} /></div>}
+        {authError !== false && <div className="px-6 py-4"><AuthNotice variant={authError === 403 ? 'forbidden' : 'missing'} mode="banner" /></div>}
 
         {/* Top Progress Bar */}
         <div className="bg-[var(--card)] border-y border-[var(--border)] px-6 py-4">

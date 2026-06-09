@@ -1,13 +1,14 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { Shield, Search, Network, Clock, FileText, Filter, RefreshCw, ChevronRight, X, AlertTriangle } from 'lucide-react';
+import { Shield, Search, Network, Clock, FileText, Filter, RefreshCw, ChevronRight, X } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { api, isAuthError, isForbidden } from '@/lib/api';
 import type { SessionDetail } from '@/lib/api';
 import { formatTaipeiDateTime, formatRelativeTime } from '@/lib/datetime';
 import { SESSION_STATUS, type SessionStatus } from '@/lib/status';
+import { AuthNotice } from '@/components/ui/AuthNotice';
 import { PageHero } from '@/components/layout/PageHero';
 
 // ---------------------------------------------------------------------------
@@ -324,18 +325,7 @@ export default function HistoryPage() {
         />
 
         {/* Auth notice (non-blocking) */}
-        {authNotice && (
-          <div className="rounded-xl border border-[var(--terminal-amber)]/30 bg-[var(--terminal-amber)]/5 p-4">
-            <div className="flex items-center gap-3">
-              <AlertTriangle className="h-4 w-4 text-[var(--terminal-amber)] shrink-0" />
-              <p className="text-sm text-[var(--muted-foreground)] flex-1">
-                {authNotice === 'forbidden'
-                  ? '權限不足或 API Key role 不符合，目前顯示空記錄'
-                  : '尚未連接 SecurityWeb Access Key，目前顯示空記錄'}
-              </p>
-            </div>
-          </div>
-        )}
+        {authNotice && <AuthNotice variant={authNotice} mode="banner" />}
 
         {/* Records list */}
         {loading ? (

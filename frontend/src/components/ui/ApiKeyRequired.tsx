@@ -1,10 +1,6 @@
 'use client';
 
-import React from 'react';
-import { AlertTriangle, Settings } from 'lucide-react';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
-import { buttonVariants } from '@/components/ui/button';
+import { AuthNotice } from './AuthNotice';
 
 interface ApiKeyRequiredProps {
   message?: string;
@@ -13,24 +9,17 @@ interface ApiKeyRequiredProps {
   className?: string;
 }
 
-const VARIANT_MESSAGES: Record<NonNullable<ApiKeyRequiredProps['variant']>, string> = {
-  missing: '請先設定 SecurityWeb Access Key',
-  forbidden: '權限不足或 API Key role 不符合',
-};
-
+/**
+ * @deprecated Use AuthNotice with mode="blocking" instead.
+ * Kept for backward compatibility with existing pages.
+ */
 export function ApiKeyRequired({ variant = 'missing', message, className }: ApiKeyRequiredProps) {
-  const displayMessage = message ?? VARIANT_MESSAGES[variant];
-
   return (
-    <div className={cn('flex flex-col items-center justify-center min-h-[400px] gap-4', className)}>
-      <div className="flex items-center gap-3 text-[var(--terminal-amber)]">
-        <AlertTriangle className="h-8 w-8" />
-        <span className="text-lg font-mono">{displayMessage}</span>
-      </div>
-      <Link href="/settings" className={buttonVariants({ className: 'bg-[var(--terminal-green)] hover:bg-[var(--terminal-green)]/90 text-black font-medium' })}>
-        <Settings className="h-4 w-4 mr-2" />
-        前往設定 Access Key
-      </Link>
-    </div>
+    <AuthNotice
+      variant={variant}
+      mode="blocking"
+      message={message}
+      className={className}
+    />
   );
 }

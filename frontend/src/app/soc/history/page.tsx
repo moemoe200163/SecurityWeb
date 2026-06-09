@@ -9,7 +9,7 @@ import { FileText, Search, Network, Shield, Clock, ChevronRight, RefreshCw } fro
 import Link from 'next/link';
 import { api, isAuthError, isForbidden, type SessionDetail } from '@/lib/api';
 import { formatRelativeTime, formatTaipeiDateTime } from '@/lib/datetime';
-import { ApiKeyRequired } from '@/components/ui/ApiKeyRequired';
+import { AuthNotice } from '@/components/ui/AuthNotice';
 import { PageHero } from '@/components/layout/PageHero';
 
 const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
@@ -122,7 +122,7 @@ export default function HistoryPage() {
       {/* Content */}
       <div className="flex-1 overflow-auto px-6 pb-6">
         <div className="max-w-4xl mx-auto space-y-4">
-          {authError !== false && <ApiKeyRequired variant={authError === 403 ? 'forbidden' : 'missing'} />}
+          {authError !== false && <AuthNotice variant={authError === 403 ? 'forbidden' : 'missing'} mode="banner" />}
 
           {loading && (
             <>
