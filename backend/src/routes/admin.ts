@@ -229,6 +229,24 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
           },
         });
 
+        // P0-5 audit: a plaintext key was just returned, log who triggered it.
+        // We deliberately do NOT log the plaintext itself — only the prefix
+        // and target user — so this audit entry can be safely shipped to
+        // log aggregators without leaking credentials.
+        await prisma.auditLog.create({
+          data: {
+            userId: request.user!.id,
+            action: 'regenerate_api_key_legacy',
+            resourceType: 'user',
+            resourceId: id,
+            details: sanitizeAuditDetails({
+              targetUserId: id,
+              keyPrefix: prefix,
+              deprecatedRoute: 'POST /api/admin/users/:id/api-key',
+            }),
+          },
+        });
+
         // Plaintext is returned ONCE — never stored, never retrievable again.
         return reply.send({
           message: 'API key regenerated',

@@ -38,6 +38,11 @@ export default async function setup(): Promise<void> {
 
   const prisma = new PrismaClient();
   try {
+    // Make setup idempotent: first drop any stale rows that point at
+    // TEST_USER_ID but use a *different* keyPrefix, then upsert.
+    // Without this, repeated runs (or runs after a `db:seed`) trip the
+    // unique constraint on `users.id` and the suite can't start.
+    await prisma.user.deleteMany({ where: { id: TEST_USER_ID } });
     await prisma.user.upsert({
       where: { keyPrefix: prefix },
       update: { id: TEST_USER_ID, role: 'admin' },

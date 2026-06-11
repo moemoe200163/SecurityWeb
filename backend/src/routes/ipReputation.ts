@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import net from 'node:net';
 import { z } from 'zod';
 import { prisma } from '../db/client.js';
 import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
@@ -9,8 +10,14 @@ const OTX_API_KEY = process.env.OTX_API_KEY;
 const ABUSEIPDB_BASE_URL = 'https://api.abuseipdb.com/api/v2';
 const OTX_BASE_URL = 'https://otx.alienvault.com/api/v1';
 
+// P1-9: enforce an actual IP literal here. The previous `z.string().min(1)`
+// accepted arbitrary junk which got forwarded to AbuseIPDB and was used
+// to waste quota + CPU. Use built-in IP validator which supports both
+// IPv4 and IPv6.
 const querySchema = z.object({
-  ip: z.string().min(1),
+  ip: z.string().refine((s) => net.isIP(s) !== 0, {
+    message: 'ip must be a valid IPv4 or IPv6 address',
+  }),
   forceRefresh: z.boolean().optional().default(false),
 });
 

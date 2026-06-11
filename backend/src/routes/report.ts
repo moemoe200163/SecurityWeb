@@ -4,6 +4,7 @@ import { miniMaxAdapter } from '../services/minimaxAdapter.js';
 import type { PentestInput, SessionData } from '../services/types.js';
 import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireUser } from '../middleware/rbac.js';
+import { checkSessionAccess } from '../utils/sessionAccess.js';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
@@ -43,6 +44,14 @@ export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.get<{ Params: { sessionId: string } }>('/:sessionId/pdf', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const { sessionId } = request.params;
+
+      const access = await checkSessionAccess(request, sessionId);
+      if (access === 'not_found') {
+        return reply.status(404).send({ error: 'Session not found' });
+      }
+      if (access === 'forbidden') {
+        return reply.status(403).send({ error: 'You do not have access to this session' });
+      }
 
       const session = await miniMaxAdapter.getSession(sessionId);
       if (!session) {
@@ -100,6 +109,14 @@ export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.get<{ Params: { sessionId: string } }>('/:sessionId/json', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
       const { sessionId } = request.params;
+
+      const access = await checkSessionAccess(request, sessionId);
+      if (access === 'not_found') {
+        return reply.status(404).send({ error: 'Session not found' });
+      }
+      if (access === 'forbidden') {
+        return reply.status(403).send({ error: 'You do not have access to this session' });
+      }
 
       const session = await miniMaxAdapter.getSession(sessionId);
       if (!session) {
@@ -667,10 +684,24 @@ async function generatePDFWeasyPrint(reportData: {
   remediation: { shortTerm: string[]; longTerm: string[] };
 }): Promise<Buffer> {
   return new Promise((resolve, reject) => {
-    // Use /tmp for temp files (writable by any user)
+    // P1-6: use randomUUID() instead of Date.now() so concurrent requests
+    // cannot collide on the same tmp file name. Each request also gets its
+    // own JSON/PDF pair for clearer cleanup semantics.
     const tmpDir = '/tmp';
-    const tmpJsonFile = path.join(tmpDir, `report_${Date.now()}.json`);
-    const tmpPdfFile = path.join(tmpDir, `report_${Date.now()}.pdf`);
+    const baseName = `report_${crypto.randomUUID()}`;
+    const tmpJsonFile = path.join(tmpDir, `${baseName}.json`);
+    const tmpPdfFile = path.join(tmpDir, `${baseName}.pdf`);
+
+    // Helper that always cleans up both files, never throws.
+    const cleanup = () => {
+      for (const f of [tmpJsonFile, tmpPdfFile]) {
+        try {
+          fs.unlinkSync(f);
+        } catch {
+          // file may not exist; ignore
+        }
+      }
+    };
 
     try {
       // Write JSON data to temp file
@@ -693,38 +724,30 @@ async function generatePDFWeasyPrint(reportData: {
       });
 
       proc.on('close', (code: number) => {
-        // Clean up temp JSON file
-        try {
-          fs.unlinkSync(tmpJsonFile);
-        } catch (e) {
-          // Ignore cleanup errors
-        }
-
         if (code === 0) {
           try {
             const pdfBuffer = fs.readFileSync(tmpPdfFile);
-            // Clean up temp PDF file
-            fs.unlinkSync(tmpPdfFile);
+            cleanup();
             resolve(pdfBuffer);
           } catch (e) {
+            cleanup();
             reject(new Error('Failed to read generated PDF'));
           }
         } else {
           console.error('WeasyPrint error:', stderr);
+          cleanup();
           reject(new Error(`WeasyPrint failed: ${stderr}`));
         }
       });
 
       proc.on('error', (err: Error) => {
-        try {
-          fs.unlinkSync(tmpJsonFile);
-        } catch (e) {
-          // Ignore cleanup errors
-        }
+        cleanup();
         reject(err);
       });
     } catch (error) {
-      // Clean up temp files on error
+      // Clean up temp files on synchronous error before spawn was even
+      // attempted.
+      cleanup();
       try {
         if (fs.existsSync(tmpJsonFile)) fs.unlinkSync(tmpJsonFile);
       } catch (e) {

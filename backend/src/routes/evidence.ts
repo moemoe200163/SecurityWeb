@@ -4,6 +4,7 @@ import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireUser } from '../middleware/rbac.js';
 import { prisma } from '../db/client.js';
 import { sanitizeAuditDetails } from '../utils/sanitize.js';
+import { checkSessionAccess } from '../utils/sessionAccess.js';
 
 const createEvidenceSchema = z.object({
   type: z.enum(['tool', 'intelligence', 'manual', 'ai']),
@@ -24,13 +25,13 @@ export async function evidenceRoutes(fastify: FastifyInstance): Promise<void> {
         const { sessionId } = request.params as { sessionId: string };
         const body = createEvidenceSchema.parse(request.body);
 
-        // Verify session exists
-        const session = await prisma.session.findUnique({
-          where: { id: sessionId },
-          select: { id: true },
-        });
-        if (!session) {
+        // Verify session exists AND caller is allowed to add evidence to it.
+        const access = await checkSessionAccess(request, sessionId);
+        if (access === 'not_found') {
           return reply.status(404).send({ error: 'Session not found' });
+        }
+        if (access === 'forbidden') {
+          return reply.status(403).send({ error: 'You do not have access to this session' });
         }
 
         const evidence = await prisma.evidence.create({
@@ -85,12 +86,12 @@ export async function evidenceRoutes(fastify: FastifyInstance): Promise<void> {
       try {
         const { sessionId } = request.params as { sessionId: string };
 
-        const session = await prisma.session.findUnique({
-          where: { id: sessionId },
-          select: { id: true },
-        });
-        if (!session) {
+        const access = await checkSessionAccess(request, sessionId);
+        if (access === 'not_found') {
           return reply.status(404).send({ error: 'Session not found' });
+        }
+        if (access === 'forbidden') {
+          return reply.status(403).send({ error: 'You do not have access to this session' });
         }
 
         const evidence = await prisma.evidence.findMany({
@@ -116,6 +117,16 @@ export async function evidenceRoutes(fastify: FastifyInstance): Promise<void> {
           sessionId: string;
           evidenceId: string;
         };
+
+        // Verify session access BEFORE looking up evidence so we don't leak
+        // existence of evidence on sessions the caller can't see.
+        const access = await checkSessionAccess(request, sessionId);
+        if (access === 'not_found') {
+          return reply.status(404).send({ error: 'Session not found' });
+        }
+        if (access === 'forbidden') {
+          return reply.status(403).send({ error: 'You do not have access to this session' });
+        }
 
         const evidence = await prisma.evidence.findFirst({
           where: { id: evidenceId, sessionId },

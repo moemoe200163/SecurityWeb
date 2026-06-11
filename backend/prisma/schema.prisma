@@ -13,6 +13,10 @@ model Session {
   module    String    // "soc" | "threat" | "pentest"
   input     Json      // Original input data
   status    String    @default("in_progress") // "in_progress" | "completed"
+  // Owning user. Nullable to preserve historical rows; routes enforce
+  // non-null at write time and treat null as "legacy / admin only".
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   steps     Step[]
@@ -22,6 +26,7 @@ model Session {
   @@index([module])
   @@index([status])
   @@index([createdAt])
+  @@index([userId])
 }
 
 model Step {
@@ -192,6 +197,7 @@ model User {
   toolExecutions ToolExecution[]
   auditLogs      AuditLog[]
   evidence       Evidence[]
+  sessions       Session[]
 
   @@map("users")
 }

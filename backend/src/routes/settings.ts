@@ -5,6 +5,7 @@ import { rateLimit } from '../middleware/rateLimit.js';
 import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireAdmin } from '../middleware/rbac.js';
 import { getAIService, invalidateCache } from '../services/AIServiceFactory.js';
+import { checkSsrf } from '../utils/ssrf.js';
 import {
   getAllProvidersSafe,
   getProviderConfig,
@@ -207,6 +208,20 @@ export async function settingsRoutes(fastify: FastifyInstance): Promise<void> {
         apiKey: z.string().optional(),
         enabled: z.boolean().optional(),
       }).parse(request.body);
+
+      // P0-4 SSRF guard: even an admin-supplied baseUrl must not point to
+      // private/loopback IP space, otherwise a stolen admin key could pivot
+      // the LLM traffic to an internal address and exfiltrate
+      // messages/raw_content through the outbound request body.
+      if (body.baseUrl !== undefined) {
+        const ssrf = await checkSsrf(body.baseUrl, { label: 'baseUrl' });
+        if (!ssrf.ok) {
+          return reply.status(400).send({
+            error: 'baseUrl points to a disallowed host',
+            details: [{ field: 'baseUrl', message: ssrf.reason ?? 'blocked' }],
+          });
+        }
+      }
 
       const config = await getProviderConfig(provider as ProviderId);
       if (body.baseUrl !== undefined) config.baseUrl = body.baseUrl;

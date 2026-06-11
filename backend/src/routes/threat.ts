@@ -6,6 +6,7 @@ import { prisma } from '../db/client.js';
 import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireUser } from '../middleware/rbac.js';
 import { rateLimit } from '../middleware/rateLimit.js';
+import { checkSessionAccess } from '../utils/sessionAccess.js';
 
 const investigateSchema = z.object({
   type: z.enum(['ip', 'domain', 'hash']),
@@ -83,7 +84,7 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
         indicatorType: body.type,
       };
 
-      const session = await ai.startAnalysis('threat', input);
+      const session = await ai.startAnalysis('threat', input, request.user!.id);
 
       // Trigger real MiniMax analysis
       triggerThreatAnalysis(session.id, body.type, body.value, ai).catch(console.error);
@@ -111,7 +112,13 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
     try {
       const ai = await getAIService();
       const sessions = await ai.getAllSessions();
-      const threatSessions = sessions.filter((s) => s.module === 'threat');
+      let threatSessions = sessions.filter((s) => s.module === 'threat');
+      // Non-admin users only see their own sessions; legacy null-owned sessions
+      // are admin-only.
+      if (request.user!.role !== 'admin') {
+        const myId = request.user!.id;
+        threatSessions = threatSessions.filter((s) => s.userId === myId);
+      }
       return reply.send({ sessions: threatSessions });
     } catch (error) {
       console.error('Get sessions error:', error);
@@ -122,10 +129,17 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/threat/sessions/:id - Get session by ID
   fastify.get('/sessions/:id', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
-      const ai = await getAIService();
       const { id } = request.params as { id: string };
-      const session = await ai.getSession(id);
+      const access = await checkSessionAccess(request, id);
+      if (access === 'not_found') {
+        return reply.status(404).send({ error: 'Session not found' });
+      }
+      if (access === 'forbidden') {
+        return reply.status(403).send({ error: 'You do not have access to this session' });
+      }
 
+      const ai = await getAIService();
+      const session = await ai.getSession(id);
       if (!session) {
         return reply.status(404).send({ error: 'Session not found' });
       }
@@ -140,12 +154,24 @@ export async function threatRoutes(fastify: FastifyInstance): Promise<void> {
   // POST /api/threat/sessions/:id/messages - Send message to session
   fastify.post('/sessions/:id/messages', { preHandler: [apiKeyAuth, requireUser, rateLimit(30, 60_000)] }, async (request, reply) => {
     try {
-      const ai = await getAIService();
       const { id } = request.params as { id: string };
+      const access = await checkSessionAccess(request, id);
+      if (access === 'not_found') {
+        return reply.status(404).send({ error: 'Session not found' });
+      }
+      if (access === 'forbidden') {
+        return reply.status(403).send({ error: 'You do not have access to this session' });
+      }
+
+      const ai = await getAIService();
       const { content } = request.body as { content: string };
 
       if (!content || typeof content !== 'string') {
         return reply.status(400).send({ error: 'Content is required' });
+      }
+      // P1-4 fix: cap content size at 10k chars (same as SOC route)
+      if (content.length > 10000) {
+        return reply.status(400).send({ error: 'Content must not exceed 10000 characters' });
       }
 
       const message = await ai.sendMessage(id, content);

@@ -6,6 +6,7 @@ import type { AIService } from '../services/types.js';
 import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireUser } from '../middleware/rbac.js';
 import { rateLimit } from '../middleware/rateLimit.js';
+import { checkSessionAccess } from '../utils/sessionAccess.js';
 import PDFDocument from 'pdfkit';
 
 const analyzeSchema = z.object({
@@ -25,7 +26,7 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
         rawContent: body.rawContent,
       };
 
-      const session = await ai.startAnalysis('soc', input);
+      const session = await ai.startAnalysis('soc', input, request.user!.id);
 
       // 如果是 simulation 模式，運行模擬
       if (body.type === 'simulation') {
@@ -58,6 +59,14 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
     try {
       const ai = await getAIService();
       const sessions = await ai.getAllSessions();
+      // Non-admin users only see their own sessions; null-owned (legacy) sessions
+      // are admin-only and stay hidden from regular users.
+      if (request.user!.role !== 'admin') {
+        const myId = request.user!.id;
+        return reply.send({
+          sessions: sessions.filter((s) => s.userId === myId),
+        });
+      }
       return reply.send({ sessions });
     } catch (error) {
       console.error('Get sessions error:', error);
@@ -68,10 +77,17 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/soc/sessions/:id - Get session by ID
   fastify.get('/sessions/:id', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
-      const ai = await getAIService();
       const { id } = request.params as { id: string };
-      const session = await ai.getSession(id);
+      const access = await checkSessionAccess(request, id);
+      if (access === 'not_found') {
+        return reply.status(404).send({ error: 'Session not found' });
+      }
+      if (access === 'forbidden') {
+        return reply.status(403).send({ error: 'You do not have access to this session' });
+      }
 
+      const ai = await getAIService();
+      const session = await ai.getSession(id);
       if (!session) {
         return reply.status(404).send({ error: 'Session not found' });
       }
@@ -88,6 +104,15 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
     try {
       const ai = await getAIService();
       const { id } = request.params as { id: string };
+
+      const access = await checkSessionAccess(request, id);
+      if (access === 'not_found') {
+        return reply.status(404).send({ error: 'Session not found' });
+      }
+      if (access === 'forbidden') {
+        return reply.status(403).send({ error: 'You do not have access to this session' });
+      }
+
       const { content } = request.body as { content: string };
 
       if (!content || typeof content !== 'string') {
@@ -98,7 +123,6 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
         return reply.status(400).send({ error: 'Content must not exceed 10000 characters' });
       }
 
-      // Check if session exists
       const session = await ai.getSession(id);
       if (!session) {
         return reply.status(404).send({ error: 'Session not found' });
@@ -115,8 +139,16 @@ export async function socRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/soc/sessions/:id/report - Generate PDF report for SOC session
   fastify.get<{ Params: { id: string } }>('/sessions/:id/report', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
-      const ai = await getAIService();
       const { id } = request.params;
+      const access = await checkSessionAccess(request, id);
+      if (access === 'not_found') {
+        return reply.status(404).send({ error: 'Session not found' });
+      }
+      if (access === 'forbidden') {
+        return reply.status(403).send({ error: 'You do not have access to this session' });
+      }
+
+      const ai = await getAIService();
       const session = await ai.getSession(id);
 
       if (!session) {

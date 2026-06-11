@@ -133,6 +133,7 @@ function formatSession(session: any): SessionData {
     status: session.status,
     createdAt: session.createdAt.toISOString(),
     updatedAt: session.updatedAt.toISOString(),
+    userId: session.userId ?? null,
     steps: session.steps.map((step: any) => ({
       id: step.id,
       order: step.order,
@@ -273,7 +274,7 @@ export class OllamaAdapter implements AIService {
     }
   }
 
-  async startAnalysis(module: ModuleType, input: unknown): Promise<SessionData> {
+  async startAnalysis(module: ModuleType, input: unknown, userId?: string): Promise<SessionData> {
     const steps = defaultSteps[module].map((step, index) => ({
       ...step,
       id: `step-${Date.now()}-${index}`,
@@ -285,6 +286,8 @@ export class OllamaAdapter implements AIService {
         module,
         input: input as object,
         status: 'in_progress',
+        // See minimaxAdapter for ownership rationale.
+        userId: userId ?? null,
         steps: {
           create: steps.map((step) => ({
             order: step.order,

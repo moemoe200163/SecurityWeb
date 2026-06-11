@@ -81,7 +81,7 @@ export function invalidateCache(): void {
  */
 function createMockAdapter(): AIService {
   return {
-    async startAnalysis(module: string, input: unknown) {
+    async startAnalysis(module: string, input: unknown, _userId?: string) {
       return {
         id: `mock-session-${Date.now()}`,
         module: module as 'soc' | 'threat' | 'pentest',

@@ -1,8 +1,12 @@
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { ToolExecutor } from './ToolExecutor.js';
 
-const execAsync = promisify(exec);
+// Use execFile (not exec) so docker arguments are passed as an array and
+// never interpreted by /bin/sh. P1-5: the previous shell: '/bin/sh' variant
+// would silently become RCE the day a developer interpolated a user input
+// into any of these commands.
+const execFileAsync = promisify(execFile);
 
 const SANDBOX_IMAGE = 'kalilinux/kali-rolling:latest';
 const SANDBOX_NETWORK = 'securityweb_sandbox';
@@ -32,7 +36,7 @@ export class SandboxManager {
 
   private async checkDockerAvailable(): Promise<void> {
     try {
-      await execAsync('docker --version', { shell: '/bin/sh' });
+      await execFileAsync('docker', ['--version']);
     } catch (error) {
       throw new Error('Docker is not available. Please ensure Docker is installed and running.');
     }
@@ -43,14 +47,16 @@ export class SandboxManager {
     const fullNetworkName = `securityweb_${SANDBOX_NETWORK}`;
     try {
       // Check if network exists
-      await execAsync(`docker network inspect ${fullNetworkName}`, { shell: '/bin/sh' });
+      await execFileAsync('docker', ['network', 'inspect', fullNetworkName]);
     } catch {
       // Network doesn't exist, try to create it
       try {
-        await execAsync(
-          `docker network create --driver=bridge --subnet=${SANDBOX_SUBNET} ${fullNetworkName}`,
-          { shell: '/bin/sh' }
-        );
+        await execFileAsync('docker', [
+          'network', 'create',
+          '--driver=bridge',
+          `--subnet=${SANDBOX_SUBNET}`,
+          fullNetworkName,
+        ]);
       } catch (createError) {
         // Check if error is because network already exists (race condition)
         const errorMsg = createError instanceof Error ? createError.message : String(createError);
@@ -69,10 +75,11 @@ export class SandboxManager {
 
     // Check if the docker-compose managed container already exists and is running
     try {
-      const { stdout } = await execAsync(
-        `docker inspect ${SANDBOX_CONTAINER_NAME} --format "{{.State.Running}}"`,
-        { shell: '/bin/sh' }
-      );
+      const { stdout } = await execFileAsync('docker', [
+        'inspect',
+        SANDBOX_CONTAINER_NAME,
+        '--format', '{{.State.Running}}',
+      ]);
       if (stdout.trim() === 'true') {
         this.containerId = SANDBOX_CONTAINER_NAME;
         return { id: SANDBOX_CONTAINER_NAME };
@@ -83,15 +90,17 @@ export class SandboxManager {
 
     // Fallback: check if there's an existing stopped container to reuse
     try {
-      const { stdout } = await execAsync(
-        `docker ps -a --filter "ancestor=${SANDBOX_IMAGE}" --format "{{.ID}}" | head -1`,
-        { shell: '/bin/sh' }
-      );
-      const existingId = stdout.trim();
+      const { stdout } = await execFileAsync('docker', [
+        'ps', '-a',
+        `--filter=ancestor=${SANDBOX_IMAGE}`,
+        '--format', '{{.ID}}',
+      ]);
+      const lines = stdout.split('\n').map((s) => s.trim()).filter(Boolean);
+      const existingId = lines[0];
       if (existingId) {
         // Remove old container
         try {
-          await execAsync(`docker rm -f ${existingId}`, { shell: '/bin/sh' });
+          await execFileAsync('docker', ['rm', '-f', existingId]);
         } catch {
           // Container removal failed, but we can continue and try to start fresh
         }
@@ -104,18 +113,18 @@ export class SandboxManager {
     // docker compose or `docker build` in backend/sandbox/), fall back
     // to the raw Kali base image.
     const securityToolsImage = await this.resolveImage();
-    const cmd = [
-      'docker', 'run', '--rm', '-d',
+    const args = [
+      'run', '--rm', '-d',
       '--network', fullNetworkName,
       '--memory', '2g', '--cpus', '1.0',
       '--pids-limit', '100',
       '--name', SANDBOX_CONTAINER_NAME,
       securityToolsImage,
-      'tail', '-f', '/dev/null'
-    ].join(' ');
+      'tail', '-f', '/dev/null',
+    ];
 
     try {
-      const { stdout } = await execAsync(cmd, { shell: '/bin/sh' });
+      const { stdout } = await execFileAsync('docker', args);
       const containerId = stdout.trim();
       if (!containerId) {
         throw new Error('Docker run returned empty container ID. Ensure Docker is running properly.');
@@ -133,7 +142,7 @@ export class SandboxManager {
   private async resolveImage(): Promise<string> {
     for (const image of [CUSTOM_SANDBOX_IMAGE, SANDBOX_IMAGE]) {
       try {
-        await execAsync(`docker image inspect ${image}`, { shell: '/bin/sh' });
+        await execFileAsync('docker', ['image', 'inspect', image]);
         return image;
       } catch {
         // image not found — try next
@@ -154,7 +163,7 @@ export class SandboxManager {
   async cleanup(): Promise<void> {
     if (this.containerId) {
       try {
-        await execAsync(`docker stop ${this.containerId}`, { shell: '/bin/sh' });
+        await execFileAsync('docker', ['stop', this.containerId]);
       } catch (error) {
         // Log but don't throw - cleanup should not fail the operation
         console.error(`Failed to stop sandbox container ${this.containerId}: ${error}`);

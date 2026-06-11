@@ -205,9 +205,13 @@ export async function urlhausRoutes(fastify: FastifyInstance): Promise<void> {
   });
 
   // GET /api/urlhaus/recent - Get recent malicious URLs
+  const recentQuerySchema = z.object({
+    limit: z.coerce.number().int().min(1).max(50).default(10),
+  });
+
   fastify.get('/recent', { preHandler: [apiKeyAuth, requireUser] }, async (request, reply) => {
     try {
-      const limit = Math.min(parseInt((request.query as any).limit) || 10, 50);
+      const { limit } = recentQuerySchema.parse(request.query);
 
       const response = await fetch(`${URLHAUS_API_BASE_URL}/recent/urlslimit/${limit}`, {
         headers: {
@@ -225,6 +229,9 @@ export async function urlhausRoutes(fastify: FastifyInstance): Promise<void> {
         generated_at: data.generated_at
       });
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        return reply.status(400).send({ error: 'Invalid limit parameter (1-50)', details: error.errors });
+      }
       console.error('URLhaus recent error:', error);
       return reply.status(500).send({ error: 'Internal server error' });
     }

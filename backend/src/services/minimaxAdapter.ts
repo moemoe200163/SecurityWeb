@@ -142,6 +142,9 @@ function formatSession(session: any): SessionData {
     status: session.status,
     createdAt: session.createdAt.toISOString(),
     updatedAt: session.updatedAt.toISOString(),
+    // Reflect the persisted owner; null when the row predates the column
+    // or was written by a route that didn't pass userId.
+    userId: session.userId ?? null,
     steps: session.steps.map((step: any) => ({
       id: step.id,
       order: step.order,
@@ -304,7 +307,7 @@ export class MiniMaxAdapter implements AIService {
     }
   }
 
-  async startAnalysis(module: ModuleType, input: unknown): Promise<SessionData> {
+  async startAnalysis(module: ModuleType, input: unknown, userId?: string): Promise<SessionData> {
     const steps = defaultSteps[module].map((step, index) => ({
       ...step,
       id: `step-${Date.now()}-${index}`,
@@ -316,6 +319,10 @@ export class MiniMaxAdapter implements AIService {
         module,
         input: input as object,
         status: 'in_progress',
+        // Persist the owning user. Nullable to allow seeding/test flows
+        // without auth; route-level ownership checks skip null-owned sessions
+        // for non-admin callers.
+        userId: userId ?? null,
         steps: {
           create: steps.map((step) => ({
             order: step.order,

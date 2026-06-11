@@ -26,6 +26,9 @@ export interface SessionData {
   status: 'in_progress' | 'completed';
   createdAt: string;
   updatedAt: string;
+  // Owning user. Null for legacy / admin-only sessions. Routes use this
+  // for IDOR checks via checkSessionAccess().
+  userId?: string | null;
   steps: StepData[];
   messages: MessageData[];
 }
@@ -95,7 +98,7 @@ export interface TemplateMetadata {
 
 // AI Service interface
 export interface AIService {
-  startAnalysis(module: ModuleType, input: unknown): Promise<SessionData>;
+  startAnalysis(module: ModuleType, input: unknown, userId?: string): Promise<SessionData>;
   getSession(sessionId: string): Promise<SessionData | null>;
   getAllSessions(): Promise<SessionData[]>;
   sendMessage(sessionId: string, content: string): Promise<MessageData>;

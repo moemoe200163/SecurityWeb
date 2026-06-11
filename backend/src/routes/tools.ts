@@ -10,7 +10,11 @@ import { sanitizeAuditDetails, sanitizeCommand } from '../utils/sanitize.js';
 
 const executeToolSchema = z.object({
   template_id: z.string().min(1),
-  params: z.record(z.string()),
+  // P1-10: cap each value length. WhitelistValidator restricts *which* keys
+  // are allowed, but a legitimate key could still be passed an oversized
+  // value, which would either blow up the spawned docker argv or be
+  // reflected into a shell command template substitution.
+  params: z.record(z.string().min(1).max(2048)),
   session_id: z.string().optional(),
 });
 
@@ -175,19 +179,33 @@ export async function toolRoutes(fastify: FastifyInstance): Promise<void> {
 
         if (!validation.valid || !validation.command) {
           // Record a failed execution attempt so the audit trail is honest.
-          // We still write the row even if the templateId doesn't exist in
-          // tool_templates — the schema marks the relation as optional.
-          await prisma.toolExecution.create({
-            data: {
-              templateId: template_id,
-              userId: request.user!.id,
-              sessionId: session_id,
-              params,
-              status: 'error',
-              error: validation.error || 'Validation failed',
-              durationMs: Date.now() - startTime,
-            },
-          });
+          // We only insert the row when templateId references an existing
+          // template — otherwise the FK constraint would throw and mask the
+          // original 400 validation error with a 500. Audit insert failures
+          // are best-effort and must not break the user-visible response.
+          try {
+            const existing = await prisma.toolTemplate.findUnique({
+              where: { id: template_id },
+              select: { id: true },
+            });
+            if (existing) {
+              await prisma.toolExecution.create({
+                data: {
+                  templateId: template_id,
+                  userId: request.user!.id,
+                  sessionId: session_id,
+                  params,
+                  status: 'error',
+                  error: validation.error || 'Validation failed',
+                  durationMs: Date.now() - startTime,
+                },
+              });
+            }
+          } catch (auditErr) {
+            // Best-effort audit; never fail the user-visible response on a
+            // logging error.
+            console.error('Failed to record failed tool execution:', auditErr);
+          }
 
           return reply.status(400).send({
             error: validation.error || 'Invalid command',
