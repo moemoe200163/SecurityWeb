@@ -1,0 +1,160 @@
+name: ci
+
+on:
+  push:
+    branches: [main, develop, 'feature/**']
+  pull_request:
+    branches: [main, develop]
+
+# Cancel in-flight runs of the same branch / PR so we don't waste
+# runner minutes on a force-pushed branch.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: backend (tsc + vitest)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: securityweb
+          POSTGRES_PASSWORD: securityweb123
+          POSTGRES_DB: securityweb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U securityweb"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://securityweb:securityweb123@localhost:5432/securityweb
+      TEST_API_KEY: sk-0000000000000000000000000000000000000000000000000000000000000001
+      # Stage 6 contract: even CI must build with a real key, not a
+      # placeholder, so middleware code paths are actually exercised.
+      MINIMAX_API_KEY: ci-placeholder-key
+      MINIMAX_API_ENDPOINT: https://example.invalid/v1
+      MINIMAX_MODEL: ci-model
+      ABUSEIPDB_API_KEY: ci-placeholder
+      OTX_API_KEY: ci-placeholder
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      - name: Install backend deps
+        working-directory: backend
+        run: npm ci
+      - name: Prisma generate
+        working-directory: backend
+        run: npx prisma generate
+      - name: TypeScript check
+        working-directory: backend
+        # Force fail on any tsc error. Without --noEmit the build emits
+        # JS files we don't want in CI, and without it the dist/ tree can
+        # drift out of sync with source (see P0-2 in AGENTS.md).
+        run: npx tsc --noEmit
+      - name: Run vitest
+        working-directory: backend
+        # Suite expects seed data; `db:seed` is idempotent thanks to
+        # the `where: { id: ... }` upserts in seed.ts.
+        run: |
+          npx prisma db push --skip-generate --accept-data-loss
+          npm run db:seed
+          npm test
+
+  frontend:
+    name: frontend (tsc + lint + e2e)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: securityweb
+          POSTGRES_PASSWORD: securityweb123
+          POSTGRES_DB: securityweb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U securityweb"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_API_KEY: sk-0000000000000000000000000000000000000000000000000000000000000001
+      DATABASE_URL: postgresql://securityweb:securityweb123@localhost:5432/securityweb
+      MINIMAX_API_KEY: ci-placeholder-key
+      MINIMAX_API_ENDPOINT: https://example.invalid/v1
+      MINIMAX_MODEL: ci-model
+      ABUSEIPDB_API_KEY: ci-placeholder
+      OTX_API_KEY: ci-placeholder
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+      - name: TypeScript check
+        working-directory: frontend
+        run: npx tsc --noEmit
+      - name: Lint
+        working-directory: frontend
+        run: npm run lint
+      - name: Install Playwright browsers
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Prepare backend for e2e
+        working-directory: backend
+        run: |
+          npx prisma generate
+          npx prisma db push --skip-generate --accept-data-loss
+          npx tsx prisma/seed.ts
+      - name: Run Playwright e2e
+        working-directory: frontend
+        run: npx playwright test
+
+  image-freshness:
+    name: container image builds & matches source mtime
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # 6-c: catch the "container runs stale dist/" class of bug by
+      # rebuilding the image fresh in CI and asserting that
+      # dist/routes/*.js timestamps are newer than the corresponding
+      # .ts source files. If anyone ever re-introduces the systemNoauth
+      # experiment without rebuilding, this check will fail loudly.
+      - name: Build backend image
+        working-directory: backend
+        run: |
+          docker build -t securityweb-backend:ci .
+      - name: Extract dist
+        run: |
+          docker create --name swb-ci securityweb-backend:ci
+          docker cp swb-ci:/app/dist ./dist-ci
+      - name: Assert dist is fresh
+        run: |
+          set -e
+          shopt -s globstar nullglob
+          STALE=0
+          for ts in backend/src/**/*.ts; do
+            rel="${ts#backend/src/}"
+            js="dist-ci/${rel%.ts}.js"
+            [ -e "$js" ] || { echo "MISSING: $js"; STALE=1; continue; }
+            if [ "$ts" -nt "$js" ]; then
+              echo "STALE: $ts newer than $js"
+              STALE=1
+            fi
+          done
+          if [ "$STALE" -ne 0 ]; then
+            echo "Container dist/ is older than source. Rebuild and re-push."
+            exit 1
+          fi

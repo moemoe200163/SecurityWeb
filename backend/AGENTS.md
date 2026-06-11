@@ -1,11 +1,23 @@
 # SecurityWeb Backend 開發指南
 
+> **本文件反映 HEAD source 實際現況（截至 2026-06-11 審查 + 階段 4 修補後）**。認證矩陣、測試結果、P0/P1/P2 清單皆來自對 source 的實測，非開發者自述。
+>
+> **更新契約**：當任何 route 的 preHandler 鏈、zod 校驗、rate limit 變動時，**必須**同步更新本檔的矩陣表 + 「嚴重問題」清單。`AGENTS.md` 與 source 矛盾時，以 source 為準並開 PR 修本檔。
+>
+> **CI 守門**：`.github/workflows/ci.yml` 跑 `tsc --noEmit` + `vitest`，並比對容器 `dist/` 與 source mtime。dist 舊於 source 時 CI 會 fail — 防止 P0-2 類（容器跑舊 build）的事件再發生。
+
 ## 技術棧
 
 - **框架**: Fastify + TypeScript
 - **ORM**: Prisma
 - **數據庫**: PostgreSQL
 - **AI**: MiniMax API
+
+## 開發約定（2026-06-11 審查後）
+
+> **AGENTS.md 與 source 不一致時，CI 會 fail**。`.github/workflows/ci.yml` 對比容器 `dist/` mtime 與 source，dist 較舊時 fail — 防止「容器跑舊 build」再次發生。
+>
+> 修改任何 route 的 `preHandler` 鏈、`zod` schema 或 `rateLimit` 時，**必須**同步更新本檔的「路由認證矩陣」+ 「嚴重問題」清單。矩陣表描述的內容以 source 為準。
 
 ## API 路由
 

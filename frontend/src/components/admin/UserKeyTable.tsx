@@ -44,11 +44,12 @@ export function UserKeyTable() {
       if (e.key === 'Escape') {
         e.preventDefault();
         e.stopPropagation();
+        closeModal();
       }
     };
     document.addEventListener('keydown', handler, true);
     return () => document.removeEventListener('keydown', handler, true);
-  }, [plaintextFor]);
+  }, [plaintextFor, closeModal]);
 
   const handleRotate = async (userId: string) => {
     if (!confirm(`Rotate this user's API key? Their current key will be invalidated.`)) return;

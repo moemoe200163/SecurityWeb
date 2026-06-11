@@ -12,6 +12,8 @@
     "db:seed": "tsx prisma/seed.ts",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:ci": "prisma db push --skip-generate --accept-data-loss && tsx prisma/seed.ts && vitest run",
+    "typecheck": "tsc --noEmit",
     "validate-egress": "tsx src/scripts/validateEgressConfig.ts ../sandbox/egress.conf.example"
   },
   "dependencies": {

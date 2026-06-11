@@ -6,6 +6,7 @@ import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireAdmin } from '../middleware/rbac.js';
 import { getAIService, invalidateCache } from '../services/AIServiceFactory.js';
 import { checkSsrf } from '../utils/ssrf.js';
+import { sanitizeErrorMessage } from '../utils/sanitize.js';
 import {
   getAllProvidersSafe,
   getProviderConfig,
@@ -169,11 +170,16 @@ export async function settingsRoutes(fastify: FastifyInstance): Promise<void> {
         sessionId: testResult.id,
       });
     } catch (error) {
-      console.error('AI connection test error:', error);
+      request.log.error({ err: error }, 'AI connection test error');
       return reply.status(500).send({
         success: false,
-        error: 'AI connection test failed',
-        details: error instanceof Error ? error.message : 'Unknown error',
+        message: 'Connection test failed',
+        // C.1: scrub credentials and internal hostnames before
+        // echoing. Full error still goes to the server log.
+        details: sanitizeErrorMessage(
+          error instanceof Error ? error.message : 'Unknown error',
+          { production: process.env.NODE_ENV === 'production' },
+        ),
       });
     }
   });
@@ -264,8 +270,14 @@ export async function settingsRoutes(fastify: FastifyInstance): Promise<void> {
 
       return reply.send(result);
     } catch (error) {
-      console.error(`Test LLM provider ${provider} error:`, error);
-      return reply.status(500).send({ error: 'Health check failed', details: error instanceof Error ? error.message : 'Unknown error' });
+      request.log.error({ err: error, provider }, 'Test LLM provider error');
+      return reply.status(500).send({
+        error: 'Health check failed',
+        details: sanitizeErrorMessage(
+          error instanceof Error ? error.message : 'Unknown error',
+          { production: process.env.NODE_ENV === 'production' },
+        ),
+      });
     }
   });
 

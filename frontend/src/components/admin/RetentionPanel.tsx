@@ -53,21 +53,27 @@ export function RetentionPanel() {
 
   useEffect(() => { load(); }, []);
 
-  const handleDryRun = async () => {
+  const handleDryRun = async (): Promise<typeof preview> => {
     try {
       const res = await api.adminRetention.run(true);
-      if (res.mode === 'dry-run') setPreview(res.preview);
+      if (res.mode === 'dry-run') {
+        setPreview(res.preview);
+        return res.preview;
+      }
+      return null;
     } catch (e) {
       const { message } = classifyError(e);
       setToast({ kind: 'err', msg: message });
+      return null;
     }
   };
 
   const handleRunClick = async () => {
-    if (!preview) {
-      await handleDryRun();
+    // 若沒有 preview，先跑 dry-run 並直接拿到結果（避免 React 還沒 re-render 時讀到 stale closure）
+    const currentPreview = preview ?? (await handleDryRun());
+    if (currentPreview) {
+      setShowConfirm(true);
     }
-    setShowConfirm(true);
   };
 
   const handleConfirmRun = async () => {
