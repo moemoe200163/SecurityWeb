@@ -6,11 +6,33 @@ import { prisma } from '../db/client.js';
 import { sanitizeAuditDetails } from '../utils/sanitize.js';
 import { checkSessionAccess } from '../utils/sessionAccess.js';
 
+// P2-4: bound the `data` field instead of `z.unknown()`. We accept
+// arbitrary nested JSON but constrain the leaf types so prototype
+// pollution payloads (functions, symbols) can't sneak in.
+const evidenceDataValueSchema = z.union([
+  z.string().max(10_000),
+  z.number(),
+  z.boolean(),
+  z.null(),
+]);
+// Use `z.ZodTypeAny` so the recursive reference type-checks. The
+// shape is still bounded by the wrapper above.
+const evidenceDataSchema: z.ZodTypeAny = z.lazy(() =>
+  z.union([
+    evidenceDataValueSchema,
+    z.array(evidenceDataSchema).max(100),
+    z.record(z.string().max(64), evidenceDataSchema).refine(
+      (obj) => Object.keys(obj).length <= 100,
+      { message: 'Too many keys in evidence data object' },
+    ),
+  ]),
+);
+
 const createEvidenceSchema = z.object({
   type: z.enum(['tool', 'intelligence', 'manual', 'ai']),
   title: z.string().min(1).max(200),
   content: z.string().min(1).max(10000),
-  data: z.unknown().optional(),
+  data: evidenceDataSchema.optional(),
   alertId: z.string().uuid().optional(),
   toolExecutionId: z.string().uuid().optional(),
 });

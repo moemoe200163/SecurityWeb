@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import net from 'node:net';
 import { prisma } from '../db/client.js';
 import dns from 'dns';
 import { promisify } from 'util';
@@ -416,10 +417,15 @@ export async function bgpRoutes(fastify: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'Missing resource parameter (ip or prefix)' });
     }
 
-    // 驗證是否為有效的 IP、前綴或 ASN
-    const isValidIP = /^(\d{1,3}\.){3}\d{1,3}(\/\d{1,2})?$/.test(resource) ||
-                      /^([0-9a-fA-F:]+)(\/\d{1,3})?$/.test(resource);
-    const isValidASN = /^AS?\d+$/i.test(resource) || /^\d+$/.test(resource);
+    // P1-2: cap the length up-front (avoids the regex DoS) and use
+    // Node's built-in IP validators instead of hand-rolled regexes
+    // that accept `999.999.999.999` and `::::::::::`.
+    if (resource.length > 64) {
+      return reply.status(400).send({ error: 'Resource parameter too long' });
+    }
+
+    const isValidIP = net.isIPv4(resource) || net.isIPv6(resource);
+    const isValidASN = /^AS?\d+$/i.test(resource);
     if (!isValidIP && !isValidASN) {
       return reply.status(400).send({ error: 'Invalid IP address, prefix, or ASN format' });
     }

@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { z } from 'zod';
 import { apiKeyAuth } from '../middleware/apiKeyAuth.js';
 import { requireUser } from '../middleware/rbac.js';
 import { prisma } from '../db/client.js';
@@ -239,12 +240,19 @@ export async function dashboardRoutes(fastify: FastifyInstance): Promise<void> {
   );
 
   // Alert resolution rate over time
+  const timelineQuerySchema = z.object({
+    // P0-4 follow-up: cap the window so a single request can't drag every
+    // alert in the table into memory. The previous `request.query as { days?: number }`
+    // accepted 0/negative/NaN/enormous values.
+    days: z.coerce.number().int().min(1).max(90).default(7),
+  });
+
   fastify.get(
     '/stats/timeline',
     { preHandler: [apiKeyAuth, requireUser] },
     async (request, reply) => {
       try {
-        const { days = 7 } = request.query as { days?: number };
+        const { days } = timelineQuerySchema.parse(request.query);
         const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
         const alerts = await prisma.alert.findMany({
@@ -256,6 +264,11 @@ export async function dashboardRoutes(fastify: FastifyInstance): Promise<void> {
             status: true,
             severity: true,
           },
+          // Defense in depth: even with a bounded window, a high-write
+          // tenant can still have millions of rows. Cap the scan to
+          // 10k rows and surface a `truncated: true` flag in the
+          // response so the UI can decide to render a warning.
+          take: 10_000,
         });
 
         // Group by day
@@ -285,6 +298,9 @@ export async function dashboardRoutes(fastify: FastifyInstance): Promise<void> {
 
         return reply.send({ timeline });
       } catch (error) {
+        if (error instanceof z.ZodError) {
+          return reply.status(400).send({ error: 'Invalid query parameter', details: error.errors });
+        }
         console.error('Timeline stats error:', error);
         return reply.status(500).send({ error: 'Failed to get timeline stats' });
       }

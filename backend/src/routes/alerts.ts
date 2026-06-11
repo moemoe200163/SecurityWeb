@@ -133,7 +133,10 @@ export async function alertRoutes(fastify: FastifyInstance): Promise<void> {
   // Import many alerts (bulk)
   fastify.post(
     '/import/bulk',
-    { preHandler: [apiKeyAuth, requireUser] },
+    // P1-7: cap bulk imports at 5/min per key. Single-row import at
+    // 20/min is fine, but bulk can write up to 1k rows per call so
+    // it's the right knob to tighten.
+    { preHandler: [apiKeyAuth, requireUser, rateLimit(5, 60_000)] },
     async (request, reply) => {
       try {
         const { alerts } = importManySchema.parse(request.body);
