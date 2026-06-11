@@ -7,7 +7,6 @@ import { useStepStore } from '@/stores/stepStore';
 import { api, ApiError, isAuthError, isForbidden, pollSession, type SessionDetail } from '@/lib/api';
 import { AuthNotice } from '@/components/ui/AuthNotice';
 import type { AlertData, ToolCall } from '@/lib/types';
-import type { SessionSummary } from '@/components/soc/AnalysisSidebar';
 import { VolcanoStepCard } from '@/components/soc/VolcanoStepCard';
 import { ThreatSummaryCard } from '@/components/soc/ThreatSummaryCard';
 import { AlertUpload } from '@/components/upload/AlertUpload';
@@ -44,6 +43,17 @@ function HistorySessionLoader({
 
 interface SOCAnalysisWorkspaceProps {
   initialSessionId?: string;
+}
+
+// Inlined from the deleted AnalysisSidebar component. Kept here so
+// `useState<SessionSummary>` still type-checks until the sidebar state
+// is wired back in (or removed entirely).
+interface SessionSummary {
+  id: string;
+  module: string;
+  status: string;
+  createdAt: string;
+  title: string;
 }
 
 export function SOCAnalysisWorkspace({ initialSessionId }: SOCAnalysisWorkspaceProps) {

@@ -84,6 +84,21 @@ const MODULE_LABELS: Record<string, string> = {
   pentest: '滲透測試輔助',
 };
 
+// Build a deep link into the right workspace for an activity item.
+// Mirrors the routing used in /history so the two surfaces agree.
+function activityHrefFor(item: ActivityItem): string {
+  switch (item.type) {
+    case 'soc':
+      return `/soc/analyze?session=${encodeURIComponent(item.id)}`;
+    case 'threat':
+      return `/threat/investigate?session=${encodeURIComponent(item.id)}`;
+    case 'pentest':
+      return `/pentest/assist?session=${encodeURIComponent(item.id)}`;
+    default:
+      return '/history';
+  }
+}
+
 function sessionToActivity(session: SessionDetail): ActivityItem {
   const input = session.input as Record<string, unknown> | undefined;
   const target =
@@ -144,9 +159,13 @@ function ActivityFeed({ sessions }: { sessions: SessionDetail[] }) {
             暫無活動記錄
           </div>
         ) : items.map((item, index) => (
-          <div
+          // 4-o fix: cursor-pointer was visual-only (no onClick) which
+          // tricked users into expecting a navigation. Wrap in <Link>
+          // and route to the same workspace the History page uses.
+          <Link
             key={item.id}
-            className="px-5 py-3 hover:bg-[var(--accent)] transition-colors cursor-pointer animate-fade-in-up"
+            href={activityHrefFor(item)}
+            className="block px-5 py-3 hover:bg-[var(--accent)] transition-colors animate-fade-in-up"
             style={{ animationDelay: `${index * 50}ms` }}
           >
             <div className="flex items-start gap-3">
@@ -164,7 +183,7 @@ function ActivityFeed({ sessions }: { sessions: SessionDetail[] }) {
               </div>
               <span className="text-xs text-[var(--muted-foreground)] font-mono whitespace-nowrap">{item.time}</span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
