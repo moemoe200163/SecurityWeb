@@ -8,6 +8,22 @@ interface MarkdownRendererProps {
   content: string;
 }
 
+/**
+ * Strip dangerous URL schemes. react-markdown already blocks `javascript:`
+ * on the `a` component, but defense-in-depth costs nothing: a future
+ * plugin change, a custom `urlTransform`, or a new built-in component
+ * could re-enable the path. Explicitly reject `javascript:`, `data:`
+ * (except images), and `vbscript:` on every URL-bearing element.
+ */
+function safeUrl(url: string | undefined | null): string | undefined {
+  if (!url) return url ?? undefined;
+  const lower = url.trim().toLowerCase();
+  if (lower.startsWith('javascript:')) return undefined;
+  if (lower.startsWith('vbscript:')) return undefined;
+  if (lower.startsWith('data:') && !lower.startsWith('data:image/')) return undefined;
+  return url;
+}
+
 export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
   return (
     <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -139,6 +155,25 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
         hr: () => (
           <hr className="my-6 border-gray-200 dark:border-gray-700" />
         ),
+        // P4-n: defense-in-depth on URL-bearing elements. react-markdown
+        // already sanitises `javascript:` on `a` and `img`, but we add
+        // an explicit safeUrl pass so any future plugin change can't
+        // silently regress this.
+        a: ({ href, children, ...rest }) => (
+          <a href={safeUrl(href)} target="_blank" rel="noopener noreferrer" {...rest}>
+            {children}
+          </a>
+        ),
+        img: ({ src, alt, ...rest }) => {
+          // react-markdown types src as string | Blob; only string URLs
+          // need the dangerous-scheme filter. Anything else (Blob) is
+          // already safe to render directly.
+          const safeSrc = typeof src === 'string' ? safeUrl(src) : src;
+          return (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={safeSrc} alt={alt ?? ''} {...rest} />
+          );
+        },
       }}
     >
       {content}
